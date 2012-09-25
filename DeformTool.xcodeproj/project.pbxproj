@@ -15,6 +15,20 @@
 		AB384B4416125C70003A2D9C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B4316125C70003A2D9C /* AppDelegate.m */; };
 		AB384B4716125C70003A2D9C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B4616125C70003A2D9C /* ViewController.m */; };
 		AB384B4A16125C70003A2D9C /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB384B4816125C70003A2D9C /* ViewController.xib */; };
+		AB384B6716125DA6003A2D9C /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B6616125DA6003A2D9C /* OpenGLES.framework */; };
+		AB384B6916125E87003A2D9C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B6816125E87003A2D9C /* QuartzCore.framework */; };
+		AB384B82161266CD003A2D9C /* BaseShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AB384B7A161266CD003A2D9C /* BaseShader.fsh */; };
+		AB384B83161266CD003A2D9C /* BaseShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = AB384B7B161266CD003A2D9C /* BaseShader.vsh */; };
+		AB384B84161266CD003A2D9C /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B7D161266CD003A2D9C /* EAGLView.m */; };
+		AB384B85161266CD003A2D9C /* GLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B7F161266CD003A2D9C /* GLProgram.m */; };
+		AB384B86161266CD003A2D9C /* GLTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B81161266CD003A2D9C /* GLTexture.m */; };
+		AB384B8916126703003A2D9C /* GLRender.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B8816126703003A2D9C /* GLRender.m */; };
+		AB6826D116126894007F7FEA /* canvas_back32.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CB16126894007F7FEA /* canvas_back32.png */; };
+		AB6826D216126894007F7FEA /* me.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CC16126894007F7FEA /* me.png */; };
+		AB6826D316126894007F7FEA /* nature.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CD16126894007F7FEA /* nature.png */; };
+		AB6826D416126894007F7FEA /* nature_alpha.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CE16126894007F7FEA /* nature_alpha.png */; };
+		AB6826D516126894007F7FEA /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CF16126894007F7FEA /* Particle.png */; };
+		AB6826D616126894007F7FEA /* table.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826D016126894007F7FEA /* table.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,15 +36,33 @@
 		AB384B3316125C70003A2D9C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		AB384B3516125C70003A2D9C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AB384B3716125C70003A2D9C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		AB384B3B16125C70003A2D9C /* DeformTool-Info.plist */ = {isa = PBXFileReference; path = "DeformTool-Info.plist"; sourceTree = "<group>"; };
+		AB384B3B16125C70003A2D9C /* DeformTool-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DeformTool-Info.plist"; sourceTree = "<group>"; };
 		AB384B3D16125C70003A2D9C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AB384B3F16125C70003A2D9C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		AB384B4116125C70003A2D9C /* DeformTool-Prefix.pch */ = {isa = PBXFileReference; path = "DeformTool-Prefix.pch"; sourceTree = "<group>"; };
-		AB384B4216125C70003A2D9C /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		AB384B4116125C70003A2D9C /* DeformTool-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DeformTool-Prefix.pch"; sourceTree = "<group>"; };
+		AB384B4216125C70003A2D9C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AB384B4316125C70003A2D9C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		AB384B4516125C70003A2D9C /* ViewController.h */ = {isa = PBXFileReference; path = ViewController.h; sourceTree = "<group>"; };
+		AB384B4516125C70003A2D9C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		AB384B4616125C70003A2D9C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		AB384B4916125C70003A2D9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
+		AB384B6616125DA6003A2D9C /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		AB384B6816125E87003A2D9C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		AB384B7A161266CD003A2D9C /* BaseShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BaseShader.fsh; sourceTree = "<group>"; };
+		AB384B7B161266CD003A2D9C /* BaseShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BaseShader.vsh; sourceTree = "<group>"; };
+		AB384B7C161266CD003A2D9C /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
+		AB384B7D161266CD003A2D9C /* EAGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EAGLView.m; sourceTree = "<group>"; };
+		AB384B7E161266CD003A2D9C /* GLProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLProgram.h; sourceTree = "<group>"; };
+		AB384B7F161266CD003A2D9C /* GLProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLProgram.m; sourceTree = "<group>"; };
+		AB384B80161266CD003A2D9C /* GLTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTexture.h; sourceTree = "<group>"; };
+		AB384B81161266CD003A2D9C /* GLTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLTexture.m; sourceTree = "<group>"; };
+		AB384B8716126703003A2D9C /* GLRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLRender.h; sourceTree = "<group>"; };
+		AB384B8816126703003A2D9C /* GLRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLRender.m; sourceTree = "<group>"; };
+		AB6826CB16126894007F7FEA /* canvas_back32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = canvas_back32.png; sourceTree = "<group>"; };
+		AB6826CC16126894007F7FEA /* me.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = me.png; sourceTree = "<group>"; };
+		AB6826CD16126894007F7FEA /* nature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nature.png; sourceTree = "<group>"; };
+		AB6826CE16126894007F7FEA /* nature_alpha.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nature_alpha.png; sourceTree = "<group>"; };
+		AB6826CF16126894007F7FEA /* Particle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Particle.png; sourceTree = "<group>"; };
+		AB6826D016126894007F7FEA /* table.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = table.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +70,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB384B6916125E87003A2D9C /* QuartzCore.framework in Frameworks */,
+				AB384B6716125DA6003A2D9C /* OpenGLES.framework in Frameworks */,
 				AB384B3416125C70003A2D9C /* UIKit.framework in Frameworks */,
 				AB384B3616125C70003A2D9C /* Foundation.framework in Frameworks */,
 				AB384B3816125C70003A2D9C /* CoreGraphics.framework in Frameworks */,
@@ -52,6 +86,7 @@
 			children = (
 				AB384B3916125C70003A2D9C /* DeformTool */,
 				AB384B3216125C70003A2D9C /* Frameworks */,
+				AB6826CA16126894007F7FEA /* Resources */,
 				AB384B3016125C70003A2D9C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -67,6 +102,8 @@
 		AB384B3216125C70003A2D9C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AB384B6816125E87003A2D9C /* QuartzCore.framework */,
+				AB384B6616125DA6003A2D9C /* OpenGLES.framework */,
 				AB384B3316125C70003A2D9C /* UIKit.framework */,
 				AB384B3516125C70003A2D9C /* Foundation.framework */,
 				AB384B3716125C70003A2D9C /* CoreGraphics.framework */,
@@ -77,6 +114,7 @@
 		AB384B3916125C70003A2D9C /* DeformTool */ = {
 			isa = PBXGroup;
 			children = (
+				AB384B79161266CD003A2D9C /* GLSupport */,
 				AB384B4216125C70003A2D9C /* AppDelegate.h */,
 				AB384B4316125C70003A2D9C /* AppDelegate.m */,
 				AB384B4516125C70003A2D9C /* ViewController.h */,
@@ -96,6 +134,36 @@
 				AB384B4116125C70003A2D9C /* DeformTool-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		AB384B79161266CD003A2D9C /* GLSupport */ = {
+			isa = PBXGroup;
+			children = (
+				AB384B7A161266CD003A2D9C /* BaseShader.fsh */,
+				AB384B7B161266CD003A2D9C /* BaseShader.vsh */,
+				AB384B7C161266CD003A2D9C /* EAGLView.h */,
+				AB384B7D161266CD003A2D9C /* EAGLView.m */,
+				AB384B7E161266CD003A2D9C /* GLProgram.h */,
+				AB384B7F161266CD003A2D9C /* GLProgram.m */,
+				AB384B80161266CD003A2D9C /* GLTexture.h */,
+				AB384B81161266CD003A2D9C /* GLTexture.m */,
+				AB384B8716126703003A2D9C /* GLRender.h */,
+				AB384B8816126703003A2D9C /* GLRender.m */,
+			);
+			path = GLSupport;
+			sourceTree = "<group>";
+		};
+		AB6826CA16126894007F7FEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AB6826CB16126894007F7FEA /* canvas_back32.png */,
+				AB6826CC16126894007F7FEA /* me.png */,
+				AB6826CD16126894007F7FEA /* nature.png */,
+				AB6826CE16126894007F7FEA /* nature_alpha.png */,
+				AB6826CF16126894007F7FEA /* Particle.png */,
+				AB6826D016126894007F7FEA /* table.png */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,6 +218,14 @@
 			files = (
 				AB384B3E16125C70003A2D9C /* InfoPlist.strings in Resources */,
 				AB384B4A16125C70003A2D9C /* ViewController.xib in Resources */,
+				AB384B82161266CD003A2D9C /* BaseShader.fsh in Resources */,
+				AB384B83161266CD003A2D9C /* BaseShader.vsh in Resources */,
+				AB6826D116126894007F7FEA /* canvas_back32.png in Resources */,
+				AB6826D216126894007F7FEA /* me.png in Resources */,
+				AB6826D316126894007F7FEA /* nature.png in Resources */,
+				AB6826D416126894007F7FEA /* nature_alpha.png in Resources */,
+				AB6826D516126894007F7FEA /* Particle.png in Resources */,
+				AB6826D616126894007F7FEA /* table.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +239,10 @@
 				AB384B4016125C70003A2D9C /* main.m in Sources */,
 				AB384B4416125C70003A2D9C /* AppDelegate.m in Sources */,
 				AB384B4716125C70003A2D9C /* ViewController.m in Sources */,
+				AB384B84161266CD003A2D9C /* EAGLView.m in Sources */,
+				AB384B85161266CD003A2D9C /* GLProgram.m in Sources */,
+				AB384B86161266CD003A2D9C /* GLTexture.m in Sources */,
+				AB384B8916126703003A2D9C /* GLRender.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,6 +354,7 @@
 				AB384B4F16125C70003A2D9C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

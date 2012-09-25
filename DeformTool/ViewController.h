@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class EAGLView;
+
+
 @interface ViewController : UIViewController
+
+@property (nonatomic, strong) IBOutlet EAGLView* glView;
 
 @end
