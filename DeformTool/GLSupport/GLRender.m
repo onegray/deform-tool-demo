@@ -9,39 +9,47 @@
 #import "GLRender.h"
 #import "GLTexture.h"
 #import "GLProgram.h"
+#import "GLTransform.h"
+
+#import "matrix.h"
+#import "TransformUtils.h"
 
 @interface GLRender ()
+{
+	GLProgram* program;
+}
+
+
 @end
 
 @implementation GLRender
-static GLProgram* baseProgram = nil;
 
-+ (GLProgram*)loadStandardProgram:(NSString*)programName
-{        
-    GLProgram* p = [[GLProgram alloc] initWithVertexShaderFilename:programName fragmentShaderFilename:programName];
-    [p addAttribute:@"position"];
-    [p addAttribute:@"texCoord"];
-    [p link];
-    return p;
-}
+static GLRender* sharedInstance = nil;
 
-+ (void)loadBaseProgram
-{        
-    if(!baseProgram)
-    {
-        baseProgram = [self loadStandardProgram:@"BaseShader"];
-    }
-}
-
-+(GLProgram*) baseProgram
++(GLRender*) sharedRender
 {
-	if(!baseProgram) {
-		[self loadBaseProgram];
-	}
-	return baseProgram;
+	return sharedInstance;
 }
 
-+ (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect
++ (void) loadSharedRender
+{
+	if(!sharedInstance) {
+		sharedInstance = [[GLRender alloc] initWithProgramName:@"BaseShader"];
+	}
+}
+
+-(id) initWithProgramName:(NSString*)programName
+{
+	if(self=[super init]) {
+		program = [[GLProgram alloc] initWithVertexShaderFilename:programName fragmentShaderFilename:programName];
+		[program addAttribute:@"position"];
+		[program addAttribute:@"texCoord"];
+		[program link];
+	}
+	return self;
+}
+
+- (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect withTransform:(GLTransform*)transform
 {
     GLfloat w = rect.size.width;
     GLfloat h = rect.size.height;
@@ -49,15 +57,16 @@ static GLProgram* baseProgram = nil;
 	GLfloat vertices[] = {pt.x,	pt.y, 0, pt.x+w, pt.y, 0, pt.x, pt.y+h, 0, pt.x+w, pt.y+h, 0};
 	GLfloat coordinates[] = { 0, texture.maxT, texture.maxS, texture.maxT, 0, 0, texture.maxS, 0};
     
-    [baseProgram use];
+    [program use];
     
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture.textureName);
     
-    glUniform1i([baseProgram uniformIndex:@"texture"], 0);
+	glUniformMatrix4fv([program uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, transform.resultMatrix);
+    glUniform1i([program uniformIndex:@"texture"], 0);
     
-    GLuint vertCoordAttr = [baseProgram attributeIndex:@"position"];
-    GLuint texCoordAttr = [baseProgram attributeIndex:@"texCoord"];
+    GLuint vertCoordAttr = [program attributeIndex:@"position"];
+    GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
     
     glVertexAttribPointer(vertCoordAttr, 3, GL_FLOAT, 0, 0, vertices);
     glEnableVertexAttribArray(vertCoordAttr);

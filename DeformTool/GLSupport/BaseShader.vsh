@@ -6,11 +6,13 @@
 //  Hire me at odesk! ( www.odesk.com/users/~~1bd7ccce67734b51 )
 //
 
+uniform mat4 modelViewProjectionMatrix;
+
 attribute vec4 position;
 attribute vec2 texCoord;
 varying vec2 varTexCoord;
 void main()
 {
     varTexCoord = texCoord;
-    gl_Position = position;
+    gl_Position = modelViewProjectionMatrix * position;
 }

@@ -10,12 +10,15 @@
 #import "EAGLView.h"
 #import "GLTexture.h"
 #import "GLRender.h"
+#import "GLTransform.h"
 
 @interface ViewController ()
 {
 	EAGLContext* context;
 	
 	GLTexture* texture;
+	
+	GLTransform* glTransform;
 }
 @end
 
@@ -41,9 +44,18 @@
 	[glView setContext:context];
 	[glView setFramebuffer];
 	
-	[GLRender loadBaseProgram];
+	[GLRender loadSharedRender];
 	
-	texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"nature"]];
+	if(!glTransform) {
+		glTransform = [[GLTransform alloc] initWithOrtho2dRect:glView.bounds];
+		
+		//[glTransform rotate:0.2 aroundPoint:glView.center];
+	}
+
+	if(!texture) {
+		texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"nature"]];
+	}
+	
 	[self drawTexture:texture];
 }
 
@@ -55,16 +67,16 @@
 
 -(CGRect) rectForTexture:(GLTexture*)tex
 {
-	CGRect r = CGRectMake(-1, -1, 2, 2);
+	CGRect r = glView.bounds;
 	CGSize vsz = glView.bounds.size;
 	CGFloat tk = tex.contentSize.width/tex.contentSize.height;
 	CGFloat vk = vsz.width/vsz.height;
 	if(vk>=tk) { // if viewport is 'wider' than texture image
-		r.size.width =2*tk/vk;
-		r.origin.x += (2 - r.size.width)/2;
+		r.size.width =r.size.height*tk;
+		r.origin.x += (vsz.width - r.size.width)/2;
 	} else {
-		r.size.height = 2*vk/tk;
-		r.origin.y += (2 - r.size.height)/2;
+		r.size.height = r.size.width/tk;
+		r.origin.y += (vsz.height - r.size.height)/2;
 	}
 	return r;
 }
@@ -77,7 +89,8 @@
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-	[GLRender drawTexture:tex inRect:[self rectForTexture:tex]];
+	CGRect textureRect = [self rectForTexture:tex];
+	[[GLRender sharedRender] drawTexture:tex inRect:textureRect withTransform:glTransform];
 	
 	[glView presentFramebuffer];  
 }
@@ -85,13 +98,16 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+	[self performSelector:@selector(setupViewport) withObject:nil afterDelay:0];
 	return YES;
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)orientation
+-(void) setupViewport
 {
+	[glTransform loadOrtho2dRect:glView.bounds];
 	[self drawTexture:texture];
 }
+
 
 @end
 

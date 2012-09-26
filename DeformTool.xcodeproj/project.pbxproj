@@ -29,6 +29,9 @@
 		AB6826D416126894007F7FEA /* nature_alpha.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CE16126894007F7FEA /* nature_alpha.png */; };
 		AB6826D516126894007F7FEA /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CF16126894007F7FEA /* Particle.png */; };
 		AB6826D616126894007F7FEA /* table.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826D016126894007F7FEA /* table.png */; };
+		AB6826FD161379CF007F7FEA /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = AB6826F71613781B007F7FEA /* matrix.c */; };
+		AB68270016137AA7007F7FEA /* TransformUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6826FF16137AA2007F7FEA /* TransformUtils.m */; };
+		AB68270316138E45007F7FEA /* GLTransform.m in Sources */ = {isa = PBXBuildFile; fileRef = AB68270216138E45007F7FEA /* GLTransform.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +66,12 @@
 		AB6826CE16126894007F7FEA /* nature_alpha.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nature_alpha.png; sourceTree = "<group>"; };
 		AB6826CF16126894007F7FEA /* Particle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Particle.png; sourceTree = "<group>"; };
 		AB6826D016126894007F7FEA /* table.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = table.png; sourceTree = "<group>"; };
+		AB6826F61613781B007F7FEA /* matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = matrix.h; sourceTree = "<group>"; };
+		AB6826F71613781B007F7FEA /* matrix.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = matrix.c; sourceTree = "<group>"; };
+		AB6826FE16137AA2007F7FEA /* TransformUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransformUtils.h; sourceTree = "<group>"; };
+		AB6826FF16137AA2007F7FEA /* TransformUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TransformUtils.m; sourceTree = "<group>"; };
+		AB68270116138E45007F7FEA /* GLTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTransform.h; sourceTree = "<group>"; };
+		AB68270216138E45007F7FEA /* GLTransform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLTransform.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +158,12 @@
 				AB384B81161266CD003A2D9C /* GLTexture.m */,
 				AB384B8716126703003A2D9C /* GLRender.h */,
 				AB384B8816126703003A2D9C /* GLRender.m */,
+				AB68270116138E45007F7FEA /* GLTransform.h */,
+				AB68270216138E45007F7FEA /* GLTransform.m */,
+				AB6826F61613781B007F7FEA /* matrix.h */,
+				AB6826F71613781B007F7FEA /* matrix.c */,
+				AB6826FE16137AA2007F7FEA /* TransformUtils.h */,
+				AB6826FF16137AA2007F7FEA /* TransformUtils.m */,
 			);
 			path = GLSupport;
 			sourceTree = "<group>";
@@ -243,6 +258,9 @@
 				AB384B85161266CD003A2D9C /* GLProgram.m in Sources */,
 				AB384B86161266CD003A2D9C /* GLTexture.m in Sources */,
 				AB384B8916126703003A2D9C /* GLRender.m in Sources */,
+				AB6826FD161379CF007F7FEA /* matrix.c in Sources */,
+				AB68270016137AA7007F7FEA /* TransformUtils.m in Sources */,
+				AB68270316138E45007F7FEA /* GLTransform.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

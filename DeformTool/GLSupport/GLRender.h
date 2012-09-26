@@ -10,10 +10,15 @@
 
 @class GLProgram;
 @class GLTexture;
+@class GLTransform;
+
 @interface GLRender : NSObject
 
-+ (void)loadBaseProgram;
-+ (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect;
-+ (GLProgram*) baseProgram;
+
++(GLRender*) sharedRender;
++ (void) loadSharedRender;
+
+- (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect withTransform:(GLTransform*)transform;
+
 
 @end
