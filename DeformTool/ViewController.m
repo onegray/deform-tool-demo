@@ -90,6 +90,7 @@
     glClear(GL_COLOR_BUFFER_BIT);
 
 	CGRect textureRect = [self rectForTexture:tex];
+	//textureRect = CGRectMake(10, 10, 250, 250);
 	[[GLRender sharedRender] drawTexture:tex inRect:textureRect withTransform:glTransform];
 	
 	[glView presentFramebuffer];  

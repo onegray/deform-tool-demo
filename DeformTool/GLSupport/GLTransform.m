@@ -39,7 +39,7 @@
 -(void) loadOrtho2dRect:(CGRect)rect
 {
 	mat4f_LoadOrtho(rect.origin.x, rect.origin.x+rect.size.width,
-					rect.origin.y, rect.origin.y+rect.size.height,
+					rect.origin.y+rect.size.height, rect.origin.y,
 					-1, 1, projection);
 	mat4f_MultiplyMat4f(projection, modelview, modelviewProjection);
 }

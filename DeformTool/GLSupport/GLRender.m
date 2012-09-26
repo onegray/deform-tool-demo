@@ -55,7 +55,13 @@ static GLRender* sharedInstance = nil;
     GLfloat h = rect.size.height;
     CGPoint pt = rect.origin;
 	GLfloat vertices[] = {pt.x,	pt.y, 0, pt.x+w, pt.y, 0, pt.x, pt.y+h, 0, pt.x+w, pt.y+h, 0};
-	GLfloat coordinates[] = { 0, texture.maxT, texture.maxS, texture.maxT, 0, 0, texture.maxS, 0};
+	//GLfloat coordinates[] = { 0, texture.maxT, texture.maxS, texture.maxT, 0, 0, texture.maxS, 0};
+	  GLfloat coordinates[] = {
+		  0,			0,
+		  texture.maxS, 0, 
+		  0,			texture.maxT,
+		  texture.maxS, texture.maxT,
+	  };
     
     [program use];
     
