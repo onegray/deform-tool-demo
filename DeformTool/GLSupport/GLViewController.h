@@ -18,7 +18,7 @@
 
 @property (nonatomic, strong) IBOutlet GLView* glView;
 
-- (void) setContext:(EAGLContext *)newContext;
+- (void) setContext;
 - (void) setFramebuffer;
 - (BOOL) presentFramebuffer;
 - (void) deleteFramebuffer;

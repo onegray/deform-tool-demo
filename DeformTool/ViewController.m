@@ -14,8 +14,6 @@
 
 @interface ViewController ()
 {
-	EAGLContext* context;
-	
 	GLTexture* texture;
 	
 	GLTransform* glTransform;
@@ -25,23 +23,12 @@
 @implementation ViewController
 @synthesize glController;
 
-- (void)dealloc {
-    if ([EAGLContext currentContext] == context) {
-        [EAGLContext setCurrentContext:nil];
-	}
-}
-
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
-	if(!context) {
-		context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-		NSAssert(context!=nil, @"Failed to create EAGLContext");
-	}
-	
-	[glController setContext:context];
+	[glController setContext];
 	[glController setFramebuffer];
 	
 	[GLRender loadSharedRender];

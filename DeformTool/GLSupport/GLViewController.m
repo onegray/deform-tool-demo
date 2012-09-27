@@ -43,6 +43,9 @@
 
 - (void)dealloc
 {
+    if ([EAGLContext currentContext] == context) {
+        [EAGLContext setCurrentContext:nil];
+	}
     [self deleteFramebuffer];    
 }
 
@@ -78,6 +81,16 @@
         [EAGLContext setCurrentContext:nil];
     }
 }
+
+- (void)setContext
+{
+	if(!context) {
+		EAGLContext* ctx = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+		NSAssert(ctx!=nil, @"Failed to create EAGLContext");
+		[self setContext:ctx];
+	}
+}
+
 
 - (void)createFramebuffer
 {
