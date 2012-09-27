@@ -10,7 +10,6 @@
 
 @class GLProgram;
 @class GLTexture;
-@class GLTransform;
 
 @interface GLRender : NSObject
 
@@ -18,7 +17,7 @@
 +(GLRender*) sharedRender;
 + (void) loadSharedRender;
 
-- (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect withTransform:(GLTransform*)transform;
+- (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect glMatrix:(GLfloat*)matrix;
 
 
 @end

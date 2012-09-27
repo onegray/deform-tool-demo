@@ -9,7 +9,6 @@
 #import "GLRender.h"
 #import "GLTexture.h"
 #import "GLProgram.h"
-#import "GLTransform.h"
 
 #import "matrix.h"
 #import "TransformUtils.h"
@@ -49,7 +48,7 @@ static GLRender* sharedInstance = nil;
 	return self;
 }
 
-- (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect withTransform:(GLTransform*)transform
+- (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect glMatrix:(GLfloat*)matrix
 {
     GLfloat w = rect.size.width;
     GLfloat h = rect.size.height;
@@ -68,7 +67,7 @@ static GLRender* sharedInstance = nil;
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture.textureName);
     
-	glUniformMatrix4fv([program uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, transform.resultMatrix);
+	glUniformMatrix4fv([program uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, matrix);
     glUniform1i([program uniformIndex:@"texture"], 0);
     
     GLuint vertCoordAttr = [program attributeIndex:@"position"];

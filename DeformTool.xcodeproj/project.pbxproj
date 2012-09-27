@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AB2D9E6E1614B88400407FDF /* GLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2D9E6D1614B88400407FDF /* GLViewController.m */; };
 		AB2D9E711614B8BA00407FDF /* GLView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2D9E701614B8BA00407FDF /* GLView.m */; };
+		AB2D9E741614DE4800407FDF /* GLTransformMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2D9E731614DE4800407FDF /* GLTransformMatrix.m */; };
 		AB384B3416125C70003A2D9C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B3316125C70003A2D9C /* UIKit.framework */; };
 		AB384B3616125C70003A2D9C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B3516125C70003A2D9C /* Foundation.framework */; };
 		AB384B3816125C70003A2D9C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B3716125C70003A2D9C /* CoreGraphics.framework */; };
@@ -32,7 +33,6 @@
 		AB6826D616126894007F7FEA /* table.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826D016126894007F7FEA /* table.png */; };
 		AB6826FD161379CF007F7FEA /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = AB6826F71613781B007F7FEA /* matrix.c */; };
 		AB68270016137AA7007F7FEA /* TransformUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6826FF16137AA2007F7FEA /* TransformUtils.m */; };
-		AB68270316138E45007F7FEA /* GLTransform.m in Sources */ = {isa = PBXBuildFile; fileRef = AB68270216138E45007F7FEA /* GLTransform.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +40,8 @@
 		AB2D9E6D1614B88400407FDF /* GLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLViewController.m; sourceTree = "<group>"; };
 		AB2D9E6F1614B8BA00407FDF /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
 		AB2D9E701614B8BA00407FDF /* GLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLView.m; sourceTree = "<group>"; };
+		AB2D9E721614DE4800407FDF /* GLTransformMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTransformMatrix.h; sourceTree = "<group>"; };
+		AB2D9E731614DE4800407FDF /* GLTransformMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLTransformMatrix.m; sourceTree = "<group>"; };
 		AB384B2F16125C70003A2D9C /* DeformTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeformTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB384B3316125C70003A2D9C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		AB384B3516125C70003A2D9C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -73,8 +75,6 @@
 		AB6826F71613781B007F7FEA /* matrix.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = matrix.c; sourceTree = "<group>"; };
 		AB6826FE16137AA2007F7FEA /* TransformUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransformUtils.h; sourceTree = "<group>"; };
 		AB6826FF16137AA2007F7FEA /* TransformUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TransformUtils.m; sourceTree = "<group>"; };
-		AB68270116138E45007F7FEA /* GLTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTransform.h; sourceTree = "<group>"; };
-		AB68270216138E45007F7FEA /* GLTransform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLTransform.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,8 +163,8 @@
 				AB384B81161266CD003A2D9C /* GLTexture.m */,
 				AB384B8716126703003A2D9C /* GLRender.h */,
 				AB384B8816126703003A2D9C /* GLRender.m */,
-				AB68270116138E45007F7FEA /* GLTransform.h */,
-				AB68270216138E45007F7FEA /* GLTransform.m */,
+				AB2D9E721614DE4800407FDF /* GLTransformMatrix.h */,
+				AB2D9E731614DE4800407FDF /* GLTransformMatrix.m */,
 				AB6826F61613781B007F7FEA /* matrix.h */,
 				AB6826F71613781B007F7FEA /* matrix.c */,
 				AB6826FE16137AA2007F7FEA /* TransformUtils.h */,
@@ -264,9 +264,9 @@
 				AB384B8916126703003A2D9C /* GLRender.m in Sources */,
 				AB6826FD161379CF007F7FEA /* matrix.c in Sources */,
 				AB68270016137AA7007F7FEA /* TransformUtils.m in Sources */,
-				AB68270316138E45007F7FEA /* GLTransform.m in Sources */,
 				AB2D9E6E1614B88400407FDF /* GLViewController.m in Sources */,
 				AB2D9E711614B8BA00407FDF /* GLView.m in Sources */,
+				AB2D9E741614DE4800407FDF /* GLTransformMatrix.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

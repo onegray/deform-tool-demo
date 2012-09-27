@@ -11,6 +11,8 @@
 #import "GLViewController.h"
 #import "GLView.h"
 
+#import "GLTransformMatrix.h"
+
 @interface GLViewController()
 {
 	GLView* view;
@@ -31,12 +33,15 @@
 
 
 @implementation GLViewController
+@synthesize projectionMatrix, scrollPos, scale;
 
 -(id) init
 {
 	self = [super init];
 	if(self) {
-		
+		projectionMatrix = [[GLTransformMatrix alloc] init];
+		scrollPos = CGPointZero;
+		scale = 1.0;
 	}
 	return self;
 }
@@ -161,6 +166,57 @@
     return success;
 }
 
+-(void) updateProjection
+{
+	[projectionMatrix loadOrtho2D:view.bounds];
+	[projectionMatrix translateTo:scrollPos];
+	[projectionMatrix scaleTo:scale];
+}
 
+-(void) setScrollPos:(CGPoint)sp
+{
+	scrollPos = sp;
+	[self updateProjection];
+}
+
+-(void) setScale:(CGFloat)s
+{
+	scale = s;
+	[self updateProjection];
+}
+
+-(void) setScale:(CGFloat)s relativeToPoint:(CGPoint)p
+{
+	scale = s;
+	[projectionMatrix loadOrtho2D:view.bounds];
+	[projectionMatrix translateTo:scrollPos];
+	[projectionMatrix scale:scale relativeToPoint:p];
+}
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

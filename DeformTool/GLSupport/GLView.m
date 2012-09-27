@@ -64,6 +64,7 @@
 
 -(void) layoutSubviews
 {
+	[controller updateProjection]; // since bounds are changed
 	[controller deleteFramebuffer];
 }
 

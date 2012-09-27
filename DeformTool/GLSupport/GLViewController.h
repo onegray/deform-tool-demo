@@ -14,13 +14,24 @@
 
 #import "GLView.h"
 
+@class GLTransformMatrix;
+
 @interface GLViewController : NSObject
 
 @property (nonatomic, strong) IBOutlet GLView* glView;
+
+@property (nonatomic, readonly) GLTransformMatrix* projectionMatrix;
+@property (nonatomic, assign) CGPoint scrollPos;
+@property (nonatomic, assign) CGFloat scale;
+-(void) setScale:(CGFloat)scale relativeToPoint:(CGPoint)p;
+
+- (void) updateProjection;
 
 - (void) setContext;
 - (void) setFramebuffer;
 - (BOOL) presentFramebuffer;
 - (void) deleteFramebuffer;
+
+
 
 @end
