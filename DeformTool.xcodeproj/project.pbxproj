@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB2D9E6E1614B88400407FDF /* GLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2D9E6D1614B88400407FDF /* GLViewController.m */; };
+		AB2D9E711614B8BA00407FDF /* GLView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2D9E701614B8BA00407FDF /* GLView.m */; };
 		AB384B3416125C70003A2D9C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B3316125C70003A2D9C /* UIKit.framework */; };
 		AB384B3616125C70003A2D9C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B3516125C70003A2D9C /* Foundation.framework */; };
 		AB384B3816125C70003A2D9C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B3716125C70003A2D9C /* CoreGraphics.framework */; };
@@ -19,7 +21,6 @@
 		AB384B6916125E87003A2D9C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B6816125E87003A2D9C /* QuartzCore.framework */; };
 		AB384B82161266CD003A2D9C /* BaseShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AB384B7A161266CD003A2D9C /* BaseShader.fsh */; };
 		AB384B83161266CD003A2D9C /* BaseShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = AB384B7B161266CD003A2D9C /* BaseShader.vsh */; };
-		AB384B84161266CD003A2D9C /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B7D161266CD003A2D9C /* EAGLView.m */; };
 		AB384B85161266CD003A2D9C /* GLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B7F161266CD003A2D9C /* GLProgram.m */; };
 		AB384B86161266CD003A2D9C /* GLTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B81161266CD003A2D9C /* GLTexture.m */; };
 		AB384B8916126703003A2D9C /* GLRender.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B8816126703003A2D9C /* GLRender.m */; };
@@ -35,6 +36,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AB2D9E6C1614B88400407FDF /* GLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLViewController.h; sourceTree = "<group>"; };
+		AB2D9E6D1614B88400407FDF /* GLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLViewController.m; sourceTree = "<group>"; };
+		AB2D9E6F1614B8BA00407FDF /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
+		AB2D9E701614B8BA00407FDF /* GLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLView.m; sourceTree = "<group>"; };
 		AB384B2F16125C70003A2D9C /* DeformTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeformTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB384B3316125C70003A2D9C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		AB384B3516125C70003A2D9C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -52,8 +57,6 @@
 		AB384B6816125E87003A2D9C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		AB384B7A161266CD003A2D9C /* BaseShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BaseShader.fsh; sourceTree = "<group>"; };
 		AB384B7B161266CD003A2D9C /* BaseShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BaseShader.vsh; sourceTree = "<group>"; };
-		AB384B7C161266CD003A2D9C /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
-		AB384B7D161266CD003A2D9C /* EAGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EAGLView.m; sourceTree = "<group>"; };
 		AB384B7E161266CD003A2D9C /* GLProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLProgram.h; sourceTree = "<group>"; };
 		AB384B7F161266CD003A2D9C /* GLProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLProgram.m; sourceTree = "<group>"; };
 		AB384B80161266CD003A2D9C /* GLTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTexture.h; sourceTree = "<group>"; };
@@ -150,8 +153,10 @@
 			children = (
 				AB384B7A161266CD003A2D9C /* BaseShader.fsh */,
 				AB384B7B161266CD003A2D9C /* BaseShader.vsh */,
-				AB384B7C161266CD003A2D9C /* EAGLView.h */,
-				AB384B7D161266CD003A2D9C /* EAGLView.m */,
+				AB2D9E6F1614B8BA00407FDF /* GLView.h */,
+				AB2D9E701614B8BA00407FDF /* GLView.m */,
+				AB2D9E6C1614B88400407FDF /* GLViewController.h */,
+				AB2D9E6D1614B88400407FDF /* GLViewController.m */,
 				AB384B7E161266CD003A2D9C /* GLProgram.h */,
 				AB384B7F161266CD003A2D9C /* GLProgram.m */,
 				AB384B80161266CD003A2D9C /* GLTexture.h */,
@@ -254,13 +259,14 @@
 				AB384B4016125C70003A2D9C /* main.m in Sources */,
 				AB384B4416125C70003A2D9C /* AppDelegate.m in Sources */,
 				AB384B4716125C70003A2D9C /* ViewController.m in Sources */,
-				AB384B84161266CD003A2D9C /* EAGLView.m in Sources */,
 				AB384B85161266CD003A2D9C /* GLProgram.m in Sources */,
 				AB384B86161266CD003A2D9C /* GLTexture.m in Sources */,
 				AB384B8916126703003A2D9C /* GLRender.m in Sources */,
 				AB6826FD161379CF007F7FEA /* matrix.c in Sources */,
 				AB68270016137AA7007F7FEA /* TransformUtils.m in Sources */,
 				AB68270316138E45007F7FEA /* GLTransform.m in Sources */,
+				AB2D9E6E1614B88400407FDF /* GLViewController.m in Sources */,
+				AB2D9E711614B8BA00407FDF /* GLView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

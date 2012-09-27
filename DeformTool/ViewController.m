@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "EAGLView.h"
+#import "GLViewController.h"
 #import "GLTexture.h"
 #import "GLRender.h"
 #import "GLTransform.h"
@@ -23,7 +23,7 @@
 @end
 
 @implementation ViewController
-@synthesize glView;
+@synthesize glController;
 
 - (void)dealloc {
     if ([EAGLContext currentContext] == context) {
@@ -41,13 +41,13 @@
 		NSAssert(context!=nil, @"Failed to create EAGLContext");
 	}
 	
-	[glView setContext:context];
-	[glView setFramebuffer];
+	[glController setContext:context];
+	[glController setFramebuffer];
 	
 	[GLRender loadSharedRender];
 	
 	if(!glTransform) {
-		glTransform = [[GLTransform alloc] initWithOrtho2dRect:glView.bounds];
+		glTransform = [[GLTransform alloc] initWithOrtho2dRect:glController.glView.bounds];
 		
 		//[glTransform rotate:0.2 aroundPoint:glView.center];
 	}
@@ -62,13 +62,13 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-	self.glView = nil;
+	glController.glView = nil;
 }
 
 -(CGRect) rectForTexture:(GLTexture*)tex
 {
-	CGRect r = glView.bounds;
-	CGSize vsz = glView.bounds.size;
+	CGRect r = glController.glView.bounds;
+	CGSize vsz = glController.glView.bounds.size;
 	CGFloat tk = tex.contentSize.width/tex.contentSize.height;
 	CGFloat vk = vsz.width/vsz.height;
 	if(vk>=tk) { // if viewport is 'wider' than texture image
@@ -84,7 +84,7 @@
 
 -(void) drawTexture:(GLTexture*)tex
 {
-    [glView setFramebuffer];
+    [glController setFramebuffer];
     
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -93,7 +93,7 @@
 	//textureRect = CGRectMake(10, 10, 250, 250);
 	[[GLRender sharedRender] drawTexture:tex inRect:textureRect withTransform:glTransform];
 	
-	[glView presentFramebuffer];  
+	[glController presentFramebuffer];  
 }
 
 
@@ -105,7 +105,7 @@
 
 -(void) setupViewport
 {
-	[glTransform loadOrtho2dRect:glView.bounds];
+	[glTransform loadOrtho2dRect:glController.glView.bounds];
 	[self drawTexture:texture];
 }
 

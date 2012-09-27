@@ -1,55 +1,74 @@
 //
-//  EAGLView.m
-//  OpenGLES_iPhone
+//  GLViewController.m
+//  DeformTool
 //
-//  Created by mmalc Crawford on 11/18/10.
-//  Copyright 2010 Apple Inc. All rights reserved.
+//  Created by onegray on 9/27/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "EAGLView.h"
+#import "GLViewController.h"
+#import "GLView.h"
 
-@interface EAGLView (PrivateMethods)
-- (void)createFramebuffer;
-- (void)deleteFramebuffer;
+@interface GLViewController()
+{
+	GLView* view;
+	
+	GLint framebufferWidth;
+    GLint framebufferHeight;
+    
+    GLuint defaultFramebuffer, colorRenderbuffer;
+	
+	EAGLContext* context;
+}
+
 @end
 
-@implementation EAGLView
+@interface GLView (private)
+-(void) setGlController:(GLViewController *)glController;
+@end
 
-@synthesize context;
 
-// You must implement this method
-+ (Class)layerClass
+@implementation GLViewController
+
+-(id) init
 {
-    return [CAEAGLLayer class];
-}
-
-- (id)initWithCoder:(NSCoder*)coder
-{
-    self = [super initWithCoder:coder];
-	if (self) {
-        CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
-        
-        eaglLayer.opaque = TRUE;
-        eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        [NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking,
-                                        kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
-                                        nil];
+	self = [super init];
+	if(self) {
 		
-		if(self.contentScaleFactor==1.0) {
-			//self.contentScaleFactor = 2.0;
-		}
-    }
-    
-    return self;
+	}
+	return self;
 }
-
 
 - (void)dealloc
 {
     [self deleteFramebuffer];    
 }
+
+
+-(void) loadView
+{
+	view = [[GLView alloc] initWithFrame:CGRectZero];
+}
+
+-(GLView*) glView
+{
+	if(!view) {
+		[self loadView];
+	}
+	return view;
+}
+
+-(void) setGlView:(GLView *)glView
+{
+	if(view!=glView) {
+		view = glView;
+		[view setGlController:self];
+		[self deleteFramebuffer];
+	}
+}
+
 
 - (void)setContext:(EAGLContext *)newContext
 {
@@ -72,7 +91,7 @@
         // Create color render buffer and allocate backing store.
         glGenRenderbuffers(1, &colorRenderbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
-        [context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer *)self.layer];
+        [context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer *)view.layer];
         glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &framebufferWidth);
         glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &framebufferHeight);
         
@@ -129,10 +148,6 @@
     return success;
 }
 
-- (void)layoutSubviews
-{
-    // The framebuffer will be re-created at the beginning of the next setFramebuffer method call.
-    [self deleteFramebuffer];
-}
+
 
 @end
