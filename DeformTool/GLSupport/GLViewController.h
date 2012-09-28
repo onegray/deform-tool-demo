@@ -32,7 +32,8 @@
 - (BOOL) presentFramebuffer;
 - (void) deleteFramebuffer;
 
--(void) setTransformAnchor:(CGPoint)p;
+- (void) setTransformAnchor:(CGPoint)p;
+- (CGPoint) convertPoint:(CGPoint)p;
 
 
 @end

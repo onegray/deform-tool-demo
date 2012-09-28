@@ -14,4 +14,6 @@
 
 @property (nonatomic, strong) IBOutlet GLViewController* glController;
 
+-(IBAction)onTransformModeBtn:(UISegmentedControl*)segmentedControl;
+
 @end

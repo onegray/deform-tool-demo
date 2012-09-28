@@ -17,7 +17,13 @@
 		
 	CGAffineTransform modelviewMatrix;
 	CGAffineTransform resultTransform;
-	BOOL zoomInProgress;
+
+	CGAffineTransform transformAnchor;
+	CGPoint pointAnchor;
+	
+	BOOL gestureInProgress;
+	
+	BOOL transformMode;
 }
 @end
 
@@ -38,6 +44,7 @@
 	
 	resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
 
+	transformMode = NO;
 	
 	[GLRender loadSharedRender];
 	
@@ -49,6 +56,8 @@
 	UIPinchGestureRecognizer* pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(onPinchGesture:)];
 	[glController.glView addGestureRecognizer:pinchRecognizer];
 	
+	UIRotationGestureRecognizer* rotateRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(onRotateGesture:)];
+	[glController.glView addGestureRecognizer:rotateRecognizer];
 	
 	[self drawTexture:texture];
 }
@@ -105,21 +114,39 @@
 }
 
 
+-(IBAction)onTransformModeBtn:(UISegmentedControl*)segmentedControl
+{
+	transformMode = segmentedControl.selectedSegmentIndex == 1;
+}
+
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	UITouch* touch = [touches anyObject];
 	CGPoint p = [touch locationInView:touch.view];
-	[glController setTransformAnchor:p];
-	zoomInProgress = NO;
+	if(!transformMode) {
+		[glController setTransformAnchor:p];
+	} else {
+		transformAnchor = modelviewMatrix;
+		p = [glController convertPoint:p];
+		pointAnchor = CGPointApplyAffineTransform(p, CGAffineTransformInvert(transformAnchor));
+	}
+	gestureInProgress = NO;
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	if([touches count] == 1 && !zoomInProgress)
+	if([touches count] == 1 && !gestureInProgress)
 	{
 		UITouch* touch = [touches anyObject];
 		CGPoint p = [touch locationInView:touch.view];
-		[glController scrollBy:p];
+		
+		if(!transformMode) {
+			[glController scrollBy:p];
+		} else {
+			p = [glController convertPoint:p];
+			p = CGPointApplyAffineTransform(p, CGAffineTransformInvert(transformAnchor));
+			modelviewMatrix = CGAffineTransformTranslate(transformAnchor, p.x-pointAnchor.x, p.y-pointAnchor.y);
+		}
 		
 		resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
 		[self drawTexture:texture];
@@ -128,15 +155,41 @@
 
 
 -(void) onPinchGesture:(UIPinchGestureRecognizer*)gesture
-{
-	zoomInProgress = YES;
-	
+{	
 	CGPoint p = [gesture locationInView:gesture.view];
-	[glController scaleBy:gesture.scale relativeToPoint:p];
+	
+	if(!transformMode) {
+		[glController scaleBy:gesture.scale relativeToPoint:p];
+	} else {
+		p = [glController convertPoint:p];
+		p = CGPointApplyAffineTransform(p, CGAffineTransformInvert(transformAnchor));
+		modelviewMatrix = CGAffineTransformTranslate(transformAnchor, p.x, p.y);
+		modelviewMatrix = CGAffineTransformScale(modelviewMatrix, gesture.scale, gesture.scale);
+		modelviewMatrix = CGAffineTransformTranslate(modelviewMatrix, -p.x, -p.y);
+	}
 
+	gestureInProgress = YES;
 	resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
 	[self drawTexture:texture];
 }
+
+-(void) onRotateGesture:(UIRotationGestureRecognizer*)gesture
+{
+	CGPoint p = [gesture locationInView:gesture.view];
+	
+	if(transformMode) {
+		p = [glController convertPoint:p];
+		p = CGPointApplyAffineTransform(p, CGAffineTransformInvert(transformAnchor));
+		modelviewMatrix = CGAffineTransformTranslate(transformAnchor, p.x, p.y);
+		modelviewMatrix = CGAffineTransformRotate(modelviewMatrix, gesture.rotation);
+		modelviewMatrix = CGAffineTransformTranslate(modelviewMatrix, -p.x, -p.y);
+	}
+	
+	gestureInProgress = YES;
+	resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
+	[self drawTexture:texture];
+}
+
 
 @end
 

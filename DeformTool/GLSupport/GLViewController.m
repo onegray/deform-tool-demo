@@ -183,6 +183,11 @@
 	projectionMatrix = CGAffineTransformConcat(transform, ortho2DProjection);
 }
 
+- (CGPoint) convertPoint:(CGPoint)p
+{
+	return CGPointApplyAffineTransform(p, CGAffineTransformInvert(transform));
+}
+
 -(void) scrollBy:(CGPoint)p
 {
 	p = CGPointApplyAffineTransform(p, transformAnchorInverted);
