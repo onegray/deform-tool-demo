@@ -20,10 +20,10 @@
 
 @property (nonatomic, strong) IBOutlet GLView* glView;
 
-@property (nonatomic, readonly) GLTransformMatrix* projectionMatrix;
-@property (nonatomic, assign) CGPoint scrollPos;
-@property (nonatomic, assign) CGFloat scale;
--(void) setScale:(CGFloat)scale relativeToPoint:(CGPoint)p;
+@property (nonatomic, readonly) CGAffineTransform projectionMatrix;
+
+-(void) scrollBy:(CGPoint)p;
+-(void) scaleBy:(CGFloat)v relativeToPoint:(CGPoint)p;
 
 - (void) updateProjection;
 
@@ -32,6 +32,7 @@
 - (BOOL) presentFramebuffer;
 - (void) deleteFramebuffer;
 
+-(void) setTransformAnchor:(CGPoint)p;
 
 
 @end

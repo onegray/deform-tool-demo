@@ -10,18 +10,14 @@
 #import "GLViewController.h"
 #import "GLTexture.h"
 #import "GLRender.h"
-#import "GLTransformMatrix.h"
 
 @interface ViewController ()
 {
 	GLTexture* texture;
 		
-	GLTransformMatrix* modelviewMatrix;
-	GLTransformMatrix* resultMatrix;
-	
-	CGPoint touchBeginPoint;
-	CGPoint scrollBeginPos;
-	CGFloat scaleBeginValue;
+	CGAffineTransform modelviewMatrix;
+	CGAffineTransform resultTransform;
+	BOOL zoomInProgress;
 }
 @end
 
@@ -36,14 +32,12 @@
 	[glController setContext];
 	[glController setFramebuffer];
 
-	if(!modelviewMatrix) {
-		modelviewMatrix = [[GLTransformMatrix alloc] init];
-		//[modelviewMatrix rotate:3.14/4 aroundPoint:CGPointMake(100, 100)];
-	}
-
-	resultMatrix = [[GLTransformMatrix alloc] init];
-	[resultMatrix loadMultiplicationOfMatrix:glController.projectionMatrix byMatrix:modelviewMatrix];
 	
+	modelviewMatrix = CGAffineTransformIdentity;
+
+	
+	resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
+
 	
 	[GLRender loadSharedRender];
 	
@@ -91,7 +85,8 @@
 
 	CGRect textureRect = [self rectForTexture:tex];
 	textureRect = CGRectMake(0, 0, 250, 250);
-	[[GLRender sharedRender] drawTexture:tex inRect:textureRect glMatrix:resultMatrix.glMatrix];
+	
+	[[GLRender sharedRender] drawTexture:tex inRect:textureRect transformMatrix:resultTransform];
 	
 	[glController presentFramebuffer];  
 }
@@ -105,7 +100,7 @@
 
 -(void) setupViewport
 {
-	[resultMatrix loadMultiplicationOfMatrix:glController.projectionMatrix byMatrix:modelviewMatrix];
+	resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
 	[self drawTexture:texture];
 }
 
@@ -113,38 +108,33 @@
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	UITouch* touch = [touches anyObject];
-	touchBeginPoint = [touch locationInView:touch.view];
-	scrollBeginPos = glController.scrollPos;
-	scaleBeginValue = glController.scale;
+	CGPoint p = [touch locationInView:touch.view];
+	[glController setTransformAnchor:p];
+	zoomInProgress = NO;
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	if([touches count] > 1) {
-		return;
+	if([touches count] == 1 && !zoomInProgress)
+	{
+		UITouch* touch = [touches anyObject];
+		CGPoint p = [touch locationInView:touch.view];
+		[glController scrollBy:p];
+		
+		resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
+		[self drawTexture:texture];
 	}
-	
-	UITouch* touch = [touches anyObject];
-	CGPoint p = [touch locationInView:touch.view];
-
-	CGPoint scrollPos = scrollBeginPos;
-	scrollPos.x += p.x - touchBeginPoint.x;
-	scrollPos.y += p.y - touchBeginPoint.y;
-	glController.scrollPos = scrollPos;
-	
-	[resultMatrix loadMultiplicationOfMatrix:glController.projectionMatrix byMatrix:modelviewMatrix];
-	[self drawTexture:texture];
 }
 
 
 -(void) onPinchGesture:(UIPinchGestureRecognizer*)gesture
 {
-	//CGPoint p = [gesture locationInView:gesture.view];
-	//[glController setScale:scaleBeginValue*gesture.scale relativeToPoint:p];
+	zoomInProgress = YES;
+	
+	CGPoint p = [gesture locationInView:gesture.view];
+	[glController scaleBy:gesture.scale relativeToPoint:p];
 
-	glController.scale = scaleBeginValue*gesture.scale;
-
-	[resultMatrix loadMultiplicationOfMatrix:glController.projectionMatrix byMatrix:modelviewMatrix];
+	resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
 	[self drawTexture:texture];
 }
 

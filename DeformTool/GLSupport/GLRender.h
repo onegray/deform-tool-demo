@@ -17,7 +17,7 @@
 +(GLRender*) sharedRender;
 + (void) loadSharedRender;
 
-- (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect glMatrix:(GLfloat*)matrix;
+- (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform;
 
 
 @end

@@ -48,8 +48,11 @@ static GLRender* sharedInstance = nil;
 	return self;
 }
 
-- (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect glMatrix:(GLfloat*)matrix
+- (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform
 {
+	GLfloat matrix[16];
+	CGAffineToGL(&transform, matrix);	
+	
     GLfloat w = rect.size.width;
     GLfloat h = rect.size.height;
     CGPoint pt = rect.origin;

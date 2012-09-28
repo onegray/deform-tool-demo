@@ -11,8 +11,6 @@
 #import "GLViewController.h"
 #import "GLView.h"
 
-#import "GLTransformMatrix.h"
-
 @interface GLViewController()
 {
 	GLView* view;
@@ -23,6 +21,13 @@
     GLuint defaultFramebuffer, colorRenderbuffer;
 	
 	EAGLContext* context;
+	
+	CGAffineTransform projectionMatrix;
+	CGAffineTransform ortho2DProjection;
+	CGAffineTransform transform;
+	CGAffineTransform transformAnchor;
+	CGAffineTransform transformAnchorInverted;
+	CGPoint pointAnchor;
 }
 
 @end
@@ -33,15 +38,15 @@
 
 
 @implementation GLViewController
-@synthesize projectionMatrix, scrollPos, scale;
+@synthesize projectionMatrix;
 
 -(id) init
 {
 	self = [super init];
 	if(self) {
-		projectionMatrix = [[GLTransformMatrix alloc] init];
-		scrollPos = CGPointZero;
-		scale = 1.0;
+		projectionMatrix = CGAffineTransformIdentity;
+		ortho2DProjection = CGAffineTransformIdentity;
+		transform = CGAffineTransformIdentity;
 	}
 	return self;
 }
@@ -166,31 +171,39 @@
     return success;
 }
 
+-(CGAffineTransform) loadOrtho2DProjection
+{
+	CGSize boundsSize = view.bounds.size;
+	return CGAffineTransformMake(2.0f/boundsSize.width, 0.0, 0.0, -2.0f/boundsSize.height, -1.0f, 1.0f);
+}
+
 -(void) updateProjection
 {
-	[projectionMatrix loadOrtho2D:view.bounds];
-	[projectionMatrix translateTo:scrollPos];
-	[projectionMatrix scaleTo:scale];
+	ortho2DProjection = [self loadOrtho2DProjection];
+	projectionMatrix = CGAffineTransformConcat(transform, ortho2DProjection);
 }
 
--(void) setScrollPos:(CGPoint)sp
+-(void) scrollBy:(CGPoint)p
 {
-	scrollPos = sp;
-	[self updateProjection];
+	p = CGPointApplyAffineTransform(p, transformAnchorInverted);
+	transform = CGAffineTransformTranslate(transformAnchor, p.x-pointAnchor.x, p.y-pointAnchor.y);
+	projectionMatrix = CGAffineTransformConcat(transform, ortho2DProjection);
 }
 
--(void) setScale:(CGFloat)s
+-(void) scaleBy:(CGFloat)v relativeToPoint:(CGPoint)p
 {
-	scale = s;
-	[self updateProjection];
+	p = CGPointApplyAffineTransform(p, transformAnchorInverted);
+	transform = CGAffineTransformTranslate(transformAnchor, p.x, p.y);
+	transform = CGAffineTransformScale(transform, v, v);
+	transform = CGAffineTransformTranslate(transform, -p.x, -p.y);
+	projectionMatrix = CGAffineTransformConcat(transform, ortho2DProjection);
 }
 
--(void) setScale:(CGFloat)s relativeToPoint:(CGPoint)p
+-(void) setTransformAnchor:(CGPoint)p
 {
-	scale = s;
-	[projectionMatrix loadOrtho2D:view.bounds];
-	[projectionMatrix translateTo:scrollPos];
-	[projectionMatrix scale:scale relativeToPoint:p];
+	transformAnchor = transform;
+	transformAnchorInverted = CGAffineTransformInvert(transformAnchor);
+	pointAnchor = CGPointApplyAffineTransform(p, transformAnchorInverted);
 }
 
 @end
