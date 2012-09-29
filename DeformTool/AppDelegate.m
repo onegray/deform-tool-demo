@@ -10,6 +10,8 @@
 
 #import "ViewController.h"
 
+#import "TextureMesh.h"
+
 @implementation AppDelegate
 
 @synthesize window;
@@ -17,6 +19,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	[TextureMesh test];
+	
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
 	self.viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];

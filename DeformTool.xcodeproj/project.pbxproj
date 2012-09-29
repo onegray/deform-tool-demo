@@ -32,6 +32,8 @@
 		AB6826D616126894007F7FEA /* table.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826D016126894007F7FEA /* table.png */; };
 		AB6826FD161379CF007F7FEA /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = AB6826F71613781B007F7FEA /* matrix.c */; };
 		AB68270016137AA7007F7FEA /* TransformUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6826FF16137AA2007F7FEA /* TransformUtils.m */; };
+		ABA16F9B16163D840075E675 /* LayerMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16F9A16163D840075E675 /* LayerMesh.m */; };
+		ABA16FA4161722B00075E675 /* TextureMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16FA3161722B00075E675 /* TextureMesh.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +74,10 @@
 		AB6826F71613781B007F7FEA /* matrix.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = matrix.c; sourceTree = "<group>"; };
 		AB6826FE16137AA2007F7FEA /* TransformUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransformUtils.h; sourceTree = "<group>"; };
 		AB6826FF16137AA2007F7FEA /* TransformUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TransformUtils.m; sourceTree = "<group>"; };
+		ABA16F9916163D840075E675 /* LayerMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerMesh.h; sourceTree = "<group>"; };
+		ABA16F9A16163D840075E675 /* LayerMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayerMesh.m; sourceTree = "<group>"; };
+		ABA16FA2161722B00075E675 /* TextureMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureMesh.h; sourceTree = "<group>"; };
+		ABA16FA3161722B00075E675 /* TextureMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureMesh.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,13 +129,17 @@
 		AB384B3916125C70003A2D9C /* DeformTool */ = {
 			isa = PBXGroup;
 			children = (
-				AB384B79161266CD003A2D9C /* GLSupport */,
 				AB384B4216125C70003A2D9C /* AppDelegate.h */,
 				AB384B4316125C70003A2D9C /* AppDelegate.m */,
 				AB384B4516125C70003A2D9C /* ViewController.h */,
 				AB384B4616125C70003A2D9C /* ViewController.m */,
 				AB384B4816125C70003A2D9C /* ViewController.xib */,
+				AB384B79161266CD003A2D9C /* GLSupport */,
 				AB384B3A16125C70003A2D9C /* Supporting Files */,
+				ABA16F9916163D840075E675 /* LayerMesh.h */,
+				ABA16F9A16163D840075E675 /* LayerMesh.m */,
+				ABA16FA2161722B00075E675 /* TextureMesh.h */,
+				ABA16FA3161722B00075E675 /* TextureMesh.m */,
 			);
 			path = DeformTool;
 			sourceTree = "<group>";
@@ -261,6 +271,8 @@
 				AB68270016137AA7007F7FEA /* TransformUtils.m in Sources */,
 				AB2D9E6E1614B88400407FDF /* GLViewController.m in Sources */,
 				AB2D9E711614B8BA00407FDF /* GLView.m in Sources */,
+				ABA16F9B16163D840075E675 /* LayerMesh.m in Sources */,
+				ABA16FA4161722B00075E675 /* TextureMesh.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
