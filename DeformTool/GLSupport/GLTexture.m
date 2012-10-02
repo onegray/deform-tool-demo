@@ -38,8 +38,14 @@
     {
 		glGenTextures(1, &textureName);
 		glBindTexture(GL_TEXTURE_2D, textureName);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// This is necessary for non-power-of-two textures
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		
         textureSize = textureRawData->texture_size;
         contentSize = textureRawData->content_size;
         pixelFormat = textureRawData->pixel_format;
@@ -129,7 +135,8 @@ static int PO2(int x)
 
 static CGSize adjustTextureSize(CGSize size)
 {
-    return CGSizeMake(PO2(size.width), PO2(size.height));
+	return size; // - using even non-power-of-two textures
+    //return CGSizeMake(PO2(size.width), PO2(size.height));
 }
 
 BOOL textureDataFromImage(TextureRawData* rawData, CGImageRef image)
