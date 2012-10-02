@@ -8,7 +8,6 @@
 
 #import "TextureMesh.h"
 
-#define MAX_TEXTURE_TILE_SIZE 32
 
 #define IS_POT(x) ((x)&&!((x)&((x)-1)))
 
@@ -23,11 +22,16 @@
 	CGRect meshRect;
 	GLfloat* coordinates;
 	int coordNum;
+	
+	
+	MeshLayout layout;
 }
 @end
 
 
 @implementation TextureMesh
+@synthesize textureSize, tileSize, meshWidth, meshHeight, meshRect, coordinates, coordNum;
+@synthesize layout;
 
 -(id) initWithTextureSize:(PixelSize)ts
 {
@@ -40,10 +44,49 @@
 	return self;
 }
 
+-(id) initWithTextureRect:(CGRect)textureRect meshLayout:(MeshLayout)meshLayout tileSize:(int)ts
+{
+	self = [super init];
+	if(self) {
+		layout = meshLayout;
+		tileSize = ts;
+		meshRect = textureRect; // Initial texture rect is {0,0,1,1} 
+	
+		meshWidth = layout.width;
+		meshHeight = layout.height;
+		coordNum = (meshWidth+1) * (meshHeight+1);
+		
+		if(coordinates) free(coordinates);
+		coordinates = (GLfloat*)malloc(coordNum*2*sizeof(GLfloat));
+		GLfloat* coordPtr = coordinates;
+		
+		for(int i=0; i<=meshHeight; i++)
+		{
+			for(int j=0; j<=meshWidth; j++)
+			{
+				*coordPtr++ = meshRect.origin.x + j * meshRect.size.width / meshWidth;
+				*coordPtr++ = meshRect.origin.y + i * meshRect.size.height / meshHeight;
+			}
+		}
+	}
+	return self;
+}
+
+-(LayoutRect) layoutRect
+{
+	float dw = meshRect.size.width / meshWidth;
+	float dh = meshRect.size.height / meshHeight;
+
+	LayoutRect r;
+	r.x = meshRect.origin.x / dw;
+	r.x = meshRect.origin.y / dh;
+	r.width = meshWidth;
+	r.height = meshHeight;
+	return r;
+}
 
 -(void) buildInitialMeshWithTileSize:(int)ts
 {
-	//meshRect = rect;
 	meshRect = CGRectMake(0.0, 0.0, 1.0, 1.0);
 	tileSize = ts;
 	meshWidth = textureSize.widthPixels / tileSize;
@@ -62,7 +105,19 @@
 			*coordPtr++ = meshRect.origin.y + i * meshRect.size.height / meshHeight;
 		}
 	}
+
+
+
+	float dw = meshRect.size.width / meshWidth;
+	float dh = meshRect.size.height / meshHeight;
+	
+	layout.x = meshRect.origin.x / dw;
+	layout.y = meshRect.origin.y / dh;
+	layout.width = meshWidth;
+	layout.height= meshHeight;
+
 }
+
 
 -(void) extendMeshRect:(CGRect)newRect
 {
@@ -107,6 +162,55 @@
 	
 	free(coordinates);
 	coordinates = newCoordinates;
+}
+
+-(void) extendMeshLayout:(MeshLayout)newLayout
+{
+	NSAssert(MeshLayoutContainsLayout(newLayout, layout), @"");
+	float dw = meshRect.size.width / layout.width;
+	float dh = meshRect.size.height / layout.height;
+	int newCoordNum = (newLayout.width+1) * (newLayout.height+1);
+
+	GLfloat* newCoordinates = (GLfloat*)malloc(newCoordNum*2*sizeof(GLfloat));
+	GLfloat* newCoordPtr = newCoordinates;
+	for(int i=0; i<=newLayout.height; i++)
+	{
+		for(int j=0; j<=newLayout.width; j++)
+		{
+			*newCoordPtr++ = (newLayout.x + j) * dw;
+			*newCoordPtr++ = (newLayout.y + i) * dh;
+		}
+	}
+	
+	GLfloat* coordPtr = coordinates;
+	for(int i=0; i<=meshHeight; i++)
+	{
+		newCoordPtr = newCoordinates + (i + layout.y-newLayout.y)*(newLayout.width+1)*2 + (layout.x-newLayout.x)*2;
+		for(int j=0; j<=meshWidth; j++)
+		{
+			*newCoordPtr++ = *coordPtr++;
+			*newCoordPtr++ = *coordPtr++;
+		}
+	}
+	
+	layout = newLayout;
+	meshRect = CGRectMake(layout.x*dw, layout.y*dh, layout.width*dw, layout.height*dh);
+	meshWidth = layout.width;
+	meshHeight = layout.height;
+	coordNum = newCoordNum;
+	
+	free(coordinates);
+	coordinates = newCoordinates;
+}
+
+
+-(void) extendLayoutRect:(LayoutRect)lr
+{
+	float dw = meshRect.size.width / meshWidth;
+	float dh = meshRect.size.height / meshHeight;
+
+	CGRect texMeshRect = CGRectMake(lr.x*dw, lr.y*dh, lr.width*dw, lr.height*dh);
+	[self extendMeshRect:texMeshRect];
 }
 
 
@@ -170,6 +274,15 @@
 	
 	free(coordinates);
 	coordinates = newCoordinates;
+	
+	
+	float dw = meshRect.size.width / meshWidth;
+	float dh = meshRect.size.height / meshHeight;
+	
+	layout.x = meshRect.origin.x / dw;
+	layout.y = meshRect.origin.y / dh;
+	layout.width = meshWidth;
+	layout.height= meshHeight;
 }
 
 
@@ -213,7 +326,8 @@
 	TextureMesh* mesh = [[TextureMesh alloc] initWithTextureSize:PixelSizeMake(64, 64)];
 	[mesh buildInitialMeshWithTileSize:32];
 	[mesh print];
-	[mesh extendMeshRect:CGRectMake(-0.5, -0.5, 1.5, 1.5)];
+	//[mesh extendMeshRect:CGRectMake(-0.5, -0.5, 1.5, 1.5)];
+	[mesh extendMeshLayout:MeshLayoutMake(-1, -1, 3, 3)];
 	[mesh print];
 	
 	[mesh resampleMeshForTileSize:8];

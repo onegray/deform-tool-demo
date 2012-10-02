@@ -135,7 +135,14 @@ static int PO2(int x)
 
 static CGSize adjustTextureSize(CGSize size)
 {
-	return size; // - using even non-power-of-two textures
+	int w = (int)size.width;
+	int h = (int)size.height;
+
+	// round up to a multiple of a 4
+	w = ((w+3)/4)*4;
+	h = ((h+3)/4)*4; 
+	return CGSizeMake(w, h); // - using even non-power-of-two textures
+	
     //return CGSizeMake(PO2(size.width), PO2(size.height));
 }
 

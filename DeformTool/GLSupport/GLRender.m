@@ -9,9 +9,11 @@
 #import "GLRender.h"
 #import "GLTexture.h"
 #import "GLProgram.h"
+#import "LayerMesh.h"
 
 #import "matrix.h"
 #import "TransformUtils.h"
+
 
 @interface GLRender ()
 {
@@ -86,6 +88,32 @@ static GLRender* sharedInstance = nil;
 
 
 
+
+- (void) drawTexture:(GLTexture*)texture withMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform
+{
+	GLfloat matrix[16];
+	CGAffineToGL(&transform, matrix);
+    
+    [program use];
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture.textureName);
+    
+	glUniformMatrix4fv([program uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, matrix);
+    glUniform1i([program uniformIndex:@"texture"], 0);
+    
+    GLuint vertCoordAttr = [program attributeIndex:@"position"];
+    GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
+    
+    glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, 0, mesh.vertices);
+    glEnableVertexAttribArray(vertCoordAttr);
+    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, 0, mesh.texCoords);
+    glEnableVertexAttribArray(texCoordAttr);
+    
+	//glDrawArrays(GL_LINE_STRIP, 0, mesh.vertNum);
+	//glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
+	glDrawElements(GL_TRIANGLE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
+}
 
 
 

@@ -11,9 +11,12 @@
 #import "GLTexture.h"
 #import "GLRender.h"
 
+#import "LayerMesh.h"
+
 @interface ViewController ()
 {
 	GLTexture* texture;
+	LayerMesh* mesh;
 		
 	CGAffineTransform modelviewMatrix;
 	CGAffineTransform resultTransform;
@@ -50,6 +53,8 @@
 	
 	if(!texture) {
 		texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"nature"]];
+		//mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(texture.contentSize.width, texture.contentSize.height)];
+		mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(352, 288)];
 	}
 
 	
@@ -92,10 +97,11 @@
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-	CGRect textureRect = [self rectForTexture:tex];
-	textureRect = CGRectMake(0, 0, 250, 250);
+	//CGRect textureRect = [self rectForTexture:tex];
+	//textureRect = CGRectMake(0, 0, 250, 250);
+	//[[GLRender sharedRender] drawTexture:tex inRect:textureRect transformMatrix:resultTransform];
 	
-	[[GLRender sharedRender] drawTexture:tex inRect:textureRect transformMatrix:resultTransform];
+	[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
 	
 	[glController presentFramebuffer];  
 }

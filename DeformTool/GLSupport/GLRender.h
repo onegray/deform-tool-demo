@@ -10,6 +10,7 @@
 
 @class GLProgram;
 @class GLTexture;
+@class LayerMesh;
 
 @interface GLRender : NSObject
 
@@ -18,6 +19,8 @@
 + (void) loadSharedRender;
 
 - (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform;
+
+- (void) drawTexture:(GLTexture*)texture withMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform;
 
 
 @end

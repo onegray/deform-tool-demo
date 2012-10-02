@@ -34,6 +34,7 @@
 		AB68270016137AA7007F7FEA /* TransformUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6826FF16137AA2007F7FEA /* TransformUtils.m */; };
 		ABA16F9B16163D840075E675 /* LayerMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16F9A16163D840075E675 /* LayerMesh.m */; };
 		ABA16FA4161722B00075E675 /* TextureMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16FA3161722B00075E675 /* TextureMesh.m */; };
+		ABA16FB61618EC320075E675 /* MeshLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16FB51618EC320075E675 /* MeshLayout.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,8 @@
 		ABA16F9A16163D840075E675 /* LayerMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayerMesh.m; sourceTree = "<group>"; };
 		ABA16FA2161722B00075E675 /* TextureMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureMesh.h; sourceTree = "<group>"; };
 		ABA16FA3161722B00075E675 /* TextureMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureMesh.m; sourceTree = "<group>"; };
+		ABA16FB41618EC320075E675 /* MeshLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshLayout.h; sourceTree = "<group>"; };
+		ABA16FB51618EC320075E675 /* MeshLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeshLayout.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +139,8 @@
 				AB384B4816125C70003A2D9C /* ViewController.xib */,
 				AB384B79161266CD003A2D9C /* GLSupport */,
 				AB384B3A16125C70003A2D9C /* Supporting Files */,
+				ABA16FB41618EC320075E675 /* MeshLayout.h */,
+				ABA16FB51618EC320075E675 /* MeshLayout.m */,
 				ABA16F9916163D840075E675 /* LayerMesh.h */,
 				ABA16F9A16163D840075E675 /* LayerMesh.m */,
 				ABA16FA2161722B00075E675 /* TextureMesh.h */,
@@ -273,6 +278,7 @@
 				AB2D9E711614B8BA00407FDF /* GLView.m in Sources */,
 				ABA16F9B16163D840075E675 /* LayerMesh.m in Sources */,
 				ABA16FA4161722B00075E675 /* TextureMesh.m in Sources */,
+				ABA16FB61618EC320075E675 /* MeshLayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
