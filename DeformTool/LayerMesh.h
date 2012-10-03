@@ -11,12 +11,16 @@
 #import "TextureMesh.h"
 
 
-struct LayoutSize {
-	int width;
-	int height;
+struct PixelSize {
+	int widthPixels;
+	int heighPixels;
 };
-typedef struct LayoutSize LayoutSize;
+typedef struct PixelSize PixelSize;
 
+CG_INLINE PixelSize PixelSizeMake(int width, int height)
+{
+	PixelSize size; size.widthPixels = width; size.heighPixels = height; return size;
+}
 
 
 

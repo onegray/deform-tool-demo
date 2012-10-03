@@ -39,11 +39,13 @@
 		
 		tileSize = MAX_TEXTURE_TILE_SIZE;
 		layout = MeshLayoutMake(0, 0, ts.widthPixels/tileSize, ts.heighPixels/tileSize);
-		textureMesh = [[TextureMesh alloc] initWithTextureRect:CGRectMake(0, 0, 1, 1) meshLayout:layout tileSize:tileSize];
-		
-		//[textureMesh resampleMeshForTileSize:16];
-		//tileSize = textureMesh.tileSize;
-		//layout = textureMesh.layout;
+		textureMesh = [[TextureMesh alloc] initWithTextureRect:CGRectMake(0, 0, 1, 1) meshLayout:layout];
+	
+		/*
+		[textureMesh resampleMesh:2];
+		tileSize = tileSize/2;
+		layout = textureMesh.layout;
+		*/
 		
 		[self rebuildVertexMesh];
 	}

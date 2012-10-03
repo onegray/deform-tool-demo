@@ -14,13 +14,9 @@
 
 @interface TextureMesh()
 {
-	PixelSize textureSize;
-	int tileSize;
-
-	CGRect meshRect;
+	CGRect textureRect;
 	GLfloat* coordinates;
 	int coordNum;
-	
 	
 	MeshLayout layout;
 }
@@ -28,16 +24,15 @@
 
 
 @implementation TextureMesh
-@synthesize textureSize, tileSize, meshRect, coordinates, coordNum;
+@synthesize textureRect, coordinates, coordNum;
 @synthesize layout;
 
--(id) initWithTextureRect:(CGRect)textureRect meshLayout:(MeshLayout)meshLayout tileSize:(int)ts
+-(id) initWithTextureRect:(CGRect)tr meshLayout:(MeshLayout)meshLayout
 {
 	self = [super init];
 	if(self) {
 		layout = meshLayout;
-		tileSize = ts;
-		meshRect = textureRect; // Initial texture rect is {0,0,1,1} 
+		textureRect = tr; // Initial texture rect is {0,0,1,1} 
 	
 		coordNum = (layout.width+1) * (layout.height+1);
 		
@@ -49,8 +44,8 @@
 		{
 			for(int j=0; j<=layout.width; j++)
 			{
-				*coordPtr++ = meshRect.origin.x + j * meshRect.size.width / layout.width;
-				*coordPtr++ = meshRect.origin.y + i * meshRect.size.height / layout.height;
+				*coordPtr++ = textureRect.origin.x + j * textureRect.size.width / layout.width;
+				*coordPtr++ = textureRect.origin.y + i * textureRect.size.height / layout.height;
 			}
 		}
 	}
@@ -61,8 +56,8 @@
 -(void) extendMeshLayout:(MeshLayout)newLayout
 {
 	NSAssert(MeshLayoutContainsLayout(newLayout, layout), @"");
-	float dw = meshRect.size.width / layout.width;
-	float dh = meshRect.size.height / layout.height;
+	float dw = textureRect.size.width / layout.width;
+	float dh = textureRect.size.height / layout.height;
 	int newCoordNum = (newLayout.width+1) * (newLayout.height+1);
 
 	GLfloat* newCoordinates = (GLfloat*)malloc(newCoordNum*2*sizeof(GLfloat));
@@ -88,7 +83,7 @@
 	}
 	
 	layout = newLayout;
-	meshRect = CGRectMake(layout.x*dw, layout.y*dh, layout.width*dw, layout.height*dh);
+	textureRect = CGRectMake(layout.x*dw, layout.y*dh, layout.width*dw, layout.height*dh);
 	coordNum = newCoordNum;
 	
 	free(coordinates);
@@ -96,13 +91,12 @@
 }
 
 
--(void) resampleMeshForTileSize:(int)newTileSize
+-(void) resampleMesh:(int)multiplier
 {
-	NSAssert(newTileSize < tileSize, @"");	
-	int tileMultiplier = tileSize/newTileSize;
+	NSAssert(IS_POT(multiplier), @"");	
 	
-	int newMeshWidth = layout.width*tileMultiplier;
-	int newMeshHeight = layout.height*tileMultiplier;
+	int newMeshWidth = layout.width*multiplier;
+	int newMeshHeight = layout.height*multiplier;
 	int newCoordNum = (newMeshWidth+1) * (newMeshHeight+1);
 
 	GLfloat* newCoordinates = (GLfloat*)malloc(newCoordNum*2*sizeof(GLfloat));
@@ -114,7 +108,7 @@
 	
 	for(int i=0; i<=layout.height; i++)
 	{
-		int ii = i*tileMultiplier;
+		int ii = i*multiplier;
 		for(int j=0; j<layout.width; j++)
 		{
 			GLfloat x0 = COORD_POINT(j, i)->x;
@@ -122,10 +116,10 @@
 			GLfloat y0 = COORD_POINT(j, i)->y;
 			GLfloat y1 = COORD_POINT(j+1, i)->y;
 
-			int jj = j*tileMultiplier;
+			int jj = j*multiplier;
 			*NEW_COORD_POINT(jj, ii) = *COORD_POINT(j, i);
-			for(int k=1; k<tileMultiplier; k++) {
-				*NEW_COORD_POINT(jj+k, ii) = CGPointMake(x0 + (x1-x0)*k/tileMultiplier, y0 + (y1-y0)*k/tileMultiplier);
+			for(int k=1; k<multiplier; k++) {
+				*NEW_COORD_POINT(jj+k, ii) = CGPointMake(x0 + (x1-x0)*k/multiplier, y0 + (y1-y0)*k/multiplier);
 			}			
 		}
 		*NEW_COORD_POINT(newMeshWidth, ii) = *COORD_POINT(layout.width, i);
@@ -133,16 +127,16 @@
 	
 	for(int i=0; i<layout.height; i++)
 	{
-		int ii = i*tileMultiplier;
+		int ii = i*multiplier;
 		for(int j=0; j<=newMeshWidth; j++)
 		{
 			GLfloat x0 = NEW_COORD_POINT(j, ii)->x;
-			GLfloat x1 = NEW_COORD_POINT(j, ii+tileMultiplier)->x;
+			GLfloat x1 = NEW_COORD_POINT(j, ii+multiplier)->x;
 			GLfloat y0 = NEW_COORD_POINT(j, ii)->y;
-			GLfloat y1 = NEW_COORD_POINT(j, ii+tileMultiplier)->y;
+			GLfloat y1 = NEW_COORD_POINT(j, ii+multiplier)->y;
 			
-			for(int k=1; k<tileMultiplier; k++) {
-				*NEW_COORD_POINT(j, ii+k) = CGPointMake(x0 + (x1-x0)*k/tileMultiplier, y0 + (y1-y0)*k/tileMultiplier);
+			for(int k=1; k<multiplier; k++) {
+				*NEW_COORD_POINT(j, ii+k) = CGPointMake(x0 + (x1-x0)*k/multiplier, y0 + (y1-y0)*k/multiplier);
 			}			
 		}
 	}
@@ -156,11 +150,11 @@
 	coordinates = newCoordinates;
 	
 	
-	float dw = meshRect.size.width / layout.width;
-	float dh = meshRect.size.height / layout.height;
+	float dw = textureRect.size.width / layout.width;
+	float dh = textureRect.size.height / layout.height;
 	
-	layout.x = meshRect.origin.x / dw;
-	layout.y = meshRect.origin.y / dh;
+	layout.x = textureRect.origin.x / dw;
+	layout.y = textureRect.origin.y / dh;
 	layout.width = newMeshWidth;
 	layout.height= newMeshHeight;
 }
@@ -170,7 +164,7 @@
 
 -(void) print
 {
-	NSLog(@"meshRect: %@", NSStringFromCGRect(meshRect) );
+	NSLog(@"meshRect: %@", NSStringFromCGRect(textureRect) );
 	NSLog(@"meshSize: %d x %d", layout.width, layout.height );
 
 	NSMutableString* str = [[NSMutableString alloc] initWithCapacity:coordNum*8];
@@ -203,12 +197,12 @@
 {
 	return;
 	
-	TextureMesh* mesh = [[TextureMesh alloc] initWithTextureRect:CGRectMake(0, 0, 1, 1) meshLayout:MeshLayoutMake(0, 0, 2, 2) tileSize:32];
+	TextureMesh* mesh = [[TextureMesh alloc] initWithTextureRect:CGRectMake(0, 0, 1, 1) meshLayout:MeshLayoutMake(0, 0, 2, 2)];
 	[mesh print];
 	//[mesh extendMeshLayout:MeshLayoutMake(0, 0, 3, 3)];
 	//[mesh print];
 	
-	[mesh resampleMeshForTileSize:16];
+	[mesh resampleMesh:2];
 	[mesh print];
 	
 }
