@@ -16,8 +16,6 @@
 {
 	PixelSize textureSize;
 	int tileSize;
-	int meshWidth;
-	int meshHeight;
 
 	CGRect meshRect;
 	GLfloat* coordinates;
@@ -30,19 +28,8 @@
 
 
 @implementation TextureMesh
-@synthesize textureSize, tileSize, meshWidth, meshHeight, meshRect, coordinates, coordNum;
+@synthesize textureSize, tileSize, meshRect, coordinates, coordNum;
 @synthesize layout;
-
--(id) initWithTextureSize:(PixelSize)ts
-{
-	self = [super init];
-	if(self) {
-		textureSize = ts;
-		NSAssert( ts.widthPixels % MAX_TEXTURE_TILE_SIZE == 0, @"");
-		NSAssert( ts.heighPixels % MAX_TEXTURE_TILE_SIZE == 0, @"");
-	}
-	return self;
-}
 
 -(id) initWithTextureRect:(CGRect)textureRect meshLayout:(MeshLayout)meshLayout tileSize:(int)ts
 {
@@ -52,117 +39,24 @@
 		tileSize = ts;
 		meshRect = textureRect; // Initial texture rect is {0,0,1,1} 
 	
-		meshWidth = layout.width;
-		meshHeight = layout.height;
-		coordNum = (meshWidth+1) * (meshHeight+1);
+		coordNum = (layout.width+1) * (layout.height+1);
 		
 		if(coordinates) free(coordinates);
 		coordinates = (GLfloat*)malloc(coordNum*2*sizeof(GLfloat));
 		GLfloat* coordPtr = coordinates;
 		
-		for(int i=0; i<=meshHeight; i++)
+		for(int i=0; i<=layout.height; i++)
 		{
-			for(int j=0; j<=meshWidth; j++)
+			for(int j=0; j<=layout.width; j++)
 			{
-				*coordPtr++ = meshRect.origin.x + j * meshRect.size.width / meshWidth;
-				*coordPtr++ = meshRect.origin.y + i * meshRect.size.height / meshHeight;
+				*coordPtr++ = meshRect.origin.x + j * meshRect.size.width / layout.width;
+				*coordPtr++ = meshRect.origin.y + i * meshRect.size.height / layout.height;
 			}
 		}
 	}
 	return self;
 }
 
--(LayoutRect) layoutRect
-{
-	float dw = meshRect.size.width / meshWidth;
-	float dh = meshRect.size.height / meshHeight;
-
-	LayoutRect r;
-	r.x = meshRect.origin.x / dw;
-	r.x = meshRect.origin.y / dh;
-	r.width = meshWidth;
-	r.height = meshHeight;
-	return r;
-}
-
--(void) buildInitialMeshWithTileSize:(int)ts
-{
-	meshRect = CGRectMake(0.0, 0.0, 1.0, 1.0);
-	tileSize = ts;
-	meshWidth = textureSize.widthPixels / tileSize;
-	meshHeight = textureSize.heighPixels / tileSize;
-	coordNum = (meshWidth+1) * (meshHeight+1);
-
-	if(coordinates) free(coordinates);
-	coordinates = (GLfloat*)malloc(coordNum*2*sizeof(GLfloat));
-	GLfloat* coordPtr = coordinates;
-	
-	for(int i=0; i<=meshHeight; i++)
-	{
-		for(int j=0; j<=meshWidth; j++)
-		{
-			*coordPtr++ = meshRect.origin.x + j * meshRect.size.width / meshWidth;
-			*coordPtr++ = meshRect.origin.y + i * meshRect.size.height / meshHeight;
-		}
-	}
-
-
-
-	float dw = meshRect.size.width / meshWidth;
-	float dh = meshRect.size.height / meshHeight;
-	
-	layout.x = meshRect.origin.x / dw;
-	layout.y = meshRect.origin.y / dh;
-	layout.width = meshWidth;
-	layout.height= meshHeight;
-
-}
-
-
--(void) extendMeshRect:(CGRect)newRect
-{
-	NSAssert( CGRectContainsRect(newRect, meshRect), @"");
-	float dw = meshRect.size.width / meshWidth;
-	float dh = meshRect.size.height / meshHeight;
-	int newMeshWidth = newRect.size.width / dw;
-	int newMeshHeight = newRect.size.height / dh;
-	int newCoordNum = (newMeshWidth+1) * (newMeshHeight+1);
-	
-	GLfloat* newCoordinates = (GLfloat*)malloc(newCoordNum*2*sizeof(GLfloat));
-	GLfloat* newCoordPtr = newCoordinates;
-	for(int i=0; i<=newMeshHeight; i++)
-	{
-		for(int j=0; j<=newMeshWidth; j++)
-		{
-			*newCoordPtr++ = newRect.origin.x + j * dw;
-			*newCoordPtr++ = newRect.origin.y + i * dh;
-		}
-	}
-
-	int mx0 = meshRect.origin.x / dw;
-	int nmx0 = newRect.origin.x / dw;
-	int my0 = meshRect.origin.y / dh;
-	int nmy0 = newRect.origin.y / dh;
-	
-	GLfloat* coordPtr = coordinates;
-	for(int i=0; i<=meshHeight; i++)
-	{
-		newCoordPtr = newCoordinates + (i + my0-nmy0)*(newMeshWidth+1)*2 + (mx0-nmx0)*2;
-		for(int j=0; j<=meshWidth; j++)
-		{
-			*newCoordPtr++ = *coordPtr++;
-			*newCoordPtr++ = *coordPtr++;
-		}
-	}
-	
-	meshRect = newRect;
-	meshWidth = newMeshWidth;
-	meshHeight = newMeshHeight;
-	coordNum = newCoordNum;
-	
-	free(coordinates);
-	coordinates = newCoordinates;
-}
 
 -(void) extendMeshLayout:(MeshLayout)newLayout
 {
@@ -183,10 +77,10 @@
 	}
 	
 	GLfloat* coordPtr = coordinates;
-	for(int i=0; i<=meshHeight; i++)
+	for(int i=0; i<=layout.height; i++)
 	{
 		newCoordPtr = newCoordinates + (i + layout.y-newLayout.y)*(newLayout.width+1)*2 + (layout.x-newLayout.x)*2;
-		for(int j=0; j<=meshWidth; j++)
+		for(int j=0; j<=layout.width; j++)
 		{
 			*newCoordPtr++ = *coordPtr++;
 			*newCoordPtr++ = *coordPtr++;
@@ -195,22 +89,10 @@
 	
 	layout = newLayout;
 	meshRect = CGRectMake(layout.x*dw, layout.y*dh, layout.width*dw, layout.height*dh);
-	meshWidth = layout.width;
-	meshHeight = layout.height;
 	coordNum = newCoordNum;
 	
 	free(coordinates);
 	coordinates = newCoordinates;
-}
-
-
--(void) extendLayoutRect:(LayoutRect)lr
-{
-	float dw = meshRect.size.width / meshWidth;
-	float dh = meshRect.size.height / meshHeight;
-
-	CGRect texMeshRect = CGRectMake(lr.x*dw, lr.y*dh, lr.width*dw, lr.height*dh);
-	[self extendMeshRect:texMeshRect];
 }
 
 
@@ -219,21 +101,21 @@
 	NSAssert(newTileSize < tileSize, @"");	
 	int tileMultiplier = tileSize/newTileSize;
 	
-	int newMeshWidth = meshWidth*tileMultiplier;
-	int newMeshHeight = meshHeight*tileMultiplier;
+	int newMeshWidth = layout.width*tileMultiplier;
+	int newMeshHeight = layout.height*tileMultiplier;
 	int newCoordNum = (newMeshWidth+1) * (newMeshHeight+1);
 
 	GLfloat* newCoordinates = (GLfloat*)malloc(newCoordNum*2*sizeof(GLfloat));
 	
-#define COORD_POINT(x,y) ((CGPoint*)&coordinates[(y)*(meshWidth+1)*2 + (x)*2])
+#define COORD_POINT(x,y) ((CGPoint*)&coordinates[(y)*(layout.width+1)*2 + (x)*2])
 #define NEW_COORD_POINT(x,y) ((CGPoint*)&newCoordinates[(y)*(newMeshWidth+1)*2 + (x)*2])
 
 	memset(newCoordinates, 0, newCoordNum*2*sizeof(GLfloat));
 	
-	for(int i=0; i<=meshHeight; i++)
+	for(int i=0; i<=layout.height; i++)
 	{
 		int ii = i*tileMultiplier;
-		for(int j=0; j<meshWidth; j++)
+		for(int j=0; j<layout.width; j++)
 		{
 			GLfloat x0 = COORD_POINT(j, i)->x;
 			GLfloat x1 = COORD_POINT(j+1, i)->x;
@@ -246,10 +128,10 @@
 				*NEW_COORD_POINT(jj+k, ii) = CGPointMake(x0 + (x1-x0)*k/tileMultiplier, y0 + (y1-y0)*k/tileMultiplier);
 			}			
 		}
-		*NEW_COORD_POINT(meshWidth*tileMultiplier, ii) = *COORD_POINT(meshWidth, i);
+		*NEW_COORD_POINT(newMeshWidth, ii) = *COORD_POINT(layout.width, i);
 	}
 	
-	for(int i=0; i<meshHeight; i++)
+	for(int i=0; i<layout.height; i++)
 	{
 		int ii = i*tileMultiplier;
 		for(int j=0; j<=newMeshWidth; j++)
@@ -268,21 +150,19 @@
 #undef COORD_POINT
 #undef NEW_COORD_POINT	
 	
-	meshWidth = newMeshWidth;
-	meshHeight = newMeshHeight;
 	coordNum = newCoordNum;
 	
 	free(coordinates);
 	coordinates = newCoordinates;
 	
 	
-	float dw = meshRect.size.width / meshWidth;
-	float dh = meshRect.size.height / meshHeight;
+	float dw = meshRect.size.width / layout.width;
+	float dh = meshRect.size.height / layout.height;
 	
 	layout.x = meshRect.origin.x / dw;
 	layout.y = meshRect.origin.y / dh;
-	layout.width = meshWidth;
-	layout.height= meshHeight;
+	layout.width = newMeshWidth;
+	layout.height= newMeshHeight;
 }
 
 
@@ -291,13 +171,13 @@
 -(void) print
 {
 	NSLog(@"meshRect: %@", NSStringFromCGRect(meshRect) );
-	NSLog(@"meshSize: %d x %d", meshWidth, meshHeight );
+	NSLog(@"meshSize: %d x %d", layout.width, layout.height );
 
 	NSMutableString* str = [[NSMutableString alloc] initWithCapacity:coordNum*8];
 	
 	GLfloat* coordPtr = coordinates;
-	for (int i=0; i<=meshHeight; i++) {
-		for(int j=0; j<=meshWidth; j++) {
+	for (int i=0; i<=layout.height; i++) {
+		for(int j=0; j<=layout.width; j++) {
 			GLfloat x = *coordPtr++;
 			GLfloat y = *coordPtr++;
 			[str appendFormat:@"\t(%.2f,%.2f) ", x, y];
@@ -323,14 +203,12 @@
 {
 	return;
 	
-	TextureMesh* mesh = [[TextureMesh alloc] initWithTextureSize:PixelSizeMake(64, 64)];
-	[mesh buildInitialMeshWithTileSize:32];
+	TextureMesh* mesh = [[TextureMesh alloc] initWithTextureRect:CGRectMake(0, 0, 1, 1) meshLayout:MeshLayoutMake(0, 0, 2, 2) tileSize:32];
 	[mesh print];
-	//[mesh extendMeshRect:CGRectMake(-0.5, -0.5, 1.5, 1.5)];
-	[mesh extendMeshLayout:MeshLayoutMake(-1, -1, 3, 3)];
-	[mesh print];
+	//[mesh extendMeshLayout:MeshLayoutMake(0, 0, 3, 3)];
+	//[mesh print];
 	
-	[mesh resampleMeshForTileSize:8];
+	[mesh resampleMeshForTileSize:16];
 	[mesh print];
 	
 }

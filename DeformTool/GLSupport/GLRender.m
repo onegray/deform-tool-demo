@@ -110,7 +110,6 @@ static GLRender* sharedInstance = nil;
     glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, 0, mesh.texCoords);
     glEnableVertexAttribArray(texCoordAttr);
     
-	//glDrawArrays(GL_LINE_STRIP, 0, mesh.vertNum);
 	//glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
 	glDrawElements(GL_TRIANGLE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
 }
