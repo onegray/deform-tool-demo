@@ -11,7 +11,14 @@ uniform sampler2D tex;
 
 void main()
 {
-    gl_FragColor = texture2D(tex, varTexCoord);
+	if(varTexCoord.x < 0.0 || varTexCoord.x > 1.0 || varTexCoord.y < 0.0 || varTexCoord.y > 1.0)
+	{
+		gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+	}
+	else
+	{
+		gl_FragColor = texture2D(tex, varTexCoord);
+	}
 }
 
 

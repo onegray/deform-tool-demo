@@ -99,6 +99,10 @@ static GLRender* sharedInstance = nil;
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture.textureName);
     
+	glEnable(GL_BLEND);   
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	
+	
 	glUniformMatrix4fv([program uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, matrix);
     glUniform1i([program uniformIndex:@"texture"], 0);
     

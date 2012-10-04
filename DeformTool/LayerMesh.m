@@ -42,6 +42,11 @@
 		textureMesh = [[TextureMesh alloc] initWithTextureRect:CGRectMake(0, 0, 1, 1) meshLayout:layout];
 	
 		/*
+		layout = MeshLayoutMake(-2, -2, layout.width+4, layout.height+4);
+		[textureMesh extendMeshLayout:layout];
+		*/
+		 
+		/*
 		[textureMesh resampleMesh:2];
 		tileSize = tileSize/2;
 		layout = textureMesh.layout;
@@ -55,9 +60,12 @@
 
 -(void) rebuildVertexMesh
 {
-	vertNum = (layout.width+1)*(layout.height+1);
 	if(vertices)
 		free(vertices);
+	if(indices)
+		free(indices);
+
+	vertNum = (layout.width+1)*(layout.height+1);
 	vertices = (GLfloat*)malloc(vertNum*2*sizeof(GLfloat));
 	GLfloat* vertPtr = vertices;
 	
@@ -69,8 +77,6 @@
 			*vertPtr++ = (layout.y+i)*tileSize;
 		}
 	}
-	
-	
 	
 	indexCount = layout.height*(layout.width+1)*2;
 	indices = malloc(indexCount*sizeof(GLushort));
