@@ -12,6 +12,7 @@
 #import "GLRender.h"
 
 #import "LayerMesh.h"
+#import "DeformTool.h"
 
 @interface ViewController ()
 {
@@ -27,6 +28,8 @@
 	BOOL gestureInProgress;
 	
 	BOOL transformMode;
+	
+	DeformTool* deformTool;
 }
 @end
 
@@ -50,6 +53,8 @@
 	transformMode = NO;
 	
 	[GLRender loadSharedRender];
+	
+	deformTool = [[DeformTool alloc] init];
 	
 	if(!texture) {
 		texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"nature"]];
@@ -97,11 +102,12 @@
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-	//CGRect textureRect = [self rectForTexture:tex];
-	//textureRect = CGRectMake(0, 0, 250, 250);
-	//[[GLRender sharedRender] drawTexture:tex inRect:textureRect transformMatrix:resultTransform];
 	
-	[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
+	//[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
+	
+	CGRect textureRect = CGRectMake(0, 0, 250, 250);
+	[[GLRender sharedRender] drawTexture:tex deformTexture:deformTool.deformTexture inRect:textureRect transformMatrix:resultTransform];
+
 	
 	[glController presentFramebuffer];  
 }

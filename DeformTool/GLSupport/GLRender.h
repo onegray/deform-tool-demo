@@ -22,5 +22,6 @@
 
 - (void) drawTexture:(GLTexture*)texture withMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform;
 
+- (void) drawTexture:(GLTexture*)texture deformTexture:(GLTexture*)deformTexture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform;
 
 @end

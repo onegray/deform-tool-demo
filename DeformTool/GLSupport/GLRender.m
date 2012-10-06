@@ -46,6 +46,9 @@ static GLRender* sharedInstance = nil;
 		[program addAttribute:@"position"];
 		[program addAttribute:@"texCoord"];
 		[program link];
+		
+		
+		[GLRender resultProgram];
 	}
 	return self;
 }
@@ -121,8 +124,59 @@ static GLRender* sharedInstance = nil;
 
 
 
++(GLProgram*) resultProgram
+{
+	static GLProgram* resultProgram = nil;
+	if(!resultProgram) {
+		resultProgram = [[GLProgram alloc] initWithVertexShaderFilename:@"ResultShader" fragmentShaderFilename:@"ResultShader"];
+		[resultProgram addAttribute:@"position"];
+		[resultProgram addAttribute:@"texCoord"];
+		[resultProgram link];
+	}
+	return resultProgram;
+}
 
 
+- (void) drawTexture:(GLTexture*)texture deformTexture:(GLTexture*)deformTexture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform
+{
+	GLfloat matrix[16];
+	CGAffineToGL(&transform, matrix);	
+	
+    GLfloat w = rect.size.width;
+    GLfloat h = rect.size.height;
+    CGPoint pt = rect.origin;
+	GLfloat vertices[] = {pt.x,	pt.y, 0, pt.x+w, pt.y, 0, pt.x, pt.y+h, 0, pt.x+w, pt.y+h, 0};
+	GLfloat coordinates[] = {
+		0,			0,
+		texture.maxS, 0, 
+		0,			texture.maxT,
+		texture.maxS, texture.maxT,
+	};
+    
+	
+	GLProgram* resultProgram = [GLRender resultProgram];
+    [resultProgram use];
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, deformTexture.textureName);
+    glUniform1i([resultProgram uniformIndex:@"deformTexture"], 1);
+	
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture.textureName);
+    glUniform1i([resultProgram uniformIndex:@"texture"], 0);
+    
+	glUniformMatrix4fv([resultProgram uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, matrix);
+    
+    GLuint vertCoordAttr = [resultProgram attributeIndex:@"position"];
+    GLuint texCoordAttr = [resultProgram attributeIndex:@"texCoord"];
+    
+    glVertexAttribPointer(vertCoordAttr, 3, GL_FLOAT, 0, 0, vertices);
+    glEnableVertexAttribArray(vertCoordAttr);
+    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, 0, coordinates);
+    glEnableVertexAttribArray(texCoordAttr);
+    
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
 
 
 

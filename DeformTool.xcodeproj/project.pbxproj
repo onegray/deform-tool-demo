@@ -24,6 +24,12 @@
 		AB384B85161266CD003A2D9C /* GLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B7F161266CD003A2D9C /* GLProgram.m */; };
 		AB384B86161266CD003A2D9C /* GLTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B81161266CD003A2D9C /* GLTexture.m */; };
 		AB384B8916126703003A2D9C /* GLRender.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B8816126703003A2D9C /* GLRender.m */; };
+		AB65C19E161F76E9007E7C29 /* DeformTool.m in Sources */ = {isa = PBXBuildFile; fileRef = AB65C19D161F76E9007E7C29 /* DeformTool.m */; };
+		AB65C1A1161F7923007E7C29 /* Black256.png in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A0161F7923007E7C29 /* Black256.png */; };
+		AB65C1A4161F7C51007E7C29 /* DeformShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A2161F7C51007E7C29 /* DeformShader.fsh */; };
+		AB65C1A5161F7C51007E7C29 /* DeformShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A3161F7C51007E7C29 /* DeformShader.vsh */; };
+		AB65C1A8161F87A3007E7C29 /* ResultShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A6161F87A3007E7C29 /* ResultShader.fsh */; };
+		AB65C1A9161F87A3007E7C29 /* ResultShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A7161F87A3007E7C29 /* ResultShader.vsh */; };
 		AB6826D116126894007F7FEA /* canvas_back32.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CB16126894007F7FEA /* canvas_back32.png */; };
 		AB6826D216126894007F7FEA /* me.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CC16126894007F7FEA /* me.png */; };
 		AB6826D316126894007F7FEA /* nature.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CD16126894007F7FEA /* nature.png */; };
@@ -65,6 +71,13 @@
 		AB384B81161266CD003A2D9C /* GLTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLTexture.m; sourceTree = "<group>"; };
 		AB384B8716126703003A2D9C /* GLRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLRender.h; sourceTree = "<group>"; };
 		AB384B8816126703003A2D9C /* GLRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLRender.m; sourceTree = "<group>"; };
+		AB65C19C161F76E9007E7C29 /* DeformTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeformTool.h; sourceTree = "<group>"; };
+		AB65C19D161F76E9007E7C29 /* DeformTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeformTool.m; sourceTree = "<group>"; };
+		AB65C1A0161F7923007E7C29 /* Black256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Black256.png; sourceTree = "<group>"; };
+		AB65C1A2161F7C51007E7C29 /* DeformShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = DeformShader.fsh; sourceTree = "<group>"; };
+		AB65C1A3161F7C51007E7C29 /* DeformShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = DeformShader.vsh; sourceTree = "<group>"; };
+		AB65C1A6161F87A3007E7C29 /* ResultShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ResultShader.fsh; sourceTree = "<group>"; };
+		AB65C1A7161F87A3007E7C29 /* ResultShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ResultShader.vsh; sourceTree = "<group>"; };
 		AB6826CB16126894007F7FEA /* canvas_back32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = canvas_back32.png; sourceTree = "<group>"; };
 		AB6826CC16126894007F7FEA /* me.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = me.png; sourceTree = "<group>"; };
 		AB6826CD16126894007F7FEA /* nature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nature.png; sourceTree = "<group>"; };
@@ -145,6 +158,8 @@
 				ABA16F9A16163D840075E675 /* LayerMesh.m */,
 				ABA16FA2161722B00075E675 /* TextureMesh.h */,
 				ABA16FA3161722B00075E675 /* TextureMesh.m */,
+				AB65C19C161F76E9007E7C29 /* DeformTool.h */,
+				AB65C19D161F76E9007E7C29 /* DeformTool.m */,
 			);
 			path = DeformTool;
 			sourceTree = "<group>";
@@ -165,6 +180,10 @@
 			children = (
 				AB384B7A161266CD003A2D9C /* BaseShader.fsh */,
 				AB384B7B161266CD003A2D9C /* BaseShader.vsh */,
+				AB65C1A2161F7C51007E7C29 /* DeformShader.fsh */,
+				AB65C1A3161F7C51007E7C29 /* DeformShader.vsh */,
+				AB65C1A6161F87A3007E7C29 /* ResultShader.fsh */,
+				AB65C1A7161F87A3007E7C29 /* ResultShader.vsh */,
 				AB2D9E6F1614B8BA00407FDF /* GLView.h */,
 				AB2D9E701614B8BA00407FDF /* GLView.m */,
 				AB2D9E6C1614B88400407FDF /* GLViewController.h */,
@@ -192,6 +211,7 @@
 				AB6826CE16126894007F7FEA /* nature_alpha.png */,
 				AB6826CF16126894007F7FEA /* Particle.png */,
 				AB6826D016126894007F7FEA /* table.png */,
+				AB65C1A0161F7923007E7C29 /* Black256.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -250,12 +270,17 @@
 				AB384B4A16125C70003A2D9C /* ViewController.xib in Resources */,
 				AB384B82161266CD003A2D9C /* BaseShader.fsh in Resources */,
 				AB384B83161266CD003A2D9C /* BaseShader.vsh in Resources */,
+				AB65C1A4161F7C51007E7C29 /* DeformShader.fsh in Resources */,
+				AB65C1A5161F7C51007E7C29 /* DeformShader.vsh in Resources */,
+				AB65C1A8161F87A3007E7C29 /* ResultShader.fsh in Resources */,
+				AB65C1A9161F87A3007E7C29 /* ResultShader.vsh in Resources */,
 				AB6826D116126894007F7FEA /* canvas_back32.png in Resources */,
 				AB6826D216126894007F7FEA /* me.png in Resources */,
 				AB6826D316126894007F7FEA /* nature.png in Resources */,
 				AB6826D416126894007F7FEA /* nature_alpha.png in Resources */,
 				AB6826D516126894007F7FEA /* Particle.png in Resources */,
 				AB6826D616126894007F7FEA /* table.png in Resources */,
+				AB65C1A1161F7923007E7C29 /* Black256.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +304,7 @@
 				ABA16F9B16163D840075E675 /* LayerMesh.m in Sources */,
 				ABA16FA4161722B00075E675 /* TextureMesh.m in Sources */,
 				ABA16FB61618EC320075E675 /* MeshLayout.m in Sources */,
+				AB65C19E161F76E9007E7C29 /* DeformTool.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
