@@ -11,6 +11,6 @@
 @class GLTexture;
 @interface DeformTool : NSObject
 
-@property (nonatomic, readonly) GLTexture* deformTexture;
+@property (nonatomic, readonly) GLuint deformTextureName;
 
 @end

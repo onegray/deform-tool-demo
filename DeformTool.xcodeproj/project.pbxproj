@@ -30,6 +30,7 @@
 		AB65C1A5161F7C51007E7C29 /* DeformShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A3161F7C51007E7C29 /* DeformShader.vsh */; };
 		AB65C1A8161F87A3007E7C29 /* ResultShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A6161F87A3007E7C29 /* ResultShader.fsh */; };
 		AB65C1A9161F87A3007E7C29 /* ResultShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A7161F87A3007E7C29 /* ResultShader.vsh */; };
+		AB65C1B81620CFEF007E7C29 /* GLFramebuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = AB65C1B71620CFEF007E7C29 /* GLFramebuffer.m */; };
 		AB6826D116126894007F7FEA /* canvas_back32.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CB16126894007F7FEA /* canvas_back32.png */; };
 		AB6826D216126894007F7FEA /* me.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CC16126894007F7FEA /* me.png */; };
 		AB6826D316126894007F7FEA /* nature.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CD16126894007F7FEA /* nature.png */; };
@@ -78,6 +79,8 @@
 		AB65C1A3161F7C51007E7C29 /* DeformShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = DeformShader.vsh; sourceTree = "<group>"; };
 		AB65C1A6161F87A3007E7C29 /* ResultShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ResultShader.fsh; sourceTree = "<group>"; };
 		AB65C1A7161F87A3007E7C29 /* ResultShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ResultShader.vsh; sourceTree = "<group>"; };
+		AB65C1B61620CFEF007E7C29 /* GLFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLFramebuffer.h; sourceTree = "<group>"; };
+		AB65C1B71620CFEF007E7C29 /* GLFramebuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLFramebuffer.m; sourceTree = "<group>"; };
 		AB6826CB16126894007F7FEA /* canvas_back32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = canvas_back32.png; sourceTree = "<group>"; };
 		AB6826CC16126894007F7FEA /* me.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = me.png; sourceTree = "<group>"; };
 		AB6826CD16126894007F7FEA /* nature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nature.png; sourceTree = "<group>"; };
@@ -192,6 +195,8 @@
 				AB384B7F161266CD003A2D9C /* GLProgram.m */,
 				AB384B80161266CD003A2D9C /* GLTexture.h */,
 				AB384B81161266CD003A2D9C /* GLTexture.m */,
+				AB65C1B61620CFEF007E7C29 /* GLFramebuffer.h */,
+				AB65C1B71620CFEF007E7C29 /* GLFramebuffer.m */,
 				AB384B8716126703003A2D9C /* GLRender.h */,
 				AB384B8816126703003A2D9C /* GLRender.m */,
 				AB6826F61613781B007F7FEA /* matrix.h */,
@@ -305,6 +310,7 @@
 				ABA16FA4161722B00075E675 /* TextureMesh.m in Sources */,
 				ABA16FB61618EC320075E675 /* MeshLayout.m in Sources */,
 				AB65C19E161F76E9007E7C29 /* DeformTool.m in Sources */,
+				AB65C1B81620CFEF007E7C29 /* GLFramebuffer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

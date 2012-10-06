@@ -137,7 +137,7 @@ static GLRender* sharedInstance = nil;
 }
 
 
-- (void) drawTexture:(GLTexture*)texture deformTexture:(GLTexture*)deformTexture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform
+- (void) drawTexture:(GLTexture*)texture deformTexture:(int)deformTexture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform
 {
 	GLfloat matrix[16];
 	CGAffineToGL(&transform, matrix);	
@@ -158,7 +158,7 @@ static GLRender* sharedInstance = nil;
     [resultProgram use];
 
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, deformTexture.textureName);
+    glBindTexture(GL_TEXTURE_2D, deformTexture);
     glUniform1i([resultProgram uniformIndex:@"deformTexture"], 1);
 	
     glActiveTexture(GL_TEXTURE0);

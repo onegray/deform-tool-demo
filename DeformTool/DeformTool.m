@@ -9,59 +9,16 @@
 #import "DeformTool.h"
 #import "GLTexture.h"
 #import "GLProgram.h"
+#import "GLFramebuffer.h"
 
 @interface DeformTool()
 {
-	GLuint savedFBO;
-	CGRect savedViewport;
-	GLuint meshFBO;
-	
-	GLTexture* deformTexture;
+	GLFramebuffer* deformFramebuffer;
 }
 @end
 
 @implementation DeformTool
-@synthesize deformTexture;
 
-+(GLuint) genFramebufferTexture2D:(GLTexture*)renderTex
-{
-	GLint oldFBO = 0;
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFBO);
-	
-	// generate FBO
-	GLuint texFBO = 0;
-	glGenFramebuffers(1, &texFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, texFBO);
-	
-	// associate texture with FBO
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTex.textureName, 0);
-	
-	// check if it worked (probably worth doing :) )
-	GLuint status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (status != GL_FRAMEBUFFER_COMPLETE)
-	{
-		[NSException raise:@"Render Texture" format:@"Could not attach texture to framebuffer"];
-	}
-	
-	glBindFramebuffer(GL_FRAMEBUFFER, oldFBO);
-	
-	return texFBO;
-}
-
--(void) startRenderingFBO:(GLuint)fbo withViewportSize:(CGSize)texSize
-{
-	glGetFloatv(GL_VIEWPORT, (GLfloat*)&savedViewport);
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&savedFBO);
-	
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);//Will direct drawing to the frame buffer created above
-	glViewport(0, 0, texSize.width, texSize.height);
-}
-
--(void)endRendering
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, savedFBO);
-	glViewport(savedViewport.origin.x, savedViewport.origin.y, savedViewport.size.width, savedViewport.size.height);	
-}
 
 +(GLProgram*) loadProgram
 {
@@ -85,10 +42,7 @@
 
 	GLProgram* program = [DeformTool loadProgram];
     [program use];
-    
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_ONE, GL_ONE);
-	
+    	
     GLuint vertCoordAttr = [program attributeIndex:@"position"];
     GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
     
@@ -106,19 +60,22 @@
 	self = [super init];
 	if(self) {
 		
-		deformTexture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"Black256.png"]];
-		meshFBO = [DeformTool genFramebufferTexture2D:deformTexture];
+		deformFramebuffer = [[GLFramebuffer alloc] initTextureFramebufferOfSize:CGSizeMake(256, 256)];
 		
-		[self startRenderingFBO:meshFBO withViewportSize:deformTexture.contentSize];
-
+		[deformFramebuffer startRendering];
+		
 		[self renderDeformInRect:CGRectMake(-1, -1, 2, 2)];
 		
-		[self endRendering];
+		[deformFramebuffer endRendering];
 		
 	}
 	return self;
 }
 
+-(GLuint) deformTextureName
+{
+	return deformFramebuffer.textureName;
+}
 
 @end
 

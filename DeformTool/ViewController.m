@@ -106,7 +106,7 @@
 	//[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
 	
 	CGRect textureRect = CGRectMake(0, 0, 250, 250);
-	[[GLRender sharedRender] drawTexture:tex deformTexture:deformTool.deformTexture inRect:textureRect transformMatrix:resultTransform];
+	[[GLRender sharedRender] drawTexture:tex deformTexture:deformTool.deformTextureName inRect:textureRect transformMatrix:resultTransform];
 
 	
 	[glController presentFramebuffer];  
