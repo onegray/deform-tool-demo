@@ -6,14 +6,15 @@
 //  Hire me at odesk! ( www.odesk.com/users/~~1bd7ccce67734b51 )
 //
 
-varying lowp vec2 varTexCoord;
+varying highp vec2 varTexCoord;
 uniform sampler2D texture;
 uniform sampler2D deformTexture;
 
 void main()
 {
-	lowp vec4 deformColor = texture2D(deformTexture, varTexCoord);
-	lowp vec2 deformVector = deformColor.rb - deformColor.ga;
+	highp vec4 deformColor = texture2D(deformTexture, varTexCoord);
+	deformColor = deformColor / 4.0;
+	highp vec2 deformVector = deformColor.rb ;//- deformColor.ga;
 	gl_FragColor = texture2D(texture, varTexCoord+deformVector);
 }
 

@@ -10,39 +10,104 @@
 #import "GLTexture.h"
 #import "GLProgram.h"
 #import "GLFramebuffer.h"
+#import "GLRender.h"
 
 @interface DeformTool()
 {
-	GLFramebuffer* deformFramebuffer;
+	GLFramebuffer* meshFramebuffer;
+
+	GLFramebuffer* tempFramebuffer;
+	
+	GLTexture* brushTexture;
 }
 @end
 
 @implementation DeformTool
 
 
-+(GLProgram*) loadProgram
++(GLProgram*) loadDeformProgram
 {
 	static GLProgram* deformProgram = nil;
 	if(!deformProgram) {
 		deformProgram = [[GLProgram alloc] initWithVertexShaderFilename:@"DeformShader" fragmentShaderFilename:@"DeformShader"];
 		[deformProgram addAttribute:@"position"];
 		[deformProgram addAttribute:@"texCoord"];
+		[deformProgram addAttribute:@"brushCoord"];
 		[deformProgram link];
 	}
 	return deformProgram;
 }
 
--(void) renderDeformInRect:(CGRect)rect
+-(void) generateBrushTexture
 {
-	GLfloat w = rect.size.width;
-    GLfloat h = rect.size.height;
-    CGPoint pt = rect.origin;
-	GLfloat vertices[] = {pt.x,	pt.y, 0, pt.x+w, pt.y, 0, pt.x, pt.y+h, 0, pt.x+w, pt.y+h, 0};
-	GLfloat coordinates[] = { 0, 0,   1, 0,   0, 1,   1, 1, };
+	static GLProgram* program = nil;
+	if(!program) {
+		program = [[GLProgram alloc] initWithVertexShaderFilename:@"GenBrush" fragmentShaderFilename:@"GenBrush"];
+		[program addAttribute:@"position"];
+		[program addAttribute:@"texCoord"];
+		[program link];
+	}
+	
+	[program use];
+	
+	GLFramebuffer* brushFramebuffer = [[GLFramebuffer alloc] initTextureFramebufferOfSize:CGSizeMake(64, 64)];
+	[brushFramebuffer startRendering];
+	
+	GLfloat vertices[] = {-1, -1, 1, -1, -1, 1, 1, 1 };
+    GLuint vertCoordAttr = [program attributeIndex:@"position"];
+    glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, 0, vertices);
+    glEnableVertexAttribArray(vertCoordAttr);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	
+	[brushFramebuffer endRendering];
+	[brushFramebuffer saveImage:@"brush.png"];
+}
 
-	GLProgram* program = [DeformTool loadProgram];
+
+-(id) init
+{
+	self = [super init];
+	if(self) {
+
+		brushTexture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"brush.png"]];
+		CGSize brushSize = [brushTexture contentSize];
+
+		meshFramebuffer = [[GLFramebuffer alloc] initTextureFramebufferOfSize:CGSizeMake(256, 256)];
+		
+		tempFramebuffer = [[GLFramebuffer alloc] initTextureFramebufferOfSize:brushSize];
+		
+	}
+	return self;
+}
+
+-(GLuint) deformTextureName
+{
+	return meshFramebuffer.textureName;
+}
+
+-(GLuint) brushTextureName
+{
+	return brushTexture.textureName;
+}
+
+/*
+-(void) renderDeform
+{
+	[tempFramebuffer startRendering];
+	
+	GLfloat vertices[] = {-1,	-1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0};
+	GLfloat coordinates[] = { 0, 0,   1, 0,   0, 1,   1, 1, };
+	
+	GLProgram* program = [DeformTool loadDeformProgram];
     [program use];
-    	
+	
+	glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, meshFramebuffer.textureName);
+    glUniform1i([program uniformIndex:@"meshTexture"], 0);
+	
+	glUniform2f([program uniformIndex:@"center"], 0.5, 0.5);
+	glUniform2f([program uniformIndex:@"force"], 0.2, 0.2);
+	
     GLuint vertCoordAttr = [program attributeIndex:@"position"];
     GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
     
@@ -52,30 +117,90 @@
     glEnableVertexAttribArray(texCoordAttr);
     
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	
+	[tempFramebuffer endRendering];
+	
+	
+	[meshFramebuffer startRendering];
+	[[GLRender sharedRender] drawTextureName:tempFramebuffer.textureName inRect:CGRectMake(-1, -1, 2, 2)];
+	[meshFramebuffer endRendering];
 }
+*/
 
 
--(id) init
+-(void) applyDeformVector:(CGPoint)force atPoint:(CGPoint)point
 {
-	self = [super init];
-	if(self) {
-		
-		deformFramebuffer = [[GLFramebuffer alloc] initTextureFramebufferOfSize:CGSizeMake(256, 256)];
-		
-		[deformFramebuffer startRendering];
-		
-		[self renderDeformInRect:CGRectMake(-1, -1, 2, 2)];
-		
-		[deformFramebuffer endRendering];
-		
-	}
-	return self;
+	CGSize contentSize = CGSizeMake(256, 256);
+	CGSize brushSize = [brushTexture contentSize];
+	//CGRect deformRect = CGRectMake(point.x-brushSize.width/2, point.y-brushSize.height/2, brushSize.width, brushSize.height);
+
+    //GLfloat w = deformRect.size.width, h = deformRect.size.height; CGPoint pt = deformRect.origin;
+	//GLfloat vertices[8] = {pt.x,	pt.y, pt.x+w, pt.y, pt.x, pt.y+h, pt.x+w, pt.y+h};
+	//GLfloat coordinates[8];
+
+	CGPoint texPoint = CGPointMake(point.x/contentSize.width, point.y/contentSize.height);
+	CGSize texBrushSize = CGSizeMake(brushSize.width/contentSize.width, brushSize.height/contentSize.height);
+	CGRect texRect = CGRectMake(texPoint.x-texBrushSize.width/2, texPoint.y-texBrushSize.height/2, texBrushSize.width, texBrushSize.height);
+	CGRect vertexRect = CGRectMake(-1 + 2*texRect.origin.x, -1 + 2*texRect.origin.y, 2*texRect.size.width, 2*texRect.size.height);
+
+	force.x = force.x / brushSize.width;
+	force.y = force.y / brushSize.height;
+	
+	NSLog(@"texBrushSize %@", NSStringFromCGSize(texBrushSize));
+	NSLog(@"texRect %@", NSStringFromCGRect(texRect));
+	NSLog(@"vertexRect %@", NSStringFromCGRect(vertexRect));
+	
+	
+	GLfloat vertices[] = {-1, -1, 1, -1, -1, 1, 1, 1 };
+	GLfloat coordinates[] = { 
+		texRect.origin.x,						texRect.origin.y,  
+		texRect.origin.x+texRect.size.width,	texRect.origin.y,
+		texRect.origin.x,						texRect.origin.y+texRect.size.height,
+		texRect.origin.x+texRect.size.width,	texRect.origin.y+texRect.size.height, };
+	GLfloat brushCoords[] = { 0, 0,   1, 0,   0, 1,   1, 1, };
+
+	GLProgram* program = [DeformTool loadDeformProgram];
+    [program use];
+	
+	[tempFramebuffer startRendering];
+
+	glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, brushTexture.textureName);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glUniform1i([program uniformIndex:@"brushTexture"], 1);
+	
+	glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, meshFramebuffer.textureName);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glUniform1i([program uniformIndex:@"meshTexture"], 0);
+	
+	glUniform2f([program uniformIndex:@"center"], texPoint.x, texPoint.y);
+	glUniform2f([program uniformIndex:@"force"], force.x, force.y);
+	
+    GLuint vertCoordAttr = [program attributeIndex:@"position"];
+    GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
+    GLuint brushCoordAttr = [program attributeIndex:@"brushCoord"];
+    
+    glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, 0, vertices);
+    glEnableVertexAttribArray(vertCoordAttr);
+    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, 0, coordinates);
+    glEnableVertexAttribArray(texCoordAttr);
+	glVertexAttribPointer(brushCoordAttr, 2, GL_FLOAT, 0, 0, brushCoords);
+    glEnableVertexAttribArray(brushCoordAttr);
+    
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	
+	[tempFramebuffer endRendering];
+	
+	[meshFramebuffer startRendering];
+	[[GLRender sharedRender] drawTextureName:tempFramebuffer.textureName inRect:vertexRect];
+	[meshFramebuffer endRendering];
 }
 
--(GLuint) deformTextureName
-{
-	return deformFramebuffer.textureName;
-}
+
+
 
 @end
 

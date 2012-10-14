@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		AB2D9E6E1614B88400407FDF /* GLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2D9E6D1614B88400407FDF /* GLViewController.m */; };
 		AB2D9E711614B8BA00407FDF /* GLView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2D9E701614B8BA00407FDF /* GLView.m */; };
+		AB34719D16271C1C00A4BB1A /* GenBrush.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AB34719B16271C1C00A4BB1A /* GenBrush.fsh */; };
+		AB34719E16271C1C00A4BB1A /* GenBrush.vsh in Resources */ = {isa = PBXBuildFile; fileRef = AB34719C16271C1C00A4BB1A /* GenBrush.vsh */; };
+		AB3471A816274B2100A4BB1A /* brush.png in Resources */ = {isa = PBXBuildFile; fileRef = AB3471A716274B2100A4BB1A /* brush.png */; };
 		AB384B3416125C70003A2D9C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B3316125C70003A2D9C /* UIKit.framework */; };
 		AB384B3616125C70003A2D9C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B3516125C70003A2D9C /* Foundation.framework */; };
 		AB384B3816125C70003A2D9C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB384B3716125C70003A2D9C /* CoreGraphics.framework */; };
@@ -31,6 +34,8 @@
 		AB65C1A8161F87A3007E7C29 /* ResultShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A6161F87A3007E7C29 /* ResultShader.fsh */; };
 		AB65C1A9161F87A3007E7C29 /* ResultShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A7161F87A3007E7C29 /* ResultShader.vsh */; };
 		AB65C1B81620CFEF007E7C29 /* GLFramebuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = AB65C1B71620CFEF007E7C29 /* GLFramebuffer.m */; };
+		AB65C1C41621B444007E7C29 /* SimpleShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1C21621B443007E7C29 /* SimpleShader.fsh */; };
+		AB65C1C51621B444007E7C29 /* SimpleShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1C31621B443007E7C29 /* SimpleShader.vsh */; };
 		AB6826D116126894007F7FEA /* canvas_back32.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CB16126894007F7FEA /* canvas_back32.png */; };
 		AB6826D216126894007F7FEA /* me.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CC16126894007F7FEA /* me.png */; };
 		AB6826D316126894007F7FEA /* nature.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6826CD16126894007F7FEA /* nature.png */; };
@@ -49,6 +54,9 @@
 		AB2D9E6D1614B88400407FDF /* GLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLViewController.m; sourceTree = "<group>"; };
 		AB2D9E6F1614B8BA00407FDF /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
 		AB2D9E701614B8BA00407FDF /* GLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLView.m; sourceTree = "<group>"; };
+		AB34719B16271C1C00A4BB1A /* GenBrush.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GenBrush.fsh; sourceTree = "<group>"; };
+		AB34719C16271C1C00A4BB1A /* GenBrush.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GenBrush.vsh; sourceTree = "<group>"; };
+		AB3471A716274B2100A4BB1A /* brush.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = brush.png; sourceTree = "<group>"; };
 		AB384B2F16125C70003A2D9C /* DeformTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeformTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB384B3316125C70003A2D9C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		AB384B3516125C70003A2D9C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -81,6 +89,8 @@
 		AB65C1A7161F87A3007E7C29 /* ResultShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ResultShader.vsh; sourceTree = "<group>"; };
 		AB65C1B61620CFEF007E7C29 /* GLFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLFramebuffer.h; sourceTree = "<group>"; };
 		AB65C1B71620CFEF007E7C29 /* GLFramebuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLFramebuffer.m; sourceTree = "<group>"; };
+		AB65C1C21621B443007E7C29 /* SimpleShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SimpleShader.fsh; sourceTree = "<group>"; };
+		AB65C1C31621B443007E7C29 /* SimpleShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SimpleShader.vsh; sourceTree = "<group>"; };
 		AB6826CB16126894007F7FEA /* canvas_back32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = canvas_back32.png; sourceTree = "<group>"; };
 		AB6826CC16126894007F7FEA /* me.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = me.png; sourceTree = "<group>"; };
 		AB6826CD16126894007F7FEA /* nature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nature.png; sourceTree = "<group>"; };
@@ -115,6 +125,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AB34719916271BC700A4BB1A /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				AB65C1C21621B443007E7C29 /* SimpleShader.fsh */,
+				AB65C1C31621B443007E7C29 /* SimpleShader.vsh */,
+				AB384B7A161266CD003A2D9C /* BaseShader.fsh */,
+				AB384B7B161266CD003A2D9C /* BaseShader.vsh */,
+				AB34719B16271C1C00A4BB1A /* GenBrush.fsh */,
+				AB34719C16271C1C00A4BB1A /* GenBrush.vsh */,
+				AB65C1A2161F7C51007E7C29 /* DeformShader.fsh */,
+				AB65C1A3161F7C51007E7C29 /* DeformShader.vsh */,
+				AB65C1A6161F87A3007E7C29 /* ResultShader.fsh */,
+				AB65C1A7161F87A3007E7C29 /* ResultShader.vsh */,
+			);
+			name = Shaders;
+			sourceTree = "<group>";
+		};
 		AB384B2416125C70003A2D9C = {
 			isa = PBXGroup;
 			children = (
@@ -181,12 +208,7 @@
 		AB384B79161266CD003A2D9C /* GLSupport */ = {
 			isa = PBXGroup;
 			children = (
-				AB384B7A161266CD003A2D9C /* BaseShader.fsh */,
-				AB384B7B161266CD003A2D9C /* BaseShader.vsh */,
-				AB65C1A2161F7C51007E7C29 /* DeformShader.fsh */,
-				AB65C1A3161F7C51007E7C29 /* DeformShader.vsh */,
-				AB65C1A6161F87A3007E7C29 /* ResultShader.fsh */,
-				AB65C1A7161F87A3007E7C29 /* ResultShader.vsh */,
+				AB34719916271BC700A4BB1A /* Shaders */,
 				AB2D9E6F1614B8BA00407FDF /* GLView.h */,
 				AB2D9E701614B8BA00407FDF /* GLView.m */,
 				AB2D9E6C1614B88400407FDF /* GLViewController.h */,
@@ -215,6 +237,7 @@
 				AB6826CD16126894007F7FEA /* nature.png */,
 				AB6826CE16126894007F7FEA /* nature_alpha.png */,
 				AB6826CF16126894007F7FEA /* Particle.png */,
+				AB3471A716274B2100A4BB1A /* brush.png */,
 				AB6826D016126894007F7FEA /* table.png */,
 				AB65C1A0161F7923007E7C29 /* Black256.png */,
 			);
@@ -273,6 +296,10 @@
 			files = (
 				AB384B3E16125C70003A2D9C /* InfoPlist.strings in Resources */,
 				AB384B4A16125C70003A2D9C /* ViewController.xib in Resources */,
+				AB34719D16271C1C00A4BB1A /* GenBrush.fsh in Resources */,
+				AB34719E16271C1C00A4BB1A /* GenBrush.vsh in Resources */,
+				AB65C1C41621B444007E7C29 /* SimpleShader.fsh in Resources */,
+				AB65C1C51621B444007E7C29 /* SimpleShader.vsh in Resources */,
 				AB384B82161266CD003A2D9C /* BaseShader.fsh in Resources */,
 				AB384B83161266CD003A2D9C /* BaseShader.vsh in Resources */,
 				AB65C1A4161F7C51007E7C29 /* DeformShader.fsh in Resources */,
@@ -286,6 +313,7 @@
 				AB6826D516126894007F7FEA /* Particle.png in Resources */,
 				AB6826D616126894007F7FEA /* table.png in Resources */,
 				AB65C1A1161F7923007E7C29 /* Black256.png in Resources */,
+				AB3471A816274B2100A4BB1A /* brush.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

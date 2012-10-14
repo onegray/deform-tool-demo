@@ -14,6 +14,13 @@
 #import "LayerMesh.h"
 #import "DeformTool.h"
 
+enum  {
+	MODE_SCROLL,
+	MODE_TRANSFORM,
+	MODE_DEFORM,
+};
+
+
 @interface ViewController ()
 {
 	GLTexture* texture;
@@ -27,7 +34,8 @@
 	
 	BOOL gestureInProgress;
 	
-	BOOL transformMode;
+	//BOOL transformMode;
+	int mode;
 	
 	DeformTool* deformTool;
 }
@@ -50,14 +58,22 @@
 	
 	resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
 
-	transformMode = NO;
+	mode = MODE_SCROLL;
 	
 	[GLRender loadSharedRender];
 	
 	deformTool = [[DeformTool alloc] init];
 	
+	[deformTool applyDeformVector:CGPointMake(20.0, 0.0) atPoint:CGPointMake(100, 150)];
+	//[deformTool applyDeformVector:CGPointMake(10.0, 0.0) atPoint:CGPointMake(100, 150)];
+
+	
+	[deformTool applyDeformVector:CGPointMake(1.0, 0.0) atPoint:CGPointMake(100, 200)];
+	[deformTool applyDeformVector:CGPointMake(1.0, 0.0) atPoint:CGPointMake(100, 200)];
+
+	
 	if(!texture) {
-		texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"nature"]];
+		texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"table"]];
 		//mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(texture.contentSize.width, texture.contentSize.height)];
 		mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(352, 288)];
 	}
@@ -103,9 +119,12 @@
     glClear(GL_COLOR_BUFFER_BIT);
 
 	
+	//[[GLRender sharedRender] drawTextureName:deformTool.deformTextureName inRect:CGRectMake(-1, -1, 2, 2)];
+	
+	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
 	//[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
 	
-	CGRect textureRect = CGRectMake(0, 0, 250, 250);
+	CGRect textureRect = CGRectMake(0, 0, 256, 256);
 	[[GLRender sharedRender] drawTexture:tex deformTexture:deformTool.deformTextureName inRect:textureRect transformMatrix:resultTransform];
 
 	
@@ -128,20 +147,29 @@
 
 -(IBAction)onTransformModeBtn:(UISegmentedControl*)segmentedControl
 {
-	transformMode = segmentedControl.selectedSegmentIndex == 1;
+	mode = segmentedControl.selectedSegmentIndex;
+	if(mode==MODE_TRANSFORM) {
+		mode = MODE_DEFORM;
+	}
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	UITouch* touch = [touches anyObject];
-	CGPoint p = [touch locationInView:touch.view];
-	if(!transformMode) {
-		[glController setTransformAnchor:p];
-	} else {
-		transformAnchor = modelviewMatrix;
-		p = [glController convertPoint:p];
-		pointAnchor = CGPointApplyAffineTransform(p, CGAffineTransformInvert(transformAnchor));
+	CGPoint pos = [touch locationInView:touch.view];
+	//CGPoint prev_pos = [touch previousLocationInView:touch.view];
+
+	if(mode==MODE_SCROLL)
+	{
+		[glController setTransformAnchor:pos];
 	}
+	else if(mode==MODE_TRANSFORM)
+	{
+		transformAnchor = modelviewMatrix;
+		pos = [glController convertPoint:pos];
+		pointAnchor = CGPointApplyAffineTransform(pos, CGAffineTransformInvert(transformAnchor));
+	}
+	
 	gestureInProgress = NO;
 }
 
@@ -150,14 +178,45 @@
 	if([touches count] == 1 && !gestureInProgress)
 	{
 		UITouch* touch = [touches anyObject];
-		CGPoint p = [touch locationInView:touch.view];
+		CGPoint pos = [touch locationInView:touch.view];
+		CGPoint prev_pos = [touch previousLocationInView:touch.view];
 		
-		if(!transformMode) {
-			[glController scrollBy:p];
-		} else {
-			p = [glController convertPoint:p];
-			p = CGPointApplyAffineTransform(p, CGAffineTransformInvert(transformAnchor));
-			modelviewMatrix = CGAffineTransformTranslate(transformAnchor, p.x-pointAnchor.x, p.y-pointAnchor.y);
+		if(mode==MODE_SCROLL)
+		{
+			[glController scrollBy:pos];
+		}
+		else if(mode==MODE_TRANSFORM)
+		{
+			pos = [glController convertPoint:pos];
+			pos = CGPointApplyAffineTransform(pos, CGAffineTransformInvert(transformAnchor));
+			modelviewMatrix = CGAffineTransformTranslate(transformAnchor, pos.x-pointAnchor.x, pos.y-pointAnchor.y);
+		}
+		else if(mode==MODE_DEFORM)
+		{
+			CGPoint p = [glController convertPoint:prev_pos];
+			CGPoint v = [glController convertPoint:pos];
+			CGFloat l, dx, dy, xf, yf;
+			int deformAreaRadius = 64/2;
+			
+			dx = p.x - v.x;
+			dy = p.y - v.y;
+			l= sqrt (dx * dx + dy * dy);
+			int num = (int) (l * 2 / deformAreaRadius) + 1;
+			dx /= num;
+			dy /= num;
+			xf = v.x + dx; yf = v.y + dy;
+			
+			for (int i=0; i< num; i++)
+			{
+				int x0 = (int) xf;
+				int y0 = (int) yf;
+				
+				[deformTool applyDeformVector:CGPointMake(dx, dy) atPoint:CGPointMake(x0, y0)];
+				
+				xf += dx;
+				yf += dy;
+			}
+			
 		}
 		
 		resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
@@ -170,9 +229,12 @@
 {	
 	CGPoint p = [gesture locationInView:gesture.view];
 	
-	if(!transformMode) {
+	if(mode==MODE_SCROLL)
+	{
 		[glController scaleBy:gesture.scale relativeToPoint:p];
-	} else {
+	}
+	else if(mode==MODE_TRANSFORM)
+	{
 		p = [glController convertPoint:p];
 		p = CGPointApplyAffineTransform(p, CGAffineTransformInvert(transformAnchor));
 		modelviewMatrix = CGAffineTransformTranslate(transformAnchor, p.x, p.y);
@@ -189,7 +251,8 @@
 {
 	CGPoint p = [gesture locationInView:gesture.view];
 	
-	if(transformMode) {
+	if(mode==MODE_TRANSFORM)
+	{
 		p = [glController convertPoint:p];
 		p = CGPointApplyAffineTransform(p, CGAffineTransformInvert(transformAnchor));
 		modelviewMatrix = CGAffineTransformTranslate(transformAnchor, p.x, p.y);

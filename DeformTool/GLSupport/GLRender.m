@@ -17,7 +17,7 @@
 
 @interface GLRender ()
 {
-	GLProgram* program;
+	//GLProgram* program;
 }
 
 
@@ -35,23 +35,25 @@ static GLRender* sharedInstance = nil;
 + (void) loadSharedRender
 {
 	if(!sharedInstance) {
-		sharedInstance = [[GLRender alloc] initWithProgramName:@"BaseShader"];
+		sharedInstance = [[GLRender alloc] init];
 	}
 }
 
--(id) initWithProgramName:(NSString*)programName
++(GLProgram*) baseProgram
 {
-	if(self=[super init]) {
-		program = [[GLProgram alloc] initWithVertexShaderFilename:programName fragmentShaderFilename:programName];
-		[program addAttribute:@"position"];
-		[program addAttribute:@"texCoord"];
-		[program link];
-		
-		
-		[GLRender resultProgram];
+	static GLProgram* baseProgram = nil;
+	if(!baseProgram) {
+		baseProgram = [[GLProgram alloc] initWithVertexShaderFilename:@"BaseShader" fragmentShaderFilename:@"BaseShader"];
+		[baseProgram addAttribute:@"position"];
+		[baseProgram addAttribute:@"texCoord"];
+		[baseProgram link];
 	}
-	return self;
+	return baseProgram;
 }
+
+
+
+
 
 - (void) drawTexture:(GLTexture*)texture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform
 {
@@ -70,6 +72,7 @@ static GLRender* sharedInstance = nil;
 		  texture.maxS, texture.maxT,
 	  };
     
+	GLProgram* program = [GLRender baseProgram];
     [program use];
     
     glActiveTexture(GL_TEXTURE0);
@@ -90,13 +93,12 @@ static GLRender* sharedInstance = nil;
 }
 
 
-
-
 - (void) drawTexture:(GLTexture*)texture withMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform
 {
 	GLfloat matrix[16];
 	CGAffineToGL(&transform, matrix);
     
+	GLProgram* program = [GLRender baseProgram];
     [program use];
     
     glActiveTexture(GL_TEXTURE0);
@@ -159,18 +161,66 @@ static GLRender* sharedInstance = nil;
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, deformTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glUniform1i([resultProgram uniformIndex:@"deformTexture"], 1);
-	
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture.textureName);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glUniform1i([resultProgram uniformIndex:@"texture"], 0);
-    
+
 	glUniformMatrix4fv([resultProgram uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, matrix);
     
     GLuint vertCoordAttr = [resultProgram attributeIndex:@"position"];
     GLuint texCoordAttr = [resultProgram attributeIndex:@"texCoord"];
     
     glVertexAttribPointer(vertCoordAttr, 3, GL_FLOAT, 0, 0, vertices);
+    glEnableVertexAttribArray(vertCoordAttr);
+    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, 0, coordinates);
+    glEnableVertexAttribArray(texCoordAttr);
+    
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+
+
++(GLProgram*) simpleProgram
+{
+	static GLProgram* simpleProgram = nil;
+	if(!simpleProgram) {
+		simpleProgram = [[GLProgram alloc] initWithVertexShaderFilename:@"SimpleShader" fragmentShaderFilename:@"SimpleShader"];
+		[simpleProgram addAttribute:@"position"];
+		[simpleProgram addAttribute:@"texCoord"];
+		[simpleProgram link];
+	}
+	return simpleProgram;
+}
+
+- (void) drawTextureName:(GLuint)textureName inRect:(CGRect)rect
+{
+    GLfloat w = rect.size.width;
+    GLfloat h = rect.size.height;
+    CGPoint pt = rect.origin;
+	GLfloat vertices[] = {pt.x,	pt.y, pt.x+w, pt.y, pt.x, pt.y+h, pt.x+w, pt.y+h};
+	GLfloat coordinates[] = { 0, 0,   1, 0,   0, 1,   1, 1, };
+    
+	GLProgram* program = [GLRender simpleProgram];
+    [program use];
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureName);
+    
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glUniform1i([program uniformIndex:@"texture"], 0);
+    
+    GLuint vertCoordAttr = [program attributeIndex:@"position"];
+    GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
+    
+    glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, 0, vertices);
     glEnableVertexAttribArray(vertCoordAttr);
     glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, 0, coordinates);
     glEnableVertexAttribArray(texCoordAttr);

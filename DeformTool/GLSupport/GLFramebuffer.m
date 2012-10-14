@@ -40,8 +40,8 @@
 	if(self) {
 		glGenTextures(1, &textureName);
 		glBindTexture(GL_TEXTURE_2D, textureName);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		// This is necessary for non-power-of-two textures
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -93,6 +93,67 @@
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, savedFBO);
 	glViewport(savedViewport.origin.x, savedViewport.origin.y, savedViewport.size.width, savedViewport.size.height);	
+}
+
+
+-(UIImage*)getUIImage
+{
+	CGSize s = framebufferSize;
+	int tx = s.width;
+	int ty = s.height;
+	
+	int bitsPerComponent=8;			
+	int bitsPerPixel=32;				
+	
+	int bytesPerRow					= (bitsPerPixel/8) * tx;
+	NSInteger myDataLength			= bytesPerRow * ty;
+	
+    
+    
+    //GLubyte* buffer = malloc(sizeof(GLubyte)*myDataLength);
+	static GLubyte* buffer = NULL;
+    if(!buffer) 
+    {
+        buffer = malloc(2048*2048*4);
+    }
+    
+	
+	
+	[self startRendering];
+	glReadPixels(0,0,tx,ty,GL_RGBA,GL_UNSIGNED_BYTE, buffer);
+	[self endRendering];
+	
+    // make data provider with data.
+    CGBitmapInfo bitmapInfo = kCGImageAlphaPremultipliedLast | kCGBitmapByteOrderDefault;
+    CGDataProviderRef provider		= CGDataProviderCreateWithData(NULL, buffer, myDataLength, NULL);
+    CGColorSpaceRef colorSpaceRef	= CGColorSpaceCreateDeviceRGB();
+    CGImageRef iref					= CGImageCreate(tx, ty,
+                                                    bitsPerComponent, bitsPerPixel, bytesPerRow,
+                                                    colorSpaceRef, bitmapInfo, provider,
+                                                    NULL, false,
+                                                    kCGRenderingIntentDefault);
+    
+    UIImage* image = [[UIImage alloc] initWithCGImage:iref];
+    
+    CGImageRelease(iref);	
+    CGColorSpaceRelease(colorSpaceRef);
+    CGDataProviderRelease(provider);
+    
+    //free(buffer);
+    
+    return image;
+}
+
+
+-(BOOL)saveImage:(NSString*)fileName
+{
+	NSArray *paths					= NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDirectory	= [paths objectAtIndex:0];
+	NSString *fullPath				= [documentsDirectory stringByAppendingPathComponent:fileName];
+	
+	NSData *data = UIImagePNGRepresentation([self getUIImage]);
+	
+	return [data writeToFile:fullPath atomically:YES];
 }
 
 

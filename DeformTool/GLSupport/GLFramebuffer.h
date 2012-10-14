@@ -21,4 +21,10 @@
 -(void) startRendering;
 -(void) endRendering;
 
+
+
+-(UIImage*)getUIImage;
+-(BOOL)saveImage:(NSString*)fileName;
+
+
 @end

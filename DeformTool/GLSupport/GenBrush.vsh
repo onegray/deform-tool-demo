@@ -7,14 +7,10 @@
 //
 
 attribute vec4 position;
-attribute vec2 texCoord;
-attribute vec2 brushCoord;
+varying vec2 varPosition;
 
-varying vec2 varTexCoord;
-varying vec2 varBrushCoord;
 void main()
 {
-    varTexCoord = texCoord;
-	varBrushCoord = brushCoord;
+    varPosition = position.xy;
     gl_Position = position;
 }
