@@ -17,6 +17,7 @@
 
 -(id) initTextureFramebufferWithTexture:(GLTexture*)texture;
 -(id) initTextureFramebufferOfSize:(CGSize)textureSize;
+-(id) initFloatTextureFramebufferOfSize:(CGSize)textureSize;
 
 -(void) startRendering;
 -(void) endRendering;

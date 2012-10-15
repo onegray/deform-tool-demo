@@ -72,9 +72,9 @@
 		brushTexture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"brush.png"]];
 		CGSize brushSize = [brushTexture contentSize];
 
-		meshFramebuffer = [[GLFramebuffer alloc] initTextureFramebufferOfSize:CGSizeMake(256, 256)];
+		meshFramebuffer = [[GLFramebuffer alloc] initFloatTextureFramebufferOfSize:CGSizeMake(256, 256)];
 		
-		tempFramebuffer = [[GLFramebuffer alloc] initTextureFramebufferOfSize:brushSize];
+		tempFramebuffer = [[GLFramebuffer alloc] initFloatTextureFramebufferOfSize:brushSize];
 		
 	}
 	return self;
@@ -90,53 +90,11 @@
 	return brushTexture.textureName;
 }
 
-/*
--(void) renderDeform
-{
-	[tempFramebuffer startRendering];
-	
-	GLfloat vertices[] = {-1,	-1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0};
-	GLfloat coordinates[] = { 0, 0,   1, 0,   0, 1,   1, 1, };
-	
-	GLProgram* program = [DeformTool loadDeformProgram];
-    [program use];
-	
-	glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, meshFramebuffer.textureName);
-    glUniform1i([program uniformIndex:@"meshTexture"], 0);
-	
-	glUniform2f([program uniformIndex:@"center"], 0.5, 0.5);
-	glUniform2f([program uniformIndex:@"force"], 0.2, 0.2);
-	
-    GLuint vertCoordAttr = [program attributeIndex:@"position"];
-    GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
-    
-    glVertexAttribPointer(vertCoordAttr, 3, GL_FLOAT, 0, 0, vertices);
-    glEnableVertexAttribArray(vertCoordAttr);
-    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, 0, coordinates);
-    glEnableVertexAttribArray(texCoordAttr);
-    
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	
-	[tempFramebuffer endRendering];
-	
-	
-	[meshFramebuffer startRendering];
-	[[GLRender sharedRender] drawTextureName:tempFramebuffer.textureName inRect:CGRectMake(-1, -1, 2, 2)];
-	[meshFramebuffer endRendering];
-}
-*/
-
 
 -(void) applyDeformVector:(CGPoint)force atPoint:(CGPoint)point
 {
 	CGSize contentSize = CGSizeMake(256, 256);
 	CGSize brushSize = [brushTexture contentSize];
-	//CGRect deformRect = CGRectMake(point.x-brushSize.width/2, point.y-brushSize.height/2, brushSize.width, brushSize.height);
-
-    //GLfloat w = deformRect.size.width, h = deformRect.size.height; CGPoint pt = deformRect.origin;
-	//GLfloat vertices[8] = {pt.x,	pt.y, pt.x+w, pt.y, pt.x, pt.y+h, pt.x+w, pt.y+h};
-	//GLfloat coordinates[8];
 
 	CGPoint texPoint = CGPointMake(point.x/contentSize.width, point.y/contentSize.height);
 	CGSize texBrushSize = CGSizeMake(brushSize.width/contentSize.width, brushSize.height/contentSize.height);
@@ -145,6 +103,8 @@
 
 	force.x = force.x / brushSize.width;
 	force.y = force.y / brushSize.height;
+	force.x = force.x / 4;
+	force.y = force.y / 4;
 	
 	NSLog(@"texBrushSize %@", NSStringFromCGSize(texBrushSize));
 	NSLog(@"texRect %@", NSStringFromCGRect(texRect));

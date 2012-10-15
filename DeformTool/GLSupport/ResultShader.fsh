@@ -12,9 +12,7 @@ uniform sampler2D deformTexture;
 
 void main()
 {
-	highp vec4 deformColor = texture2D(deformTexture, varTexCoord);
-	deformColor = deformColor / 4.0;
-	highp vec2 deformVector = deformColor.rb ;//- deformColor.ga;
+	highp vec2 deformVector = texture2D(deformTexture, varTexCoord).rg;
 	gl_FragColor = texture2D(texture, varTexCoord+deformVector);
 }
 

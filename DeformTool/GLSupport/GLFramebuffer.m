@@ -56,6 +56,31 @@
 }
 
 
+-(id) initFloatTextureFramebufferOfSize:(CGSize)textureSize
+{
+	self = [super init];
+	if(self) {
+		
+		glGenTextures(1, &textureName);
+		glBindTexture(GL_TEXTURE_2D, textureName);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// This is necessary for non-power-of-two textures
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG_EXT, textureSize.width, textureSize.height, 0, GL_RG_EXT, GL_HALF_FLOAT_OES, NULL);		
+		
+
+		framebufferSize = textureSize;
+		fbo = [GLFramebuffer genFramebufferTexture2D:textureName];
+		
+	}
+	return self;
+}
+
+
+
 + (GLuint) genFramebufferTexture2D:(GLuint)textureName
 {
 	GLint oldFBO = 0;

@@ -17,14 +17,13 @@ uniform highp vec2 center;
 
 void main()
 {
-	highp float power = texture2D(brushTexture, varBrushCoord).r;
+	highp float deform_value = texture2D(brushTexture, varBrushCoord).r;
+	highp vec2 nv = deform_value*force;
 
-	highp vec4 deformColor = texture2D(meshTexture, varTexCoord) / 1.0;
-	highp vec2 deformVector = deformColor.rb ;//- deformColor.ga;
-	deformVector = deformVector + force*power*1.0;
+	highp vec2 v = texture2D(meshTexture, varTexCoord+nv).rg;
+	v = v + nv;
 	
-	deformVector = deformVector*1.0;
-	gl_FragColor = vec4( deformVector.x, -deformVector.x, deformVector.y, -deformVector.y);
+	gl_FragColor = vec4(v.x, v.y, 0.0, 0.0);
 	
 }
 
