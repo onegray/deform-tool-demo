@@ -13,7 +13,7 @@ void main()
 	highp float r = distance(vec2(0.0, 0.0), varPosition);
 	highp float v = 0.0;
 	if(r<1.0) {
-		v = pow((cos(sqrt(r) * 3.1415)+1.0) * 0.5, 0.7);
+		v = pow((cos(r * 3.1415)+1.0) * 0.5, 0.7);
 	}
 	gl_FragColor = vec4(v,v,v,v);
 }
