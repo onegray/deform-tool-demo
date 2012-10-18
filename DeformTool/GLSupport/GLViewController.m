@@ -38,7 +38,7 @@
 
 
 @implementation GLViewController
-@synthesize projectionMatrix;
+@synthesize projectionMatrix, transform;
 
 -(id) init
 {

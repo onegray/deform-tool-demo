@@ -21,6 +21,7 @@
 @property (nonatomic, strong) IBOutlet GLView* glView;
 
 @property (nonatomic, readonly) CGAffineTransform projectionMatrix;
+@property (nonatomic, readonly) CGAffineTransform transform;
 
 -(void) scrollBy:(CGPoint)p;
 -(void) scaleBy:(CGFloat)v relativeToPoint:(CGPoint)p;

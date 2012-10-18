@@ -118,15 +118,13 @@ enum  {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-	
-	//[[GLRender sharedRender] drawTextureName:deformTool.deformTextureName inRect:CGRectMake(-1, -1, 2, 2)];
-	
+
 	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
 	//[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
 	
+	
 	CGRect textureRect = CGRectMake(0, 0, 256, 256);
 	[[GLRender sharedRender] drawTexture:tex deformTexture:deformTool.deformTextureName inRect:textureRect transformMatrix:resultTransform];
-
 	
 	[glController presentFramebuffer];  
 }
@@ -148,9 +146,6 @@ enum  {
 -(IBAction)onTransformModeBtn:(UISegmentedControl*)segmentedControl
 {
 	mode = segmentedControl.selectedSegmentIndex;
-	if(mode==MODE_TRANSFORM) {
-		mode = MODE_DEFORM;
-	}
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -184,27 +179,31 @@ enum  {
 		if(mode==MODE_SCROLL)
 		{
 			[glController scrollBy:pos];
+			resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
 		}
 		else if(mode==MODE_TRANSFORM)
 		{
 			pos = [glController convertPoint:pos];
 			pos = CGPointApplyAffineTransform(pos, CGAffineTransformInvert(transformAnchor));
 			modelviewMatrix = CGAffineTransformTranslate(transformAnchor, pos.x-pointAnchor.x, pos.y-pointAnchor.y);
+			resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
 		}
 		else if(mode==MODE_DEFORM)
 		{
-			CGPoint p = [glController convertPoint:prev_pos];
-			CGPoint v = [glController convertPoint:pos];
+			CGAffineTransform t = CGAffineTransformInvert(CGAffineTransformConcat(modelviewMatrix, glController.transform));
+			CGPoint p0 = CGPointApplyAffineTransform(prev_pos, t);
+			CGPoint p1 = CGPointApplyAffineTransform(pos, t);
+			
 			CGFloat l, dx, dy, xf, yf;
 			int deformAreaRadius = 64/2;
 			
-			dx = p.x - v.x;
-			dy = p.y - v.y;
+			dx = p0.x - p1.x;
+			dy = p0.y - p1.y;
 			l= sqrt (dx * dx + dy * dy);
 			int num = (int) (l * 2 / deformAreaRadius) + 1;
 			dx /= num;
 			dy /= num;
-			xf = v.x + dx; yf = v.y + dy;
+			xf = p1.x + dx; yf = p1.y + dy;
 			
 			for (int i=0; i< num; i++)
 			{
@@ -219,7 +218,6 @@ enum  {
 			
 		}
 		
-		resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
 		[self drawTexture:texture];
 	}
 }
