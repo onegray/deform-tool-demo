@@ -8,14 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
-@class GLTexture;
+
+@class GLTexture, GLFramebuffer;
 @interface DeformTool : NSObject
-
-@property (nonatomic, readonly) GLuint deformTextureName;
-@property (nonatomic, readonly) GLuint brushTextureName;
-
--(void) applyDeformVector:(CGPoint)force atPoint:(CGPoint)point;
-
+{
+	GLFramebuffer* meshFramebuffer;
+	
+	GLFramebuffer* tempFramebuffer;
+	
+	GLTexture* brushTexture;
+}
 
 
 @end
+
+
+#import "DeformTool+TextureMesh.h"

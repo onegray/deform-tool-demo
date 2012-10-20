@@ -52,10 +52,7 @@ enum  {
 	[glController setContext];
 	[glController setFramebuffer];
 
-	
 	modelviewMatrix = CGAffineTransformIdentity;
-
-	
 	resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
 
 	mode = MODE_SCROLL;
@@ -63,14 +60,6 @@ enum  {
 	[GLRender loadSharedRender];
 	
 	deformTool = [[DeformTool alloc] init];
-	
-	[deformTool applyDeformVector:CGPointMake(20.0, 0.0) atPoint:CGPointMake(100, 150)];
-	//[deformTool applyDeformVector:CGPointMake(10.0, 0.0) atPoint:CGPointMake(100, 150)];
-
-	
-	[deformTool applyDeformVector:CGPointMake(1.0, 0.0) atPoint:CGPointMake(100, 200)];
-	[deformTool applyDeformVector:CGPointMake(1.0, 0.0) atPoint:CGPointMake(100, 200)];
-
 	
 	if(!texture) {
 		texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"table"]];
@@ -119,12 +108,11 @@ enum  {
     glClear(GL_COLOR_BUFFER_BIT);
 
 
-	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
 	//[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
+
 	
-	
-	CGRect textureRect = CGRectMake(0, 0, 256, 256);
-	[[GLRender sharedRender] drawTexture:tex deformTexture:deformTool.deformTextureName inRect:textureRect transformMatrix:resultTransform];
+	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
+	[[GLRender sharedRender] drawTexture:tex deformTexture:deformTool.deformTextureName inRect:CGRectMake(0, 0, 256, 256) transformMatrix:resultTransform];
 	
 	[glController presentFramebuffer];  
 }

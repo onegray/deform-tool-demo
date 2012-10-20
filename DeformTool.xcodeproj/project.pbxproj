@@ -47,6 +47,7 @@
 		ABA16F9B16163D840075E675 /* LayerMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16F9A16163D840075E675 /* LayerMesh.m */; };
 		ABA16FA4161722B00075E675 /* TextureMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16FA3161722B00075E675 /* TextureMesh.m */; };
 		ABA16FB61618EC320075E675 /* MeshLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16FB51618EC320075E675 /* MeshLayout.m */; };
+		ABC27B2B163343BC00EA868E /* DeformTool+TextureMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -107,6 +108,8 @@
 		ABA16FA3161722B00075E675 /* TextureMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureMesh.m; sourceTree = "<group>"; };
 		ABA16FB41618EC320075E675 /* MeshLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshLayout.h; sourceTree = "<group>"; };
 		ABA16FB51618EC320075E675 /* MeshLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeshLayout.m; sourceTree = "<group>"; };
+		ABC27B29163343BC00EA868E /* DeformTool+TextureMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DeformTool+TextureMesh.h"; sourceTree = "<group>"; };
+		ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DeformTool+TextureMesh.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +193,8 @@
 				ABA16FA3161722B00075E675 /* TextureMesh.m */,
 				AB65C19C161F76E9007E7C29 /* DeformTool.h */,
 				AB65C19D161F76E9007E7C29 /* DeformTool.m */,
+				ABC27B29163343BC00EA868E /* DeformTool+TextureMesh.h */,
+				ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */,
 			);
 			path = DeformTool;
 			sourceTree = "<group>";
@@ -339,6 +344,7 @@
 				ABA16FB61618EC320075E675 /* MeshLayout.m in Sources */,
 				AB65C19E161F76E9007E7C29 /* DeformTool.m in Sources */,
 				AB65C1B81620CFEF007E7C29 /* GLFramebuffer.m in Sources */,
+				ABC27B2B163343BC00EA868E /* DeformTool+TextureMesh.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
