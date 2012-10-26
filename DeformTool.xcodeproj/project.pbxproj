@@ -48,6 +48,8 @@
 		ABA16FA4161722B00075E675 /* TextureMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16FA3161722B00075E675 /* TextureMesh.m */; };
 		ABA16FB61618EC320075E675 /* MeshLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16FB51618EC320075E675 /* MeshLayout.m */; };
 		ABC27B2B163343BC00EA868E /* DeformTool+TextureMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */; };
+		ABC27B7D163740EC00EA868E /* MeshShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = ABC27B7B163740EC00EA868E /* MeshShader.fsh */; };
+		ABC27B7E163740EC00EA868E /* MeshShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = ABC27B7C163740EC00EA868E /* MeshShader.vsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -110,6 +112,8 @@
 		ABA16FB51618EC320075E675 /* MeshLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeshLayout.m; sourceTree = "<group>"; };
 		ABC27B29163343BC00EA868E /* DeformTool+TextureMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DeformTool+TextureMesh.h"; sourceTree = "<group>"; };
 		ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DeformTool+TextureMesh.m"; sourceTree = "<group>"; };
+		ABC27B7B163740EC00EA868E /* MeshShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MeshShader.fsh; sourceTree = "<group>"; };
+		ABC27B7C163740EC00EA868E /* MeshShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MeshShader.vsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +139,8 @@
 				AB65C1C31621B443007E7C29 /* SimpleShader.vsh */,
 				AB384B7A161266CD003A2D9C /* BaseShader.fsh */,
 				AB384B7B161266CD003A2D9C /* BaseShader.vsh */,
+				ABC27B7B163740EC00EA868E /* MeshShader.fsh */,
+				ABC27B7C163740EC00EA868E /* MeshShader.vsh */,
 				AB34719B16271C1C00A4BB1A /* GenBrush.fsh */,
 				AB34719C16271C1C00A4BB1A /* GenBrush.vsh */,
 				AB65C1A2161F7C51007E7C29 /* DeformShader.fsh */,
@@ -307,6 +313,8 @@
 				AB65C1C51621B444007E7C29 /* SimpleShader.vsh in Resources */,
 				AB384B82161266CD003A2D9C /* BaseShader.fsh in Resources */,
 				AB384B83161266CD003A2D9C /* BaseShader.vsh in Resources */,
+				ABC27B7D163740EC00EA868E /* MeshShader.fsh in Resources */,
+				ABC27B7E163740EC00EA868E /* MeshShader.vsh in Resources */,
 				AB65C1A4161F7C51007E7C29 /* DeformShader.fsh in Resources */,
 				AB65C1A5161F7C51007E7C29 /* DeformShader.vsh in Resources */,
 				AB65C1A8161F87A3007E7C29 /* ResultShader.fsh in Resources */,

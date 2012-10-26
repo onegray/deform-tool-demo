@@ -10,6 +10,7 @@
 
 
 @class GLTexture, GLFramebuffer;
+@class LayerMesh;
 @interface DeformTool : NSObject
 {
 	GLFramebuffer* meshFramebuffer;
@@ -19,6 +20,8 @@
 	GLTexture* brushTexture;
 }
 
+-(id) initWithMesh:(LayerMesh*)aMesh;
+-(void) applyMoveDeformVector:(CGPoint)force atPoint:(CGPoint)point;
 
 @end
 

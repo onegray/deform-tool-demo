@@ -51,6 +51,19 @@ static GLRender* sharedInstance = nil;
 	return baseProgram;
 }
 
++(GLProgram*) meshProgram
+{
+	static GLProgram* meshProgram = nil;
+	if(!meshProgram) {
+		meshProgram = [[GLProgram alloc] initWithVertexShaderFilename:@"MeshShader" fragmentShaderFilename:@"MeshShader"];
+		[meshProgram addAttribute:@"position"];
+		[meshProgram addAttribute:@"texCoord"];
+		[meshProgram addAttribute:@"vectors"];
+		[meshProgram link];
+	}
+	return meshProgram;
+}
+
 
 
 
@@ -98,7 +111,7 @@ static GLRender* sharedInstance = nil;
 	GLfloat matrix[16];
 	CGAffineToGL(&transform, matrix);
     
-	GLProgram* program = [GLRender baseProgram];
+	GLProgram* program = [GLRender meshProgram];
     [program use];
     
     glActiveTexture(GL_TEXTURE0);
@@ -113,11 +126,14 @@ static GLRender* sharedInstance = nil;
     
     GLuint vertCoordAttr = [program attributeIndex:@"position"];
     GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
+    GLuint vectorsAttr = [program attributeIndex:@"vectors"];
     
     glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, 0, mesh.vertices);
     glEnableVertexAttribArray(vertCoordAttr);
     glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, 0, mesh.texCoords);
     glEnableVertexAttribArray(texCoordAttr);
+    glVertexAttribPointer(vectorsAttr, 2, GL_FLOAT, 0, 0, mesh.vectors);
+    glEnableVertexAttribArray(vectorsAttr);
     
 	//glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
 	glDrawElements(GL_TRIANGLE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);

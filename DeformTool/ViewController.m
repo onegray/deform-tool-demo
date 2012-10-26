@@ -59,13 +59,13 @@ enum  {
 	
 	[GLRender loadSharedRender];
 	
-	deformTool = [[DeformTool alloc] init];
-	
 	if(!texture) {
-		texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"table"]];
+		texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"nature"]];
 		//mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(texture.contentSize.width, texture.contentSize.height)];
 		mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(352, 288)];
 	}
+
+	deformTool = [[DeformTool alloc] initWithMesh:mesh];
 
 	
 	UIPinchGestureRecognizer* pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(onPinchGesture:)];
@@ -107,12 +107,12 @@ enum  {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-
-	//[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
-
 	
+	[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
+
 	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
-	[[GLRender sharedRender] drawTexture:tex deformTexture:deformTool.deformTextureName inRect:CGRectMake(0, 0, 256, 256) transformMatrix:resultTransform];
+	
+	//[[GLRender sharedRender] drawTexture:tex deformTexture:deformTool.deformTextureName inRect:CGRectMake(0, 0, 256, 256) transformMatrix:resultTransform];
 	
 	[glController presentFramebuffer];  
 }
@@ -198,7 +198,9 @@ enum  {
 				int x0 = (int) xf;
 				int y0 = (int) yf;
 				
-				[deformTool applyDeformVector:CGPointMake(dx, dy) atPoint:CGPointMake(x0, y0)];
+				//[deformTool applyDeformVector:CGPointMake(dx, dy) atPoint:CGPointMake(x0, y0)];
+				
+				[deformTool applyMoveDeformVector:CGPointMake(dx, dy) atPoint:CGPointMake(x0, y0)];
 				
 				xf += dx;
 				yf += dy;

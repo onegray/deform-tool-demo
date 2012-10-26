@@ -29,6 +29,7 @@ CG_INLINE PixelSize PixelSizeMake(int width, int height)
 -(id) initWithTextureSize:(PixelSize)ts;
 
 @property (nonatomic, readonly) GLfloat* vertices;
+@property (nonatomic, readonly) GLfloat* vectors;
 @property (nonatomic, readonly) int vertNum;
 
 @property (nonatomic, readonly) GLushort* indices;
@@ -37,6 +38,8 @@ CG_INLINE PixelSize PixelSizeMake(int width, int height)
 @property (nonatomic, readonly) GLfloat* texCoords;
 @property (nonatomic, readonly) int texCoordNum;
 
-
+@property (nonatomic, readonly) MeshLayout layout;
+@property (nonatomic, readonly) int tileSize;
+@property (nonatomic, readonly) PixelSize textureContentSize;
 
 @end

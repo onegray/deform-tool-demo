@@ -17,17 +17,20 @@
 	MeshLayout layout;
 	int tileSize;
 	GLfloat* vertices;
+	GLfloat* vectors;
 	int vertNum;
 	
 	GLushort* indices;
 	int indexCount;
+	
 }
 @end
 
 
 @implementation LayerMesh
-@synthesize vertices, vertNum;
+@synthesize vertices, vectors, vertNum;
 @synthesize indices, indexCount;
+@synthesize layout, tileSize, textureContentSize;
 
 
 -(id) initWithTextureSize:(PixelSize)ts
@@ -37,7 +40,8 @@
 		NSAssert( ts.widthPixels % MAX_TEXTURE_TILE_SIZE == 0, @"");
 		NSAssert( ts.heighPixels % MAX_TEXTURE_TILE_SIZE == 0, @"");
 		
-		tileSize = MAX_TEXTURE_TILE_SIZE;
+		tileSize = 4;
+		textureContentSize = ts;
 		layout = MeshLayoutMake(0, 0, ts.widthPixels/tileSize, ts.heighPixels/tileSize);
 		textureMesh = [[TextureMesh alloc] initWithTextureRect:CGRectMake(0, 0, 1, 1) meshLayout:layout];
 	
@@ -64,8 +68,14 @@
 		free(vertices);
 	if(indices)
 		free(indices);
+	if(vectors)
+		free(vectors);
 
 	vertNum = (layout.width+1)*(layout.height+1);
+	
+	vectors = (GLfloat*)malloc(vertNum*2*sizeof(GLfloat));
+	memset(vectors, 0, vertNum*2*sizeof(GLfloat));
+	
 	vertices = (GLfloat*)malloc(vertNum*2*sizeof(GLfloat));
 	GLfloat* vertPtr = vertices;
 	
@@ -102,7 +112,6 @@
 	}	
 	
 	NSAssert(indexCount==(pi-indices), @"Invalid indNum");
-
 }
 
 

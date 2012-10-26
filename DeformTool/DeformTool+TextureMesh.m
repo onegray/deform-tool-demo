@@ -27,6 +27,15 @@
 	return deformProgram;
 }
 
+-(id) init
+{
+	self = [super init];
+	if(self) {
+		[self initDeformTextures];
+	}
+	return self;
+}
+
 -(void) initDeformTextures
 {
 	brushTexture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"brush.png"]];
