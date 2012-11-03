@@ -40,13 +40,13 @@
 		NSAssert( ts.widthPixels % MAX_TEXTURE_TILE_SIZE == 0, @"");
 		NSAssert( ts.heighPixels % MAX_TEXTURE_TILE_SIZE == 0, @"");
 		
-		tileSize = 4;
+		tileSize = 8;
 		textureContentSize = ts;
 		layout = MeshLayoutMake(0, 0, ts.widthPixels/tileSize, ts.heighPixels/tileSize);
 		textureMesh = [[TextureMesh alloc] initWithTextureRect:CGRectMake(0, 0, 1, 1) meshLayout:layout];
 	
 		/*
-		layout = MeshLayoutMake(-2, -2, layout.width+4, layout.height+4);
+		layout = MeshLayoutMake(-7, -8, layout.width+20, layout.height+20);
 		[textureMesh extendMeshLayout:layout];
 		*/
 		 
@@ -59,6 +59,29 @@
 		[self rebuildVertexMesh];
 	}
 	return self;
+}
+
+
+-(void) satisfyVisibleRect:(CGRect)visibleRect
+{
+	int left = floorf(visibleRect.origin.x/tileSize);
+	int right = ceilf((visibleRect.origin.x+visibleRect.size.width)/tileSize);
+	int top = floorf(visibleRect.origin.y/tileSize);
+	int bottom = ceilf((visibleRect.origin.y+visibleRect.size.height)/tileSize);
+
+	int layoutMaxX = layout.x+layout.width;
+	int layoutMaxY = layout.y+layout.height;
+	if(left < layout.x || right > layoutMaxX || top < layout.y || bottom > layoutMaxY)
+	{
+		left = MIN(left, layout.x);
+		right = MAX(right, layoutMaxX);
+		top = MIN(top, layout.y);
+		bottom = MAX(bottom, layoutMaxY);
+		
+		layout = MeshLayoutMake(left, top, right-left, bottom-top);
+		[textureMesh extendMeshLayout:layout];
+		[self rebuildVertexMesh];
+	}
 }
 
 

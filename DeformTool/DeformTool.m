@@ -39,30 +39,35 @@
 	return self;
 }
 
-static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, int rowSize)
+static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, MeshLayout layout)
 {
-	int xi = (int)p.x;
-	int yi = (int)p.y;
-	
-	float dx = p.x - xi;
-	float dy = p.y - yi;
-
-	int index = yi*rowSize + xi;
-
-	CGPoint v00 = deformVectors[index];
-	CGPoint v10 = deformVectors[index+1];
-	CGPoint v01 = deformVectors[index+rowSize];
-	CGPoint v11 = deformVectors[index+rowSize+1];
-
-	float mx0 = v00.x + (v10.x-v00.x) * dx;
-	float mx1 = v01.x + (v11.x-v01.x) * dx;
-	float my0 = v00.y + (v10.y-v00.y) * dx;
-	float my1 = v01.y + (v11.y-v01.y) * dx;
-
-	float vx = mx0 + dy * (mx1 - mx0);
-	float vy = my0 + dy * (my1 - my0);
-	
-	return CGPointMake(vx, vy);
+	if(p.x>=0 && p.x<=layout.width && p.y>=0 && p.y<=layout.height)
+	{
+		int xi = (int)p.x;
+		int yi = (int)p.y;
+		
+		float dx = p.x - xi;
+		float dy = p.y - yi;
+		
+		int rowSize = layout.width+1;
+		int index = yi*rowSize + xi;
+		
+		CGPoint v00 = deformVectors[index];
+		CGPoint v10 = deformVectors[index+1];
+		CGPoint v01 = deformVectors[index+rowSize];
+		CGPoint v11 = deformVectors[index+rowSize+1];
+		
+		float mx0 = v00.x + (v10.x-v00.x) * dx;
+		float mx1 = v01.x + (v11.x-v01.x) * dx;
+		float my0 = v00.y + (v10.y-v00.y) * dx;
+		float my1 = v01.y + (v11.y-v01.y) * dx;
+		
+		float vx = mx0 + dy * (mx1 - mx0);
+		float vy = my0 + dy * (my1 - my0);
+		
+		return CGPointMake(vx, vy);
+	}
+	return CGPointMake(0, 0);
 }
 
 // Inline assembler optimization   http://stackoverflow.com/questions/11161237/fast-arm-neon-memcpy
@@ -105,7 +110,7 @@ static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, int rowSize
 				float nvx = deformValue*force.x;
 				float nvy = deformValue*force.y;
 
-				CGPoint v = interpolatedVector(CGPointMake(xi+nvx/tileSize, yi+nvy/tileSize), deformVectors, layout.width+1);
+				CGPoint v = interpolatedVector(CGPointMake(xi+nvx/tileSize, yi+nvy/tileSize), deformVectors, layout);
 				v.x += nvx/mesh.textureContentSize.widthPixels;
 				v.y += nvy/mesh.textureContentSize.heighPixels;
 				
@@ -125,7 +130,6 @@ static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, int rowSize
 			float dy = yi-p.y;
 			float d2 = dx*dx + dy*dy;
 			if(d2<=r2) {
-				
 				int ax = xi-left;
 				int ay = yi-top;
 				int aw = right-left;

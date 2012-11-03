@@ -51,6 +51,17 @@ static GLRender* sharedInstance = nil;
 	return baseProgram;
 }
 
++(GLProgram*) colorProgram
+{
+	static GLProgram* colorProgram = nil;
+	if(!colorProgram) {
+		colorProgram = [[GLProgram alloc] initWithVertexShaderFilename:@"ColorShader" fragmentShaderFilename:@"ColorShader"];
+		[colorProgram addAttribute:@"position"];
+		[colorProgram link];
+	}
+	return colorProgram;
+}
+
 +(GLProgram*) meshProgram
 {
 	static GLProgram* meshProgram = nil;
@@ -138,6 +149,25 @@ static GLRender* sharedInstance = nil;
 	//glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
 	glDrawElements(GL_TRIANGLE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
 }
+
+- (void) drawMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform
+{
+	GLfloat matrix[16];
+	CGAffineToGL(&transform, matrix);
+    
+	GLProgram* program = [GLRender colorProgram];
+    [program use];
+    
+	glUniformMatrix4fv([program uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, matrix);
+	glUniform4fv([program uniformIndex:@"color"], 1, (float[4]){1.0, 1.0, 1.0, 1.0} );
+    
+    GLuint vertCoordAttr = [program attributeIndex:@"position"];
+    glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, 0, mesh.vertices);
+    glEnableVertexAttribArray(vertCoordAttr);
+    
+	glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
+}
+
 
 
 

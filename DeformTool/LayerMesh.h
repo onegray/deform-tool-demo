@@ -28,6 +28,8 @@ CG_INLINE PixelSize PixelSizeMake(int width, int height)
 
 -(id) initWithTextureSize:(PixelSize)ts;
 
+-(void) satisfyVisibleRect:(CGRect)visibleRect;
+
 @property (nonatomic, readonly) GLfloat* vertices;
 @property (nonatomic, readonly) GLfloat* vectors;
 @property (nonatomic, readonly) int vertNum;

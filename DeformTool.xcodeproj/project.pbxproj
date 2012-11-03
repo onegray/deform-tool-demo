@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB27A1701641D5E800A495F8 /* ColorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AB27A16E1641D5E800A495F8 /* ColorShader.fsh */; };
+		AB27A1711641D5E800A495F8 /* ColorShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = AB27A16F1641D5E800A495F8 /* ColorShader.vsh */; };
 		AB2D9E6E1614B88400407FDF /* GLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2D9E6D1614B88400407FDF /* GLViewController.m */; };
 		AB2D9E711614B8BA00407FDF /* GLView.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2D9E701614B8BA00407FDF /* GLView.m */; };
 		AB34719D16271C1C00A4BB1A /* GenBrush.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AB34719B16271C1C00A4BB1A /* GenBrush.fsh */; };
@@ -53,6 +55,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AB27A16E1641D5E800A495F8 /* ColorShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ColorShader.fsh; sourceTree = "<group>"; };
+		AB27A16F1641D5E800A495F8 /* ColorShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ColorShader.vsh; sourceTree = "<group>"; };
 		AB2D9E6C1614B88400407FDF /* GLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLViewController.h; sourceTree = "<group>"; };
 		AB2D9E6D1614B88400407FDF /* GLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLViewController.m; sourceTree = "<group>"; };
 		AB2D9E6F1614B8BA00407FDF /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
@@ -137,6 +141,8 @@
 			children = (
 				AB65C1C21621B443007E7C29 /* SimpleShader.fsh */,
 				AB65C1C31621B443007E7C29 /* SimpleShader.vsh */,
+				AB27A16E1641D5E800A495F8 /* ColorShader.fsh */,
+				AB27A16F1641D5E800A495F8 /* ColorShader.vsh */,
 				AB384B7A161266CD003A2D9C /* BaseShader.fsh */,
 				AB384B7B161266CD003A2D9C /* BaseShader.vsh */,
 				ABC27B7B163740EC00EA868E /* MeshShader.fsh */,
@@ -319,6 +325,8 @@
 				AB65C1A5161F7C51007E7C29 /* DeformShader.vsh in Resources */,
 				AB65C1A8161F87A3007E7C29 /* ResultShader.fsh in Resources */,
 				AB65C1A9161F87A3007E7C29 /* ResultShader.vsh in Resources */,
+				AB27A1701641D5E800A495F8 /* ColorShader.fsh in Resources */,
+				AB27A1711641D5E800A495F8 /* ColorShader.vsh in Resources */,
 				AB6826D116126894007F7FEA /* canvas_back32.png in Resources */,
 				AB6826D216126894007F7FEA /* me.png in Resources */,
 				AB6826D316126894007F7FEA /* nature.png in Resources */,

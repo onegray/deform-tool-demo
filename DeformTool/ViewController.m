@@ -109,6 +109,10 @@ enum  {
 
 	
 	[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
+	//if(mode==MODE_DEFORM)
+	{
+		[[GLRender sharedRender] drawMesh:mesh transformMatrix:resultTransform];
+	}
 
 	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
 	
@@ -130,10 +134,24 @@ enum  {
 	[self drawTexture:texture];
 }
 
+-(CGRect) modelVisibleRect
+{
+	CGAffineTransform t = CGAffineTransformInvert(CGAffineTransformConcat(modelviewMatrix, glController.transform));
+	return CGRectApplyAffineTransform(glController.glView.bounds, t);
+}
 
 -(IBAction)onTransformModeBtn:(UISegmentedControl*)segmentedControl
 {
 	mode = segmentedControl.selectedSegmentIndex;
+	
+	if(mode==MODE_DEFORM)
+	{
+		CGRect visibleRect = [self modelVisibleRect];
+		[mesh satisfyVisibleRect:visibleRect];
+	}
+	
+	
+	[self drawTexture:texture];
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -195,13 +213,10 @@ enum  {
 			
 			for (int i=0; i< num; i++)
 			{
-				int x0 = (int) xf;
-				int y0 = (int) yf;
+				//[deformTool applyDeformVector:CGPointMake(dx, dy) atPoint:CGPointMake((int)xf, (int)yf)];
 				
-				//[deformTool applyDeformVector:CGPointMake(dx, dy) atPoint:CGPointMake(x0, y0)];
-				
-				[deformTool applyMoveDeformVector:CGPointMake(dx, dy) atPoint:CGPointMake(x0, y0)];
-				
+				[deformTool applyMoveDeformVector:CGPointMake(dx, dy) atPoint:CGPointMake(xf, yf)];
+
 				xf += dx;
 				yf += dy;
 			}
