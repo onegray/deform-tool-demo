@@ -7,22 +7,27 @@
 //
 
 #import "LayerMesh.h"
-#import "TextureMesh.h"
+#import "DeformVectors.h"
+#import <Accelerate/Accelerate.h>
 
 @interface LayerMesh()
 {
-	TextureMesh* textureMesh;
-	
+	double textureWidth1px;
+	double textureHeight1px;
+	CGRect textureCoordinateRect;
+	GLfloat* textureCoordinates;
 
 	MeshLayout layout;
 	int tileSize;
 	GLfloat* vertices;
-	GLfloat* vectors;
 	int vertNum;
 	
 	GLushort* indices;
 	int indexCount;
 	
+	
+	
+	DeformVectors* deformVectors;
 }
 @end
 
@@ -43,8 +48,12 @@
 		tileSize = 8;
 		textureContentSize = ts;
 		layout = MeshLayoutMake(0, 0, ts.widthPixels/tileSize, ts.heighPixels/tileSize);
-		textureMesh = [[TextureMesh alloc] initWithTextureRect:CGRectMake(0, 0, 1, 1) meshLayout:layout];
-	
+		textureCoordinateRect = CGRectMake(0, 0, 1, 1);
+		textureWidth1px = (double)textureCoordinateRect.size.width / textureContentSize.widthPixels;
+		textureHeight1px = (double)textureCoordinateRect.size.height / textureContentSize.heighPixels;
+		
+		deformVectors = [[DeformVectors alloc] initWithLayout:layout];
+		
 		/*
 		layout = MeshLayoutMake(-7, -8, layout.width+20, layout.height+20);
 		[textureMesh extendMeshLayout:layout];
@@ -56,9 +65,16 @@
 		layout = textureMesh.layout;
 		*/
 		
-		[self rebuildVertexMesh];
+		[self rebuildVertices];
+		[self rebuildTextureCoordinates];
+		[self rebuildIndices];
 	}
 	return self;
+}
+
+-(GLfloat*) vectors
+{
+	return deformVectors.vectors;
 }
 
 
@@ -79,26 +95,20 @@
 		bottom = MAX(bottom, layoutMaxY);
 		
 		layout = MeshLayoutMake(left, top, right-left, bottom-top);
-		[textureMesh extendMeshLayout:layout];
-		[self rebuildVertexMesh];
+		[deformVectors extendLayout:layout];
+
+		[self rebuildVertices];
+		[self rebuildTextureCoordinates];
+		[self rebuildIndices];
 	}
 }
 
-
--(void) rebuildVertexMesh
+-(void) rebuildVertices
 {
 	if(vertices)
 		free(vertices);
-	if(indices)
-		free(indices);
-	if(vectors)
-		free(vectors);
-
+	
 	vertNum = (layout.width+1)*(layout.height+1);
-	
-	vectors = (GLfloat*)malloc(vertNum*2*sizeof(GLfloat));
-	memset(vectors, 0, vertNum*2*sizeof(GLfloat));
-	
 	vertices = (GLfloat*)malloc(vertNum*2*sizeof(GLfloat));
 	GLfloat* vertPtr = vertices;
 	
@@ -109,7 +119,63 @@
 			*vertPtr++ = (layout.x+j)*tileSize;
 			*vertPtr++ = (layout.y+i)*tileSize;
 		}
+	}	
+}
+
+-(void) rebuildTextureCoordinates
+{
+	if(textureCoordinates) {
+		free(textureCoordinates);
 	}
+
+	int coordNum = (layout.width+1) * (layout.height+1);
+	textureCoordinates = (GLfloat*)malloc(coordNum*2*sizeof(GLfloat));
+	
+	float dx = textureWidth1px*tileSize;
+	float dy = textureHeight1px*tileSize;
+	
+
+	long rowStride = (layout.width+1)*2;
+	
+	float x0 = textureCoordinateRect.origin.x+layout.x*dx;
+	vDSP_vramp(&x0, &dx, textureCoordinates, 2, layout.width+1);
+
+	float y0 = textureCoordinateRect.origin.y+layout.y*dy;
+	vDSP_vramp(&y0, &dy, textureCoordinates+1, rowStride, layout.height+1);
+
+	for(int j=0; j<=layout.width; j++)
+	{
+		float* colPtr = textureCoordinates + j*2;
+		vDSP_vfill(colPtr, colPtr+rowStride, rowStride, layout.height);
+	}
+	
+	for(int i=0; i<=layout.height; i++)
+	{
+		float* rowPtr = textureCoordinates + i*rowStride;
+		vDSP_vfill(rowPtr+1, rowPtr+1+2, 2, layout.width);
+	}
+
+#if 1
+	GLfloat* coordPtr = textureCoordinates;
+	for(int i=0; i<=layout.height; i++)
+	{
+		for(int j=0; j<=layout.width; j++)
+		{
+			float x = textureCoordinateRect.origin.x + (layout.x+j) * dx;
+			float y = textureCoordinateRect.origin.y + (layout.y+i) * dy;
+			NSAssert(fabs(coordPtr[0]-x) < 0.000001 && fabs(coordPtr[1]-y) < 0.000001, @"Invalid vDSP processing");
+			*coordPtr++ = x;
+			*coordPtr++ = y;
+		}
+	}
+#endif
+	
+}
+
+-(void) rebuildIndices
+{
+	if(indices)
+		free(indices);
 	
 	indexCount = layout.height*(layout.width+1)*2;
 	indices = malloc(indexCount*sizeof(GLushort));
@@ -132,21 +198,20 @@
 			*pi++ = (i+1)*(layout.width+1) + j;
 			*pi++ = i*(layout.width+1) + j;
 		}
-	}	
+	}
 	
 	NSAssert(indexCount==(pi-indices), @"Invalid indNum");
 }
 
 
-
-
 -(void) buildMeshForLayout:(MeshLayout)viewLayout 
-{	
+{
+	/*
 	if(!MeshLayoutContainsLayout(textureMesh.layout, viewLayout)) {
 		MeshLayout unionLayout = MeshLayoutUnion(textureMesh.layout, viewLayout);
 		[textureMesh extendMeshLayout:unionLayout];
 	}
-
+	*/
 	//int ts = textureMesh.tileSize;
 	//CGRect viewRect = CGRectMake(viewLayout.x*ts, viewLayout.y*ts, viewLayout.width*ts, viewLayout.height*ts);
 	
@@ -157,12 +222,12 @@
 
 -(GLfloat*) texCoords
 {
-	return textureMesh.coordinates;
+	return textureCoordinates;
 }
 
 -(int) texCoordNum
 {
-	return textureMesh.coordNum;
+	return vertNum;
 }
 
 

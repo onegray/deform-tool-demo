@@ -49,6 +49,8 @@
 		ABA16F9B16163D840075E675 /* LayerMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16F9A16163D840075E675 /* LayerMesh.m */; };
 		ABA16FA4161722B00075E675 /* TextureMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16FA3161722B00075E675 /* TextureMesh.m */; };
 		ABA16FB61618EC320075E675 /* MeshLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16FB51618EC320075E675 /* MeshLayout.m */; };
+		ABA7AF6316470DF100782DCF /* DeformVectors.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA7AF6216470DF100782DCF /* DeformVectors.m */; };
+		ABA7AF66164718C300782DCF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA7AF65164718C300782DCF /* Accelerate.framework */; };
 		ABC27B2B163343BC00EA868E /* DeformTool+TextureMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */; };
 		ABC27B7D163740EC00EA868E /* MeshShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = ABC27B7B163740EC00EA868E /* MeshShader.fsh */; };
 		ABC27B7E163740EC00EA868E /* MeshShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = ABC27B7C163740EC00EA868E /* MeshShader.vsh */; };
@@ -114,6 +116,9 @@
 		ABA16FA3161722B00075E675 /* TextureMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureMesh.m; sourceTree = "<group>"; };
 		ABA16FB41618EC320075E675 /* MeshLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshLayout.h; sourceTree = "<group>"; };
 		ABA16FB51618EC320075E675 /* MeshLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeshLayout.m; sourceTree = "<group>"; };
+		ABA7AF6116470DF100782DCF /* DeformVectors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeformVectors.h; sourceTree = "<group>"; };
+		ABA7AF6216470DF100782DCF /* DeformVectors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeformVectors.m; sourceTree = "<group>"; };
+		ABA7AF65164718C300782DCF /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		ABC27B29163343BC00EA868E /* DeformTool+TextureMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DeformTool+TextureMesh.h"; sourceTree = "<group>"; };
 		ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DeformTool+TextureMesh.m"; sourceTree = "<group>"; };
 		ABC27B7B163740EC00EA868E /* MeshShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MeshShader.fsh; sourceTree = "<group>"; };
@@ -125,6 +130,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABA7AF66164718C300782DCF /* Accelerate.framework in Frameworks */,
 				AB384B6916125E87003A2D9C /* QuartzCore.framework in Frameworks */,
 				AB384B6716125DA6003A2D9C /* OpenGLES.framework in Frameworks */,
 				AB384B3416125C70003A2D9C /* UIKit.framework in Frameworks */,
@@ -178,6 +184,7 @@
 		AB384B3216125C70003A2D9C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ABA7AF65164718C300782DCF /* Accelerate.framework */,
 				AB384B6816125E87003A2D9C /* QuartzCore.framework */,
 				AB384B6616125DA6003A2D9C /* OpenGLES.framework */,
 				AB384B3316125C70003A2D9C /* UIKit.framework */,
@@ -205,6 +212,8 @@
 				ABA16FA3161722B00075E675 /* TextureMesh.m */,
 				AB65C19C161F76E9007E7C29 /* DeformTool.h */,
 				AB65C19D161F76E9007E7C29 /* DeformTool.m */,
+				ABA7AF6116470DF100782DCF /* DeformVectors.h */,
+				ABA7AF6216470DF100782DCF /* DeformVectors.m */,
 				ABC27B29163343BC00EA868E /* DeformTool+TextureMesh.h */,
 				ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */,
 			);
@@ -361,6 +370,7 @@
 				AB65C19E161F76E9007E7C29 /* DeformTool.m in Sources */,
 				AB65C1B81620CFEF007E7C29 /* GLFramebuffer.m in Sources */,
 				ABC27B2B163343BC00EA868E /* DeformTool+TextureMesh.m in Sources */,
+				ABA7AF6316470DF100782DCF /* DeformVectors.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,10 +444,14 @@
 		AB384B4E16125C70003A2D9C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Armelle Cloche (H4A5RNNCY8)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Armelle Cloche (H4A5RNNCY8)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeformTool/DeformTool-Prefix.pch";
 				INFOPLIST_FILE = "DeformTool/DeformTool-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "C57344EC-D800-4536-B48D-CB3CD3EAF572";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C57344EC-D800-4536-B48D-CB3CD3EAF572";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -445,10 +459,12 @@
 		AB384B4F16125C70003A2D9C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Armelle Cloche (H4A5RNNCY8)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeformTool/DeformTool-Prefix.pch";
 				INFOPLIST_FILE = "DeformTool/DeformTool-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "C57344EC-D800-4536-B48D-CB3CD3EAF572";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

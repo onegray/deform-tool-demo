@@ -11,6 +11,7 @@
 #import "ViewController.h"
 
 #import "TextureMesh.h"
+#import "DeformVectors.h"
 
 @implementation AppDelegate
 
@@ -20,6 +21,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	[TextureMesh test];
+	[DeformVectors test];
 	
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
