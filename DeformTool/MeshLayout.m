@@ -33,3 +33,17 @@ MeshLayout MeshLayoutUnion(MeshLayout l1, MeshLayout l2)
 	l.height = MAX(l1.y+l1.height, l2.y+l2.height) - l.y;
 	return l;
 }
+
+
+
+
+LayoutWindow LayoutWindowMake(int l, int t, int r, int b)
+{
+	return (LayoutWindow){l, t, r, b};
+}
+
+
+MeshLayout MeshLayoutFromWindow(LayoutWindow window)
+{
+	return (MeshLayout){window.left, window.top, window.right-window.left, window.bottom-window.top};
+}

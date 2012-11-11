@@ -139,11 +139,11 @@ static GLRender* sharedInstance = nil;
     GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
     GLuint vectorsAttr = [program attributeIndex:@"vectors"];
     
-    glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, 0, mesh.vertices);
+    glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, mesh.vertStride, mesh.vertices);
     glEnableVertexAttribArray(vertCoordAttr);
-    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, 0, mesh.texCoords);
+    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, mesh.vertStride, mesh.texCoords);
     glEnableVertexAttribArray(texCoordAttr);
-    glVertexAttribPointer(vectorsAttr, 2, GL_FLOAT, 0, 0, mesh.vectors);
+    glVertexAttribPointer(vectorsAttr, 2, GL_FLOAT, 0, mesh.vertStride, mesh.vectors);
     glEnableVertexAttribArray(vectorsAttr);
     
 	//glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
@@ -162,10 +162,18 @@ static GLRender* sharedInstance = nil;
 	glUniform4fv([program uniformIndex:@"color"], 1, (float[4]){1.0, 1.0, 1.0, 1.0} );
     
     GLuint vertCoordAttr = [program attributeIndex:@"position"];
-    glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, 0, mesh.vertices);
+    glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, mesh.vertStride, mesh.vertices);
     glEnableVertexAttribArray(vertCoordAttr);
     
 	glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
+	
+	/*
+	GLuint* buf = (GLuint*)malloc(mesh.indexCount*sizeof(GLuint));
+	for(int i=0; i<mesh.indexCount; i++) {
+		buf[i] = mesh.indices[i];
+	}
+	glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_INT, buf);
+	*/
 }
 
 

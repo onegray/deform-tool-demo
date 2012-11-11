@@ -75,10 +75,9 @@ static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, MeshLayout 
 
 -(void) applyMoveDeformVector:(CGPoint)force atPoint:(CGPoint)point
 {
-	
 	int tileSize = mesh.tileSize;
 	MeshLayout layout = mesh.layout;
-	CGPoint* deformVectors = (CGPoint*)mesh.vectors;
+	CGPoint* deformVectors = (CGPoint*)mesh.vectorsAbsolutePointer;
 	int r = deformAreaRadius/tileSize;
 	int r2 = r*r;
 
@@ -106,7 +105,7 @@ static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, MeshLayout 
 			float d2 = dx*dx + dy*dy;
 			if(d2<=r2) {
 
-				float deformValue = 0.9 * powf(( cos(sqrt(d2/r2)*M_PI)+1)*0.5, 0.7);
+				float deformValue = 0.9 * powf(( cos(sqrt((double)d2/r2)*M_PI)+1.0)*0.5, 0.7);
 				float nvx = deformValue*force.x;
 				float nvy = deformValue*force.y;
 

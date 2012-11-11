@@ -18,6 +18,8 @@
 	GLfloat* textureCoordinates;
 
 	MeshLayout layout;
+	LayoutWindow maxLayoutWindow;
+	
 	int tileSize;
 	GLfloat* vertices;
 	int vertNum;
@@ -25,7 +27,7 @@
 	GLushort* indices;
 	int indexCount;
 	
-	
+	int vertOffset;
 	
 	DeformVectors* deformVectors;
 }
@@ -36,7 +38,7 @@
 @synthesize vertices, vectors, vertNum;
 @synthesize indices, indexCount;
 @synthesize layout, tileSize, textureContentSize;
-
+@synthesize vertStride;
 
 -(id) initWithTextureSize:(PixelSize)ts
 {
@@ -68,40 +70,116 @@
 		[self rebuildVertices];
 		[self rebuildTextureCoordinates];
 		[self rebuildIndices];
+		
+		vertStride = sizeof(GLfloat)*2;
 	}
 	return self;
 }
 
--(GLfloat*) vectors
+
+-(GLfloat*) vectorsAbsolutePointer
 {
 	return deformVectors.vectors;
 }
 
+-(GLfloat*) vectors
+{
+	return deformVectors.vectors + vertOffset;
+}
 
--(void) satisfyVisibleRect:(CGRect)visibleRect
+-(GLfloat*) vertices
+{
+	return vertices + vertOffset;
+}
+
+-(GLfloat*) texCoords
+{
+	return textureCoordinates + vertOffset;
+}
+
+
+-(void) extendLayoutForWindow:(LayoutWindow)window
+{
+	int layoutMaxX = layout.x+layout.width;
+	int layoutMaxY = layout.y+layout.height;
+	if(window.left < layout.x || window.right > layoutMaxX || window.top < layout.y || window.bottom > layoutMaxY)
+	{
+		window.left = MIN(window.left, layout.x);
+		window.right = MAX(window.right, layoutMaxX);
+		window.top = MIN(window.top, layout.y);
+		window.bottom = MAX(window.bottom, layoutMaxY);
+		
+		layout = MeshLayoutFromWindow(window);
+		[deformVectors extendLayout:layout];
+		
+		[self rebuildVertices];
+		[self rebuildTextureCoordinates];
+		[self rebuildIndices];
+	}
+}
+
+
+-(void) setupVisibleRect:(CGRect)visibleRect interlacing:(int)interlacing
 {
 	int left = floorf(visibleRect.origin.x/tileSize);
 	int right = ceilf((visibleRect.origin.x+visibleRect.size.width)/tileSize);
 	int top = floorf(visibleRect.origin.y/tileSize);
 	int bottom = ceilf((visibleRect.origin.y+visibleRect.size.height)/tileSize);
 
-	int layoutMaxX = layout.x+layout.width;
-	int layoutMaxY = layout.y+layout.height;
-	if(left < layout.x || right > layoutMaxX || top < layout.y || bottom > layoutMaxY)
-	{
-		left = MIN(left, layout.x);
-		right = MAX(right, layoutMaxX);
-		top = MIN(top, layout.y);
-		bottom = MAX(bottom, layoutMaxY);
-		
-		layout = MeshLayoutMake(left, top, right-left, bottom-top);
-		[deformVectors extendLayout:layout];
+	int width = right - left;
+	int height = bottom - top;
+	
+	width = ((width+interlacing-1)/interlacing)*interlacing;  // width = n*interlacing
+	height = ((height+interlacing-1)/interlacing)*interlacing;
 
-		[self rebuildVertices];
-		[self rebuildTextureCoordinates];
-		[self rebuildIndices];
-	}
+	right = left + width;
+	bottom = top + height;
+	
+	LayoutWindow visibleWindow = LayoutWindowMake(left, top, right, bottom);
+	[self extendLayoutForWindow:visibleWindow];
+	[self rebuildIndicesForWindow:visibleWindow interlacing:interlacing];
 }
+
+-(void) rebuildIndicesForWindow:(LayoutWindow)window interlacing:(int)interlacing
+{
+	if(indices)
+		free(indices);
+
+	int windowWidth = window.right - window.left;
+	int windowHeight = window.bottom - window.top;
+	NSAssert( !(windowWidth%interlacing) && !(windowHeight%interlacing), @"Invalid window ");
+	
+	int interlacedLayoutWidth = windowWidth/interlacing;
+	int interlacedLayoutHeight = windowHeight/interlacing;
+
+	indexCount = interlacedLayoutHeight*(interlacedLayoutWidth+1)*2;
+	indices = malloc(indexCount*sizeof(GLushort));
+	GLushort* pi = indices;
+	
+	for(int i=0; i<interlacedLayoutHeight; i++)
+	{
+		for(int j=0; j<=interlacedLayoutWidth; j++)
+		{
+			*pi++ = (i*(layout.width+1) + j);
+			*pi++ = ((i+1)*(layout.width+1) +j);
+		}
+		
+		i++;
+		if(i==interlacedLayoutHeight)
+			break;
+		
+		for(int j=interlacedLayoutWidth; j>=0; j--)
+		{
+			*pi++ = ((i+1)*(layout.width+1) + j);
+			*pi++ = (i*(layout.width+1) + j);
+		}
+	}
+	NSAssert(indexCount==(pi-indices), @"Invalid indNum");
+	
+	vertOffset = ((window.top-layout.y)*(layout.width+1) + (window.left-layout.x))*2;
+	vertStride = interlacing*sizeof(GLfloat)*2;
+}
+
 
 -(void) rebuildVertices
 {
@@ -163,7 +241,7 @@
 		{
 			float x = textureCoordinateRect.origin.x + (layout.x+j) * dx;
 			float y = textureCoordinateRect.origin.y + (layout.y+i) * dy;
-			NSAssert(fabs(coordPtr[0]-x) < 0.000001 && fabs(coordPtr[1]-y) < 0.000001, @"Invalid vDSP processing");
+			NSAssert(fabs(coordPtr[0]-x) < 0.00001 && fabs(coordPtr[1]-y) < 0.00001, @"Invalid vDSP processing");
 			*coordPtr++ = x;
 			*coordPtr++ = y;
 		}
@@ -204,31 +282,53 @@
 }
 
 
--(void) buildMeshForLayout:(MeshLayout)viewLayout 
+-(void) interlaceIndices:(int)interlacing
 {
-	/*
-	if(!MeshLayoutContainsLayout(textureMesh.layout, viewLayout)) {
-		MeshLayout unionLayout = MeshLayoutUnion(textureMesh.layout, viewLayout);
-		[textureMesh extendMeshLayout:unionLayout];
+	if(indices)
+		free(indices);
+
+	NSAssert( !(layout.width%interlacing) && !(layout.height%interlacing), @"Invalid layout or interlacing");
+	
+	int interlacedLayoutWidth = layout.width/interlacing;
+	int interlacedLayoutHeight = layout.height/interlacing;
+	
+	indexCount = interlacedLayoutHeight*(interlacedLayoutWidth+1)*2;
+	indices = malloc(indexCount*sizeof(GLushort));
+	GLushort* pi = indices;
+	
+	int max = 0;
+	
+	for(int i=0; i<interlacedLayoutHeight; i++)
+	{
+		for(int j=0; j<=interlacedLayoutWidth; j++)
+		{
+			*pi++ = (i*(layout.width+1) + j)*interlacing;
+			*pi++ = ((i+1)*(layout.width+1) +j)*interlacing;
+			
+			max = MAX(pi[-1], max);
+			max = MAX(pi[-2], max);
+		}
+		
+		i++;
+		if(i==interlacedLayoutHeight)
+			break;
+		
+		for(int j=interlacedLayoutWidth; j>=0; j--)
+		{
+			*pi++ = ((i+1)*(layout.width+1) + j)*interlacing;
+			*pi++ = (i*(layout.width+1) + j)*interlacing;
+
+			max = MAX(pi[-1], max);
+			max = MAX(pi[-2], max);
+		}
 	}
-	*/
-	//int ts = textureMesh.tileSize;
-	//CGRect viewRect = CGRectMake(viewLayout.x*ts, viewLayout.y*ts, viewLayout.width*ts, viewLayout.height*ts);
-	
-	
-	
+
+	NSLog(@"interlaceIndices indexCount: %d", indexCount);
+	NSLog(@"interlaceIndices max: %d", max);
+
+	NSAssert(indexCount==(pi-indices), @"Invalid indNum");
 }
 
-
--(GLfloat*) texCoords
-{
-	return textureCoordinates;
-}
-
--(int) texCoordNum
-{
-	return vertNum;
-}
 
 
 @end

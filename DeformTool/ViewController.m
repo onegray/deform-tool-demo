@@ -61,8 +61,10 @@ enum  {
 	
 	if(!texture) {
 		texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"nature"]];
-		//mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(texture.contentSize.width, texture.contentSize.height)];
 		mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(352, 288)];
+
+		//texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"table"]];
+		//mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(256, 256)];
 	}
 
 	deformTool = [[DeformTool alloc] initWithMesh:mesh];
@@ -107,6 +109,8 @@ enum  {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	
 	[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
 	//if(mode==MODE_DEFORM)
@@ -147,7 +151,7 @@ enum  {
 	if(mode==MODE_DEFORM)
 	{
 		CGRect visibleRect = [self modelVisibleRect];
-		[mesh satisfyVisibleRect:visibleRect];
+		[mesh setupVisibleRect:visibleRect interlacing:4];
 	}
 	
 	
@@ -214,8 +218,9 @@ enum  {
 			for (int i=0; i< num; i++)
 			{
 				//[deformTool applyDeformVector:CGPointMake(dx, dy) atPoint:CGPointMake((int)xf, (int)yf)];
-				
+
 				[deformTool applyMoveDeformVector:CGPointMake(dx, dy) atPoint:CGPointMake(xf, yf)];
+				//[deformTool applyMoveDeformVector:CGPointMake(dx, dy) atPoint:CGPointMake((int)xf, (int)yf)];
 
 				xf += dx;
 				yf += dy;

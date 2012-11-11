@@ -21,3 +21,17 @@ MeshLayout MeshLayoutMake(int x, int y, int width, int height);
 BOOL MeshLayoutEqualToLayout(MeshLayout l1, MeshLayout l2);
 BOOL MeshLayoutContainsLayout(MeshLayout l1, MeshLayout l2);
 MeshLayout MeshLayoutUnion(MeshLayout l1, MeshLayout l2);
+
+
+
+
+struct LayoutWindow {
+	int left;
+	int top;
+	int right;
+	int bottom;
+};
+typedef struct LayoutWindow LayoutWindow;
+
+LayoutWindow LayoutWindowMake(int l, int t, int r, int b);
+MeshLayout MeshLayoutFromWindow(LayoutWindow window);
