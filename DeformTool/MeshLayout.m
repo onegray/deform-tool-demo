@@ -42,8 +42,56 @@ LayoutWindow LayoutWindowMake(int l, int t, int r, int b)
 	return (LayoutWindow){l, t, r, b};
 }
 
+LayoutWindow LayoutWindowIntersection(LayoutWindow w1, LayoutWindow w2)
+{
+	return (LayoutWindow){MAX(w1.left, w2.left), MAX(w1.top, w2.top), MIN(w1.right, w2.right), MIN(w1.bottom, w2.bottom)};
+}
+
+BOOL LayoutWindowContainsWindow(LayoutWindow w1, LayoutWindow w2)
+{
+	return w1.left<=w2.left && w1.top<=w2.top && w1.right>=w2.right && w1.bottom>=w2.bottom;
+}
+
+BOOL LayoutWindowBiggerThanWindow(LayoutWindow w1, LayoutWindow w2)
+{
+	return (w1.right-w1.left > w2.right-w2.left) && (w1.bottom-w1.top > w2.bottom-w2.top);
+}
+
+LayoutWindow LayoutWindowShiftInsideWindow(LayoutWindow child, LayoutWindow parent)
+{
+	NSCAssert(LayoutWindowBiggerThanWindow(parent, child), @"Parent is too small");
+	
+	if(child.left < parent.left) {
+		int w = child.right-child.left;
+		child.left = parent.left;
+		child.right = child.left + w;
+	} else if(child.right > parent.right) {
+		int w = child.right-child.left;
+		child.right = parent.right;
+		child.left = child.right - w;
+	}
+	
+	if(child.top < parent.top) {
+		int h = child.bottom-child.top;
+		child.top = parent.top;
+		child.bottom = child.top + h;
+	} else if(child.bottom > parent.bottom) {
+		int h = child.bottom-child.top;
+		child.bottom = parent.bottom;
+		child.top = child.bottom - h;
+	}
+	
+	return child;
+}
 
 MeshLayout MeshLayoutFromWindow(LayoutWindow window)
 {
 	return (MeshLayout){window.left, window.top, window.right-window.left, window.bottom-window.top};
 }
+
+BOOL MeshLayoutContainsWindow(MeshLayout l, LayoutWindow w)
+{
+	return l.x<=w.left && l.y<=w.top && (l.x+l.width)>=w.right && (l.y+l.height)>=w.bottom;
+}
+
+

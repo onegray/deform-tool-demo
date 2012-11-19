@@ -29,7 +29,6 @@ CG_INLINE PixelSize PixelSizeMake(int width, int height)
 -(id) initWithTextureSize:(PixelSize)ts;
 
 -(void) setupVisibleRect:(CGRect)visibleRect interlacing:(int)interlacing;
-//-(void) interlaceIndices:(int)interlaceFactor;
 
 @property (nonatomic, readonly) GLfloat* vertices;
 @property (nonatomic, readonly) GLfloat* vectors;
@@ -47,5 +46,9 @@ CG_INLINE PixelSize PixelSizeMake(int width, int height)
 @property (nonatomic, readonly) MeshLayout layout;
 @property (nonatomic, readonly) int tileSize;
 @property (nonatomic, readonly) PixelSize textureContentSize;
+
+
+-(void) checkVertices;
+-(void) checkVerticesForIndices;
 
 @end

@@ -148,13 +148,6 @@ enum  {
 {
 	mode = segmentedControl.selectedSegmentIndex;
 	
-	if(mode==MODE_DEFORM)
-	{
-		CGRect visibleRect = [self modelVisibleRect];
-		[mesh setupVisibleRect:visibleRect interlacing:4];
-	}
-	
-	
 	[self drawTexture:texture];
 }
 
@@ -190,6 +183,9 @@ enum  {
 		{
 			[glController scrollBy:pos];
 			resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
+			
+			CGRect visibleRect = [self modelVisibleRect];
+			[mesh setupVisibleRect:visibleRect interlacing:2];
 		}
 		else if(mode==MODE_TRANSFORM)
 		{
@@ -197,6 +193,9 @@ enum  {
 			pos = CGPointApplyAffineTransform(pos, CGAffineTransformInvert(transformAnchor));
 			modelviewMatrix = CGAffineTransformTranslate(transformAnchor, pos.x-pointAnchor.x, pos.y-pointAnchor.y);
 			resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
+			
+			CGRect visibleRect = [self modelVisibleRect];
+			[mesh setupVisibleRect:visibleRect interlacing:2];
 		}
 		else if(mode==MODE_DEFORM)
 		{

@@ -34,4 +34,9 @@ struct LayoutWindow {
 typedef struct LayoutWindow LayoutWindow;
 
 LayoutWindow LayoutWindowMake(int l, int t, int r, int b);
+LayoutWindow LayoutWindowIntersection(LayoutWindow w1, LayoutWindow w2);
+BOOL LayoutWindowContainsWindow(LayoutWindow w1, LayoutWindow w2);
+BOOL LayoutWindowBiggerThanWindow(LayoutWindow w1, LayoutWindow w2);
+LayoutWindow LayoutWindowShiftInsideWindow(LayoutWindow child, LayoutWindow parent);
 MeshLayout MeshLayoutFromWindow(LayoutWindow window);
+BOOL MeshLayoutContainsWindow(MeshLayout l, LayoutWindow w);

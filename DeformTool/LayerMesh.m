@@ -25,7 +25,11 @@
 	int vertNum;
 	
 	GLushort* indices;
+	//GLushort* indicesBackup;
 	int indexCount;
+	int indicesWindowWidth;
+	int indicesWindowHeight;
+	int indicesBuildedForLayoutWidth;
 	
 	int vertOffset;
 	
@@ -47,7 +51,8 @@
 		NSAssert( ts.widthPixels % MAX_TEXTURE_TILE_SIZE == 0, @"");
 		NSAssert( ts.heighPixels % MAX_TEXTURE_TILE_SIZE == 0, @"");
 		
-		tileSize = 8;
+		tileSize = 4;
+		maxLayoutWindow = LayoutWindowMake(-120, -120, 240+120, 240+120);
 		textureContentSize = ts;
 		layout = MeshLayoutMake(0, 0, ts.widthPixels/tileSize, ts.heighPixels/tileSize);
 		textureCoordinateRect = CGRectMake(0, 0, 1, 1);
@@ -69,7 +74,7 @@
 		
 		[self rebuildVertices];
 		[self rebuildTextureCoordinates];
-		[self rebuildIndices];
+		[self rebuildIndices_deprecated];
 		
 		vertStride = sizeof(GLfloat)*2;
 	}
@@ -102,60 +107,93 @@
 {
 	int layoutMaxX = layout.x+layout.width;
 	int layoutMaxY = layout.y+layout.height;
-	if(window.left < layout.x || window.right > layoutMaxX || window.top < layout.y || window.bottom > layoutMaxY)
-	{
-		window.left = MIN(window.left, layout.x);
-		window.right = MAX(window.right, layoutMaxX);
-		window.top = MIN(window.top, layout.y);
-		window.bottom = MAX(window.bottom, layoutMaxY);
-		
-		layout = MeshLayoutFromWindow(window);
-		[deformVectors extendLayout:layout];
-		
-		[self rebuildVertices];
-		[self rebuildTextureCoordinates];
-		[self rebuildIndices];
-	}
+
+	window.left = MIN(window.left, layout.x);
+	window.right = MAX(window.right, layoutMaxX);
+	window.top = MIN(window.top, layout.y);
+	window.bottom = MAX(window.bottom, layoutMaxY);
+	
+	layout = MeshLayoutFromWindow(window);
+	[deformVectors extendLayout:layout];
+
+	[self rebuildVertices];
+	[self rebuildTextureCoordinates];
+	//[self rebuildIndices];
 }
 
+-(LayoutWindow) inclusiveWindowForRect:(CGRect)rect interlacing:(int)interlacing
+{
+	int interlacedTileSize = tileSize*interlacing;
+	int left = interlacing * floorf(rect.origin.x/interlacedTileSize);
+	int right = interlacing * ceilf((rect.origin.x+rect.size.width)/interlacedTileSize);
+	int top = interlacing * floorf(rect.origin.y/interlacedTileSize);
+	int bottom = interlacing * ceilf((rect.origin.y+rect.size.height)/interlacedTileSize);
+	return LayoutWindowMake(left, top, right, bottom);
+	
+}
 
 -(void) setupVisibleRect:(CGRect)visibleRect interlacing:(int)interlacing
 {
-	int left = floorf(visibleRect.origin.x/tileSize);
-	int right = ceilf((visibleRect.origin.x+visibleRect.size.width)/tileSize);
-	int top = floorf(visibleRect.origin.y/tileSize);
-	int bottom = ceilf((visibleRect.origin.y+visibleRect.size.height)/tileSize);
-
-	int width = right - left;
-	int height = bottom - top;
+	LayoutWindow inclusiveWindow = [self inclusiveWindowForRect:visibleRect interlacing:interlacing];
+	NSAssert(LayoutWindowBiggerThanWindow(maxLayoutWindow, inclusiveWindow), @"maxLayoutWindow is too small");
+	LayoutWindow renderingWindow = LayoutWindowShiftInsideWindow(inclusiveWindow, maxLayoutWindow);
 	
-	width = ((width+interlacing-1)/interlacing)*interlacing;  // width = n*interlacing
-	height = ((height+interlacing-1)/interlacing)*interlacing;
-
-	right = left + width;
-	bottom = top + height;
+	if(!MeshLayoutContainsWindow(layout, renderingWindow)) {
+		[self extendLayoutForWindow:renderingWindow];
+	}
 	
-	LayoutWindow visibleWindow = LayoutWindowMake(left, top, right, bottom);
-	[self extendLayoutForWindow:visibleWindow];
-	[self rebuildIndicesForWindow:visibleWindow interlacing:interlacing];
+	int width = inclusiveWindow.right - inclusiveWindow.left;
+	int height = inclusiveWindow.bottom - inclusiveWindow.top;
+
+	if(width > indicesWindowWidth || height > indicesWindowHeight || indicesBuildedForLayoutWidth!=layout.width)
+	{
+		[self rebuildIndicesForWindowWidth:width height:height interlacing:interlacing];
+	}
+	
+	int offsetX = renderingWindow.left-layout.x;
+	if(offsetX+indicesWindowWidth > layout.width) {
+		offsetX = layout.width - indicesWindowWidth;
+		NSAssert(offsetX>=0, @"");
+	}
+	int offsetY = renderingWindow.top-layout.y;
+	if(offsetY+indicesWindowHeight > layout.height) {
+		offsetY = layout.height - indicesWindowHeight;
+		NSAssert(offsetY>=0, @"");
+	}
+
+	vertOffset = ( offsetY*(layout.width+1) + offsetX )*2;
+	vertStride = interlacing*sizeof(GLfloat)*2;
+	
+	//[self checkVerticesForIndices];
 }
 
--(void) rebuildIndicesForWindow:(LayoutWindow)window interlacing:(int)interlacing
-{
-	if(indices)
-		free(indices);
 
-	int windowWidth = window.right - window.left;
-	int windowHeight = window.bottom - window.top;
+-(void) rebuildIndicesForWindowWidth:(int)windowWidth height:(int)windowHeight interlacing:(int)interlacing
+{
 	NSAssert( !(windowWidth%interlacing) && !(windowHeight%interlacing), @"Invalid window ");
-	
+
 	int interlacedLayoutWidth = windowWidth/interlacing;
 	int interlacedLayoutHeight = windowHeight/interlacing;
 
+	int maxIndex = interlacedLayoutHeight*(layout.width+1) + interlacedLayoutWidth;
+	NSLog(@"rebuildIndicesForWindowWidth:%d height:%d interlacing:%d (maxIndex %d) ", windowWidth, windowHeight, interlacing, maxIndex);
+
+	int maxHeight = (USHRT_MAX-interlacedLayoutWidth)/(layout.width+1);
+	if(maxHeight < interlacedLayoutHeight) {
+		int maxIndexLimited = maxHeight*(layout.width+1)+interlacedLayoutWidth;
+		NSAssert(maxIndexLimited <= USHRT_MAX, @"");
+		interlacedLayoutHeight = maxHeight;
+		NSLog(@"maxIndexLimited %d", maxIndexLimited);
+	}
+	
+	
+	if(indices)
+		free(indices);
+	
 	indexCount = interlacedLayoutHeight*(interlacedLayoutWidth+1)*2;
 	indices = malloc(indexCount*sizeof(GLushort));
 	GLushort* pi = indices;
-	
+
 	for(int i=0; i<interlacedLayoutHeight; i++)
 	{
 		for(int j=0; j<=interlacedLayoutWidth; j++)
@@ -176,10 +214,16 @@
 	}
 	NSAssert(indexCount==(pi-indices), @"Invalid indNum");
 	
-	vertOffset = ((window.top-layout.y)*(layout.width+1) + (window.left-layout.x))*2;
-	vertStride = interlacing*sizeof(GLfloat)*2;
-}
+	indicesWindowWidth = windowWidth;
+	indicesWindowHeight = windowHeight;
+	indicesBuildedForLayoutWidth = layout.width;
 
+	/*
+	if(indicesBackup) free(indicesBackup);
+	indicesBackup = malloc(indexCount*sizeof(GLushort));
+	memcpy(indicesBackup, indices, indexCount*sizeof(GLushort));
+	*/ 
+}
 
 -(void) rebuildVertices
 {
@@ -197,7 +241,35 @@
 			*vertPtr++ = (layout.x+j)*tileSize;
 			*vertPtr++ = (layout.y+i)*tileSize;
 		}
-	}	
+	}
+	
+	[self checkVertices];
+}
+
+-(void) checkVertices
+{
+	GLfloat* vertPtr = vertices;
+	for(int i=0; i<=layout.height; i++)
+	{
+		for(int j=0; j<=layout.width; j++)
+		{
+			CGFloat x = (layout.x+j)*tileSize;
+			CGFloat y = (layout.y+i)*tileSize;
+			NSAssert( vertPtr[0]==x && vertPtr[1]==y, @"Invalid vertices");
+			vertPtr+=2;
+		}
+	}
+}
+
+-(void) checkVerticesForIndices
+{
+	GLfloat* pVertEnd = vertices + vertNum*2*sizeof(GLfloat);
+	for(int i=0; i<indexCount; i++)
+	{
+		int vertIndex = indices[i];
+		GLfloat* p = vertices + vertOffset + vertIndex*vertStride;
+		NSAssert(p>=vertices && p<pVertEnd, @"Invalid indices");
+	}
 }
 
 -(void) rebuildTextureCoordinates
@@ -241,7 +313,7 @@
 		{
 			float x = textureCoordinateRect.origin.x + (layout.x+j) * dx;
 			float y = textureCoordinateRect.origin.y + (layout.y+i) * dy;
-			NSAssert(fabs(coordPtr[0]-x) < 0.00001 && fabs(coordPtr[1]-y) < 0.00001, @"Invalid vDSP processing");
+			NSAssert(fabs(coordPtr[0]-x) < 0.0001 && fabs(coordPtr[1]-y) < 0.0001, @"Invalid vDSP processing");
 			*coordPtr++ = x;
 			*coordPtr++ = y;
 		}
@@ -250,7 +322,19 @@
 	
 }
 
--(void) rebuildIndices
+
+
+
+
+
+
+
+
+
+
+
+
+-(void) rebuildIndices_deprecated
 {
 	if(indices)
 		free(indices);
@@ -281,8 +365,16 @@
 	NSAssert(indexCount==(pi-indices), @"Invalid indNum");
 }
 
+/*
+-(void) checkMemory
+{
+	for(int i=0; i<indexCount; i++) {
+		NSAssert(indices[i]==indicesBackup[i], @"checkMemory failed");
+	}
+}
+*/
 
--(void) interlaceIndices:(int)interlacing
+-(void) interlaceIndices_deprecated:(int)interlacing
 {
 	if(indices)
 		free(indices);
