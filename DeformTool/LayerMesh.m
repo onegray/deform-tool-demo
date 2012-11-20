@@ -30,6 +30,7 @@
 	int indicesWindowWidth;
 	int indicesWindowHeight;
 	int indicesBuildedForLayoutWidth;
+	int indicesInterlacing;
 	
 	int vertOffset;
 	
@@ -60,18 +61,7 @@
 		textureHeight1px = (double)textureCoordinateRect.size.height / textureContentSize.heighPixels;
 		
 		deformVectors = [[DeformVectors alloc] initWithLayout:layout];
-		
-		/*
-		layout = MeshLayoutMake(-7, -8, layout.width+20, layout.height+20);
-		[textureMesh extendMeshLayout:layout];
-		*/
-		 
-		/*
-		[textureMesh resampleMesh:2];
-		tileSize = tileSize/2;
-		layout = textureMesh.layout;
-		*/
-		
+				
 		[self rebuildVertices];
 		[self rebuildTextureCoordinates];
 		[self rebuildIndices_deprecated];
@@ -81,6 +71,11 @@
 	return self;
 }
 
++(int) interlacingForScale:(CGFloat)scale
+{
+	static const int values[20] = {1, 1, 2, 3, 4, 5, 6, 6, 8, 8, 10, 10, 12, 12, 12, 15, 15, 15, 15, 15};
+	return scale < 20 ? values[(int)scale] : 20;
+}
 
 -(GLfloat*) vectorsAbsolutePointer
 {
@@ -135,7 +130,10 @@
 -(void) setupVisibleRect:(CGRect)visibleRect interlacing:(int)interlacing
 {
 	LayoutWindow inclusiveWindow = [self inclusiveWindowForRect:visibleRect interlacing:interlacing];
-	NSAssert(LayoutWindowBiggerThanWindow(maxLayoutWindow, inclusiveWindow), @"maxLayoutWindow is too small");
+	if(LayoutWindowBiggerThanWindow(inclusiveWindow, maxLayoutWindow)) {
+		inclusiveWindow = maxLayoutWindow;
+	}
+	//NSAssert(LayoutWindowBiggerThanWindow(maxLayoutWindow, inclusiveWindow), @"maxLayoutWindow is too small");
 	LayoutWindow renderingWindow = LayoutWindowShiftInsideWindow(inclusiveWindow, maxLayoutWindow);
 	
 	if(!MeshLayoutContainsWindow(layout, renderingWindow)) {
@@ -145,7 +143,7 @@
 	int width = inclusiveWindow.right - inclusiveWindow.left;
 	int height = inclusiveWindow.bottom - inclusiveWindow.top;
 
-	if(width > indicesWindowWidth || height > indicesWindowHeight || indicesBuildedForLayoutWidth!=layout.width)
+	if(width > indicesWindowWidth || height > indicesWindowHeight || indicesBuildedForLayoutWidth!=layout.width || interlacing!=indicesInterlacing)
 	{
 		[self rebuildIndicesForWindowWidth:width height:height interlacing:interlacing];
 	}
@@ -165,6 +163,12 @@
 	vertStride = interlacing*sizeof(GLfloat)*2;
 	
 	//[self checkVerticesForIndices];
+}
+
+-(void) setupVisibleRect:(CGRect)visibleRect scale:(CGFloat)scale
+{
+	int interlacing = [[self class] interlacingForScale:scale];
+	[self setupVisibleRect:visibleRect interlacing:interlacing];
 }
 
 
@@ -217,6 +221,7 @@
 	indicesWindowWidth = windowWidth;
 	indicesWindowHeight = windowHeight;
 	indicesBuildedForLayoutWidth = layout.width;
+	indicesInterlacing = interlacing;
 
 	/*
 	if(indicesBackup) free(indicesBackup);

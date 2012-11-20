@@ -144,6 +144,13 @@ enum  {
 	return CGRectApplyAffineTransform(glController.glView.bounds, t);
 }
 
+-(CGFloat) modelScale
+{
+	CGAffineTransform t = CGAffineTransformInvert(CGAffineTransformConcat(modelviewMatrix, glController.transform));
+	CGRect r = CGRectApplyAffineTransform(CGRectMake(0, 0, 100, 100), t);
+	return r.size.width/100;
+}
+
 -(IBAction)onTransformModeBtn:(UISegmentedControl*)segmentedControl
 {
 	mode = segmentedControl.selectedSegmentIndex;
@@ -185,7 +192,8 @@ enum  {
 			resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
 			
 			CGRect visibleRect = [self modelVisibleRect];
-			[mesh setupVisibleRect:visibleRect interlacing:2];
+			CGFloat scale = [self modelScale];
+			[mesh setupVisibleRect:visibleRect scale:scale*1.5];
 		}
 		else if(mode==MODE_TRANSFORM)
 		{

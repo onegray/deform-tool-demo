@@ -59,7 +59,7 @@ BOOL LayoutWindowBiggerThanWindow(LayoutWindow w1, LayoutWindow w2)
 
 LayoutWindow LayoutWindowShiftInsideWindow(LayoutWindow child, LayoutWindow parent)
 {
-	NSCAssert(LayoutWindowBiggerThanWindow(parent, child), @"Parent is too small");
+	NSCAssert(!LayoutWindowBiggerThanWindow(child, parent), @"Parent is too small");
 	
 	if(child.left < parent.left) {
 		int w = child.right-child.left;
