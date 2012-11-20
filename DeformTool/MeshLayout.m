@@ -52,14 +52,14 @@ BOOL LayoutWindowContainsWindow(LayoutWindow w1, LayoutWindow w2)
 	return w1.left<=w2.left && w1.top<=w2.top && w1.right>=w2.right && w1.bottom>=w2.bottom;
 }
 
-BOOL LayoutWindowBiggerThanWindow(LayoutWindow w1, LayoutWindow w2)
+BOOL LayoutWindowExceedsWindow(LayoutWindow w1, LayoutWindow w2)
 {
-	return (w1.right-w1.left > w2.right-w2.left) && (w1.bottom-w1.top > w2.bottom-w2.top);
+	return (w1.right-w1.left > w2.right-w2.left) || (w1.bottom-w1.top > w2.bottom-w2.top);
 }
 
 LayoutWindow LayoutWindowShiftInsideWindow(LayoutWindow child, LayoutWindow parent)
 {
-	NSCAssert(!LayoutWindowBiggerThanWindow(child, parent), @"Parent is too small");
+	NSCAssert(!LayoutWindowExceedsWindow(child, parent), @"Parent is too small");
 	
 	if(child.left < parent.left) {
 		int w = child.right-child.left;
@@ -92,6 +92,11 @@ MeshLayout MeshLayoutFromWindow(LayoutWindow window)
 BOOL MeshLayoutContainsWindow(MeshLayout l, LayoutWindow w)
 {
 	return l.x<=w.left && l.y<=w.top && (l.x+l.width)>=w.right && (l.y+l.height)>=w.bottom;
+}
+
+NSString* LayoutWindowDescription(LayoutWindow w)
+{
+	return [NSString stringWithFormat:@"l:%d r:%d (w:%d)  t:%d b:%d (h:%d)", w.left, w.right, w.right-w.left, w.top, w.bottom, w.bottom-w.top];
 }
 
 

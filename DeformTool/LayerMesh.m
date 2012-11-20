@@ -129,12 +129,16 @@
 
 -(void) setupVisibleRect:(CGRect)visibleRect interlacing:(int)interlacing
 {
+	//NSLog(@"-"); NSLog(@"setupVisibleRect:");
+	
 	LayoutWindow inclusiveWindow = [self inclusiveWindowForRect:visibleRect interlacing:interlacing];
-	if(LayoutWindowBiggerThanWindow(inclusiveWindow, maxLayoutWindow)) {
+	//NSLog(@"inclusiveWindow %@", LayoutWindowDescription(inclusiveWindow));
+	if(LayoutWindowExceedsWindow(inclusiveWindow, maxLayoutWindow)) {
+		//NSLog(@"inclusiveWindow %@", LayoutWindowDescription(inclusiveWindow));
 		inclusiveWindow = maxLayoutWindow;
 	}
-	//NSAssert(LayoutWindowBiggerThanWindow(maxLayoutWindow, inclusiveWindow), @"maxLayoutWindow is too small");
 	LayoutWindow renderingWindow = LayoutWindowShiftInsideWindow(inclusiveWindow, maxLayoutWindow);
+	//NSLog(@"renderingWindow %@", LayoutWindowDescription(renderingWindow));
 	
 	if(!MeshLayoutContainsWindow(layout, renderingWindow)) {
 		[self extendLayoutForWindow:renderingWindow];
@@ -159,10 +163,10 @@
 		NSAssert(offsetY>=0, @"");
 	}
 
+	//NSLog(@"offsetX:%d offsetY:%d", offsetX, offsetY);
+	
 	vertOffset = ( offsetY*(layout.width+1) + offsetX )*2;
 	vertStride = interlacing*sizeof(GLfloat)*2;
-	
-	//[self checkVerticesForIndices];
 }
 
 -(void) setupVisibleRect:(CGRect)visibleRect scale:(CGFloat)scale
