@@ -21,7 +21,7 @@
 	LayoutWindow maxLayoutWindow;
 	
 	int tileSize;
-	GLfloat* vertices;
+	GLshort* vertices;
 	int vertNum;
 	
 	GLushort* indices;
@@ -43,7 +43,7 @@
 @synthesize vertices, vectors, vertNum;
 @synthesize indices, indexCount;
 @synthesize layout, tileSize, textureContentSize;
-@synthesize vertStride;
+@synthesize vertStride, vectorsStride;
 
 -(id) initWithTextureSize:(PixelSize)ts
 {
@@ -63,10 +63,11 @@
 		deformVectors = [[DeformVectors alloc] initWithLayout:layout];
 				
 		[self rebuildVertices];
-		[self rebuildTextureCoordinates];
+		//[self rebuildTextureCoordinates];
 		[self rebuildIndices_deprecated];
 		
-		vertStride = sizeof(GLfloat)*2;
+		vertStride = sizeof(GLshort)*2;
+		vectorsStride = sizeof(GLfloat)*2;
 	}
 	return self;
 }
@@ -87,7 +88,7 @@
 	return deformVectors.vectors + vertOffset;
 }
 
--(GLfloat*) vertices
+-(GLshort*) vertices
 {
 	return vertices + vertOffset;
 }
@@ -112,7 +113,7 @@
 	[deformVectors extendLayout:layout];
 
 	[self rebuildVertices];
-	[self rebuildTextureCoordinates];
+	//[self rebuildTextureCoordinates];
 	//[self rebuildIndices];
 }
 
@@ -166,7 +167,7 @@
 	//NSLog(@"offsetX:%d offsetY:%d", offsetX, offsetY);
 	
 	vertOffset = ( offsetY*(layout.width+1) + offsetX )*2;
-	vertStride = interlacing*sizeof(GLfloat)*2;
+	vertStride = interlacing*sizeof(GLshort)*2;
 }
 
 -(void) setupVisibleRect:(CGRect)visibleRect scale:(CGFloat)scale
@@ -240,8 +241,8 @@
 		free(vertices);
 	
 	vertNum = (layout.width+1)*(layout.height+1);
-	vertices = (GLfloat*)malloc(vertNum*2*sizeof(GLfloat));
-	GLfloat* vertPtr = vertices;
+	vertices = (GLshort*)malloc(vertNum*2*sizeof(GLshort));
+	GLshort* vertPtr = vertices;
 	
 	for(int i=0; i<=layout.height; i++)
 	{
@@ -257,7 +258,7 @@
 
 -(void) checkVertices
 {
-	GLfloat* vertPtr = vertices;
+	GLshort* vertPtr = vertices;
 	for(int i=0; i<=layout.height; i++)
 	{
 		for(int j=0; j<=layout.width; j++)
@@ -272,16 +273,27 @@
 
 -(void) checkVerticesForIndices
 {
-	GLfloat* pVertEnd = vertices + vertNum*2*sizeof(GLfloat);
+	GLshort* pVertEnd = vertices + vertNum*2;
 	for(int i=0; i<indexCount; i++)
 	{
 		int vertIndex = indices[i];
-		GLfloat* p = vertices + vertOffset + vertIndex*vertStride;
+		GLshort* p = vertices + vertOffset + vertIndex*vertStride;
 		NSAssert(p>=vertices && p<pVertEnd, @"Invalid indices");
 	}
 }
 
--(void) rebuildTextureCoordinates
+
+
+
+
+
+
+
+
+
+
+
+-(void) rebuildTextureCoordinates_deprecated
 {
 	if(textureCoordinates) {
 		free(textureCoordinates);
@@ -330,18 +342,6 @@
 #endif
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 -(void) rebuildIndices_deprecated
 {

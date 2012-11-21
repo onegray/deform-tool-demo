@@ -7,13 +7,15 @@
 //
 
 uniform mat4 modelViewProjectionMatrix;
+uniform vec2 textureContentSize;
 
 attribute vec4 position;
-attribute vec2 texCoord;
+//attribute vec2 texCoord;
 attribute vec2 vectors;
 varying vec2 varTexCoord;
 void main()
 {
+	highp vec2 texCoord = position.xy / textureContentSize.xy;
     varTexCoord = texCoord+vectors;
     gl_Position = modelViewProjectionMatrix * position;
 }

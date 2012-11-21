@@ -68,7 +68,7 @@ static GLRender* sharedInstance = nil;
 	if(!meshProgram) {
 		meshProgram = [[GLProgram alloc] initWithVertexShaderFilename:@"MeshShader" fragmentShaderFilename:@"MeshShader"];
 		[meshProgram addAttribute:@"position"];
-		[meshProgram addAttribute:@"texCoord"];
+		//[meshProgram addAttribute:@"texCoord"];
 		[meshProgram addAttribute:@"vectors"];
 		[meshProgram link];
 	}
@@ -134,16 +134,18 @@ static GLRender* sharedInstance = nil;
 	
 	glUniformMatrix4fv([program uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, matrix);
     glUniform1i([program uniformIndex:@"texture"], 0);
+	
+	glUniform2f([program uniformIndex:@"textureContentSize"], mesh.textureContentSize.widthPixels, mesh.textureContentSize.heighPixels);
     
     GLuint vertCoordAttr = [program attributeIndex:@"position"];
-    GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
+    //GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
     GLuint vectorsAttr = [program attributeIndex:@"vectors"];
     
-    glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, mesh.vertStride, mesh.vertices);
+    glVertexAttribPointer(vertCoordAttr, 2, GL_SHORT, 0, mesh.vertStride, mesh.vertices);
     glEnableVertexAttribArray(vertCoordAttr);
-    glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, mesh.vertStride, mesh.texCoords);
-    glEnableVertexAttribArray(texCoordAttr);
-    glVertexAttribPointer(vectorsAttr, 2, GL_FLOAT, 0, mesh.vertStride, mesh.vectors);
+    //glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, mesh.vertStride, mesh.texCoords);
+    //glEnableVertexAttribArray(texCoordAttr);
+    glVertexAttribPointer(vectorsAttr, 2, GL_FLOAT, 0, mesh.vectorsStride, mesh.vectors);
     glEnableVertexAttribArray(vectorsAttr);
     
 	//glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
@@ -162,7 +164,7 @@ static GLRender* sharedInstance = nil;
 	glUniform4fv([program uniformIndex:@"color"], 1, (float[4]){1.0, 1.0, 1.0, 1.0} );
     
     GLuint vertCoordAttr = [program attributeIndex:@"position"];
-    glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, mesh.vertStride, mesh.vertices);
+    glVertexAttribPointer(vertCoordAttr, 2, GL_SHORT, 0, mesh.vertStride, mesh.vertices);
     glEnableVertexAttribArray(vertCoordAttr);
     
 	glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
