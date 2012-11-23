@@ -29,6 +29,7 @@
 		AB384B85161266CD003A2D9C /* GLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B7F161266CD003A2D9C /* GLProgram.m */; };
 		AB384B86161266CD003A2D9C /* GLTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B81161266CD003A2D9C /* GLTexture.m */; };
 		AB384B8916126703003A2D9C /* GLRender.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B8816126703003A2D9C /* GLRender.m */; };
+		AB47689D165ED71B0030308F /* IndexMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = AB47689C165ED71B0030308F /* IndexMesh.m */; };
 		AB65C19E161F76E9007E7C29 /* DeformTool.m in Sources */ = {isa = PBXBuildFile; fileRef = AB65C19D161F76E9007E7C29 /* DeformTool.m */; };
 		AB65C1A1161F7923007E7C29 /* Black256.png in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A0161F7923007E7C29 /* Black256.png */; };
 		AB65C1A4161F7C51007E7C29 /* DeformShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A2161F7C51007E7C29 /* DeformShader.fsh */; };
@@ -89,6 +90,8 @@
 		AB384B81161266CD003A2D9C /* GLTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLTexture.m; sourceTree = "<group>"; };
 		AB384B8716126703003A2D9C /* GLRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLRender.h; sourceTree = "<group>"; };
 		AB384B8816126703003A2D9C /* GLRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLRender.m; sourceTree = "<group>"; };
+		AB47689B165ED71B0030308F /* IndexMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndexMesh.h; sourceTree = "<group>"; };
+		AB47689C165ED71B0030308F /* IndexMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndexMesh.m; sourceTree = "<group>"; };
 		AB65C19C161F76E9007E7C29 /* DeformTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeformTool.h; sourceTree = "<group>"; };
 		AB65C19D161F76E9007E7C29 /* DeformTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeformTool.m; sourceTree = "<group>"; };
 		AB65C1A0161F7923007E7C29 /* Black256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Black256.png; sourceTree = "<group>"; };
@@ -208,6 +211,8 @@
 				ABA16FB51618EC320075E675 /* MeshLayout.m */,
 				ABA16F9916163D840075E675 /* LayerMesh.h */,
 				ABA16F9A16163D840075E675 /* LayerMesh.m */,
+				AB47689B165ED71B0030308F /* IndexMesh.h */,
+				AB47689C165ED71B0030308F /* IndexMesh.m */,
 				ABA16FA2161722B00075E675 /* TextureMesh.h */,
 				ABA16FA3161722B00075E675 /* TextureMesh.m */,
 				AB65C19C161F76E9007E7C29 /* DeformTool.h */,
@@ -371,6 +376,7 @@
 				AB65C1B81620CFEF007E7C29 /* GLFramebuffer.m in Sources */,
 				ABC27B2B163343BC00EA868E /* DeformTool+TextureMesh.m in Sources */,
 				ABA7AF6316470DF100782DCF /* DeformVectors.m in Sources */,
+				AB47689D165ED71B0030308F /* IndexMesh.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,6 +408,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -417,6 +424,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -427,6 +435,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -436,6 +445,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -444,14 +454,14 @@
 		AB384B4E16125C70003A2D9C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Armelle Cloche (H4A5RNNCY8)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Armelle Cloche (H4A5RNNCY8)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeformTool/DeformTool-Prefix.pch";
 				INFOPLIST_FILE = "DeformTool/DeformTool-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "C57344EC-D800-4536-B48D-CB3CD3EAF572";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C57344EC-D800-4536-B48D-CB3CD3EAF572";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -459,12 +469,12 @@
 		AB384B4F16125C70003A2D9C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Armelle Cloche (H4A5RNNCY8)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeformTool/DeformTool-Prefix.pch";
 				INFOPLIST_FILE = "DeformTool/DeformTool-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "C57344EC-D800-4536-B48D-CB3CD3EAF572";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

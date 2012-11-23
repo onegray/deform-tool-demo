@@ -6,9 +6,12 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#import <Accelerate/Accelerate.h>
+
 #import "LayerMesh.h"
 #import "DeformVectors.h"
-#import <Accelerate/Accelerate.h>
+#import "IndexMesh.h"
+
 
 @interface LayerMesh()
 {
