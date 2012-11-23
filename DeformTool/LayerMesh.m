@@ -171,6 +171,7 @@
 	
 	vertOffset = ( offsetY*(layout.width+1) + offsetX )*2;
 	vertStride = interlacing*sizeof(GLshort)*2;
+	vectorsStride = interlacing*sizeof(GLfloat)*2;
 }
 
 -(void) setupVisibleRect:(CGRect)visibleRect scale:(CGFloat)scale
