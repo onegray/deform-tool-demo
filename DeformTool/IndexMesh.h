@@ -12,6 +12,7 @@
 
 +(IndexMesh*) indexMeshWithWidth:(int)w maxHeight:(int)mh rowStride:(int)rs;
 -(id) initWithWidth:(int)w height:(int)h rowStride:(int)rs;
+-(int) indexCountForMeshHeight:(int)h;
 
 @property (nonatomic, readonly) GLushort* indices;
 @property (nonatomic, readonly) int indexCount;

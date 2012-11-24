@@ -35,6 +35,8 @@
 
 -(id) initWithWidth:(int)w height:(int)h rowStride:(int)rs
 {
+	NSLog(@"IndexMesh initWithWidth:%d height:%d rowStride:%d", w, h, rs);
+	
 	self = [super init];
 	if(self) {
 		
@@ -68,6 +70,12 @@
 	}
 	return self;
 }
+
+-(int) indexCountForMeshHeight:(int)h
+{
+	return h*(width+1)*2;
+}
+
 
 -(void) dealloc
 {

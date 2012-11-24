@@ -11,6 +11,7 @@
 #import "LayerMesh.h"
 #import "DeformVectors.h"
 #import "IndexMesh.h"
+#import "IndexMeshCache.h"
 
 
 @interface LayerMesh()
@@ -27,26 +28,25 @@
 	GLshort* vertices;
 	int vertNum;
 	
-	GLushort* indices;
-	//GLushort* indicesBackup;
-	int indexCount;
-	int indicesWindowWidth;
-	int indicesWindowHeight;
-	int indicesBuildedForLayoutWidth;
-	int indicesInterlacing;
+	int indexMeshHeight;
 	
 	int vertOffset;
 	
 	DeformVectors* deformVectors;
 }
+
+@property (nonatomic, retain) IndexMesh* indexMesh;
+@property (nonatomic, retain) IndexMeshCache* indexMeshCache;
+
 @end
 
 
 @implementation LayerMesh
 @synthesize vertices, vectors, vertNum;
-@synthesize indices, indexCount;
+//@synthesize indices, indexCount;
 @synthesize layout, tileSize, textureContentSize;
 @synthesize vertStride, vectorsStride;
+@synthesize indexMesh, indexMeshCache;
 
 -(id) initWithTextureSize:(PixelSize)ts
 {
@@ -66,8 +66,7 @@
 		deformVectors = [[DeformVectors alloc] initWithLayout:layout];
 				
 		[self rebuildVertices];
-		//[self rebuildTextureCoordinates];
-		[self rebuildIndices_deprecated];
+		[self setupVisibleRect:CGRectMake(0, 0, ts.widthPixels, ts.heighPixels) interlacing:1];
 		
 		vertStride = sizeof(GLshort)*2;
 		vectorsStride = sizeof(GLfloat)*2;
@@ -94,6 +93,17 @@
 -(GLshort*) vertices
 {
 	return vertices + vertOffset;
+}
+
+-(GLushort*) indices
+{
+	return indexMesh.indices;
+}
+
+-(int) indexCount
+{
+	//return indexMesh.indexCount;
+	return [indexMesh indexCountForMeshHeight:indexMeshHeight];
 }
 
 -(GLfloat*) texCoords
@@ -146,25 +156,46 @@
 	
 	if(!MeshLayoutContainsWindow(layout, renderingWindow)) {
 		[self extendLayoutForWindow:renderingWindow];
+		self.indexMeshCache = [[IndexMeshCache alloc] initWithLayerLayout:layout];
+	}
+	
+	if(!self.indexMeshCache) {
+		self.indexMeshCache = [[IndexMeshCache alloc] initWithLayerLayout:layout];
 	}
 	
 	int width = inclusiveWindow.right - inclusiveWindow.left;
 	int height = inclusiveWindow.bottom - inclusiveWindow.top;
 
-	if(width > indicesWindowWidth || height > indicesWindowHeight || indicesBuildedForLayoutWidth!=layout.width || interlacing!=indicesInterlacing)
+	NSAssert( !(width%interlacing) && !(height%interlacing), @"Invalid index window");
+	int interlacedWidth = width/interlacing;
+	int interlacedHeight = height/interlacing;
+	NSAssert(interlacedWidth <= layout.width && interlacedHeight <= layout.height, @"Invalid index window");
+
+	
+	self.indexMesh = [indexMeshCache meshForWidth:interlacedWidth];
+	indexMeshHeight = MIN(interlacedHeight, indexMesh.height);
+	//[indexMeshCache printLast:20];
+	
+	/*
+	if(interlacedWidth > indexMesh.width || interlacedHeight > indexMesh.height || (layout.width+1)!=indexMesh.rowStride)
 	{
-		[self rebuildIndicesForWindowWidth:width height:height interlacing:interlacing];
+		self.indexMesh = [IndexMesh indexMeshWithWidth:interlacedWidth maxHeight:interlacedHeight rowStride:(layout.width+1)];
 	}
+	else if(indexMesh.width*interlacing > layout.width || indexMesh.height*interlacing > layout.height)
+	{
+		self.indexMesh = [IndexMesh indexMeshWithWidth:interlacedWidth maxHeight:interlacedHeight rowStride:(layout.width+1)];
+	}
+	*/ 
 	
 	int offsetX = renderingWindow.left-layout.x;
-	if(offsetX+indicesWindowWidth > layout.width) {
-		offsetX = layout.width - indicesWindowWidth;
+	if(offsetX+indexMesh.width*interlacing > layout.width) {
+		offsetX = layout.width - indexMesh.width*interlacing;
 		NSAssert(offsetX>=0, @"");
 	}
+	
 	int offsetY = renderingWindow.top-layout.y;
-	if(offsetY+indicesWindowHeight > layout.height) {
-		offsetY = layout.height - indicesWindowHeight;
-		NSAssert(offsetY>=0, @"");
+	if(offsetY+indexMeshHeight*interlacing > layout.height) {
+		indexMeshHeight = (layout.height - offsetY)/interlacing;
 	}
 
 	//NSLog(@"offsetX:%d offsetY:%d", offsetX, offsetY);
@@ -180,7 +211,7 @@
 	[self setupVisibleRect:visibleRect interlacing:interlacing];
 }
 
-
+/*
 -(void) rebuildIndicesForWindowWidth:(int)windowWidth height:(int)windowHeight interlacing:(int)interlacing
 {
 	NSAssert( !(windowWidth%interlacing) && !(windowHeight%interlacing), @"Invalid window ");
@@ -231,13 +262,8 @@
 	indicesWindowHeight = windowHeight;
 	indicesBuildedForLayoutWidth = layout.width;
 	indicesInterlacing = interlacing;
-
-	/*
-	if(indicesBackup) free(indicesBackup);
-	indicesBackup = malloc(indexCount*sizeof(GLushort));
-	memcpy(indicesBackup, indices, indexCount*sizeof(GLushort));
-	*/ 
 }
+*/
 
 -(void) rebuildVertices
 {
@@ -275,12 +301,14 @@
 	}
 }
 
+
 -(void) checkVerticesForIndices
 {
 	GLshort* pVertEnd = vertices + vertNum*2;
+	int indexCount = [self indexCount];
 	for(int i=0; i<indexCount; i++)
 	{
-		int vertIndex = indices[i];
+		int vertIndex = indexMesh.indices[i];
 		GLshort* p = vertices + vertOffset + vertIndex*vertStride;
 		NSAssert(p>=vertices && p<pVertEnd, @"Invalid indices");
 	}
@@ -347,6 +375,7 @@
 	
 }
 
+/*
 -(void) rebuildIndices_deprecated
 {
 	if(indices)
@@ -377,6 +406,7 @@
 	
 	NSAssert(indexCount==(pi-indices), @"Invalid indNum");
 }
+*/
 
 /*
 -(void) checkMemory
@@ -386,54 +416,6 @@
 	}
 }
 */
-
--(void) interlaceIndices_deprecated:(int)interlacing
-{
-	if(indices)
-		free(indices);
-
-	NSAssert( !(layout.width%interlacing) && !(layout.height%interlacing), @"Invalid layout or interlacing");
-	
-	int interlacedLayoutWidth = layout.width/interlacing;
-	int interlacedLayoutHeight = layout.height/interlacing;
-	
-	indexCount = interlacedLayoutHeight*(interlacedLayoutWidth+1)*2;
-	indices = malloc(indexCount*sizeof(GLushort));
-	GLushort* pi = indices;
-	
-	int max = 0;
-	
-	for(int i=0; i<interlacedLayoutHeight; i++)
-	{
-		for(int j=0; j<=interlacedLayoutWidth; j++)
-		{
-			*pi++ = (i*(layout.width+1) + j)*interlacing;
-			*pi++ = ((i+1)*(layout.width+1) +j)*interlacing;
-			
-			max = MAX(pi[-1], max);
-			max = MAX(pi[-2], max);
-		}
-		
-		i++;
-		if(i==interlacedLayoutHeight)
-			break;
-		
-		for(int j=interlacedLayoutWidth; j>=0; j--)
-		{
-			*pi++ = ((i+1)*(layout.width+1) + j)*interlacing;
-			*pi++ = (i*(layout.width+1) + j)*interlacing;
-
-			max = MAX(pi[-1], max);
-			max = MAX(pi[-2], max);
-		}
-	}
-
-	NSLog(@"interlaceIndices indexCount: %d", indexCount);
-	NSLog(@"interlaceIndices max: %d", max);
-
-	NSAssert(indexCount==(pi-indices), @"Invalid indNum");
-}
-
 
 
 @end
