@@ -147,8 +147,10 @@ enum  {
 -(CGFloat) modelScale
 {
 	CGAffineTransform t = CGAffineTransformInvert(CGAffineTransformConcat(modelviewMatrix, glController.transform));
-	CGRect r = CGRectApplyAffineTransform(CGRectMake(0, 0, 100, 100), t);
-	return r.size.width/100;
+	float scaleX = sqrtf(t.a*t.a + t.c*t.c);
+	//float scaleY = sqrtf(t.b*t.b + t.d*t.d);
+	//float scaleX = 1.0/sqrtf((t1.a*t1.a + t1.c*t1.c)*(t2.a*t2.a + t2.c*t2.c));
+	return scaleX;
 }
 
 -(IBAction)onTransformModeBtn:(UISegmentedControl*)segmentedControl
