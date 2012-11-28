@@ -11,6 +11,8 @@
 
 @class GLTexture, GLFramebuffer;
 @class LayerMesh;
+@class DeformBrush;
+
 @interface DeformTool : NSObject
 {
 	GLFramebuffer* meshFramebuffer;
@@ -22,6 +24,8 @@
 
 -(id) initWithMesh:(LayerMesh*)aMesh;
 -(void) applyMoveDeformVector:(CGPoint)force atPoint:(CGPoint)point;
+
+@property (nonatomic, retain) DeformBrush* brush;
 
 @end
 

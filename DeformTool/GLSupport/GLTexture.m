@@ -36,6 +36,9 @@
     self = [super init];
     if(self)
     {
+		//glPixelStorei(GL_UNPACK_ROW_LENGTH, width);
+		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		
 		glGenTextures(1, &textureName);
 		glBindTexture(GL_TEXTURE_2D, textureName);
         
@@ -138,10 +141,12 @@ static CGSize adjustTextureSize(CGSize size)
 	int w = (int)size.width;
 	int h = (int)size.height;
 
-	// round up to a multiple of a 4
-	w = ((w+3)/4)*4;
-	h = ((h+3)/4)*4; 
+	// round up to a multiple of 32
+	w = ((w+32-1)/32)*32;
+	h = ((h+32-1)/32)*32;
 	return CGSizeMake(w, h); // - using even non-power-of-two textures
+	
+	//UNPACK_ALIGNMENT
 	
     //return CGSizeMake(PO2(size.width), PO2(size.height));
 }

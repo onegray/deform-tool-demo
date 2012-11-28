@@ -47,6 +47,8 @@ CG_INLINE PixelSize PixelSizeMake(int width, int height)
 
 @property (nonatomic, readonly) MeshLayout layout;
 @property (nonatomic, readonly) int tileSize;
+@property (nonatomic, readonly) int interlacing;
+@property (nonatomic, readonly) int interlacedTileSize;
 @property (nonatomic, readonly) PixelSize textureContentSize;
 
 

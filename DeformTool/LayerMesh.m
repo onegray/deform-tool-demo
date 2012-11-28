@@ -47,6 +47,7 @@
 @synthesize layout, tileSize, textureContentSize;
 @synthesize vertStride, vectorsStride;
 @synthesize indexMesh, indexMeshCache;
+@synthesize interlacing = _interlacing;
 
 -(id) initWithTextureSize:(PixelSize)ts
 {
@@ -111,6 +112,10 @@
 	return textureCoordinates + vertOffset;
 }
 
+-(int) interlacedTileSize
+{
+	return _interlacing*tileSize;
+}
 
 -(void) extendLayoutForWindow:(LayoutWindow)window
 {
@@ -203,6 +208,7 @@
 	vertOffset = ( offsetY*(layout.width+1) + offsetX )*2;
 	vertStride = interlacing*sizeof(GLshort)*2;
 	vectorsStride = interlacing*sizeof(GLfloat)*2;
+	_interlacing = interlacing;
 }
 
 -(void) setupVisibleRect:(CGRect)visibleRect scale:(CGFloat)scale

@@ -8,6 +8,7 @@
 
 #import "DeformTool.h"
 #import "LayerMesh.h"
+#import "DeformBrush.h"
 
 @interface DeformTool()
 {
@@ -17,6 +18,8 @@
 	CGPoint* deformAreaVectors;
 
 }
+
+
 @end
 
 
@@ -37,6 +40,19 @@
 		
 	}
 	return self;
+}
+
+-(void) setBrush:(DeformBrush *)b
+{
+	_brush = b;
+	
+	if(_brush.pixelSize!=deformAreaRadius) {
+		
+		deformAreaRadius = _brush.pixelSize;
+		int deformAreaBufSize = (2*deformAreaRadius+1)*(2*deformAreaRadius+1)*sizeof(CGPoint);
+		deformAreaVectors = (CGPoint*)malloc(deformAreaBufSize);
+		memset(deformAreaVectors, 0, deformAreaBufSize);
+	}
 }
 
 static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, MeshLayout layout)
@@ -105,7 +121,10 @@ static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, MeshLayout 
 			float d2 = dx*dx + dy*dy;
 			if(d2<=r2) {
 
-				float deformValue = 0.9 * powf(( cos(sqrt((double)d2/r2)*M_PI)+1.0)*0.5, 0.7);
+				//float deformValue = 0.9 * powf(( cos(sqrt((double)d2/r2)*M_PI)+1.0)*0.5, 0.7);				
+				int valueIndex = _brush.valueBufferLength * sqrt(d2)/r;
+				float deformValue = _brush.valueBuffer[valueIndex];
+				
 				float nvx = deformValue*force.x;
 				float nvy = deformValue*force.y;
 

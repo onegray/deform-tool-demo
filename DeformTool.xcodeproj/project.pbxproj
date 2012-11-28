@@ -30,6 +30,8 @@
 		AB384B86161266CD003A2D9C /* GLTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B81161266CD003A2D9C /* GLTexture.m */; };
 		AB384B8916126703003A2D9C /* GLRender.m in Sources */ = {isa = PBXBuildFile; fileRef = AB384B8816126703003A2D9C /* GLRender.m */; };
 		AB3A1584165FF41700130517 /* IndexMeshCache.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3A1583165FF41700130517 /* IndexMeshCache.m */; };
+		AB3A15911661584900130517 /* Brush.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3A15901661584900130517 /* Brush.m */; };
+		AB3A15941661724600130517 /* DeformBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3A15931661724600130517 /* DeformBrush.m */; };
 		AB47689D165ED71B0030308F /* IndexMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = AB47689C165ED71B0030308F /* IndexMesh.m */; };
 		AB65C19E161F76E9007E7C29 /* DeformTool.m in Sources */ = {isa = PBXBuildFile; fileRef = AB65C19D161F76E9007E7C29 /* DeformTool.m */; };
 		AB65C1A1161F7923007E7C29 /* Black256.png in Resources */ = {isa = PBXBuildFile; fileRef = AB65C1A0161F7923007E7C29 /* Black256.png */; };
@@ -93,6 +95,10 @@
 		AB384B8816126703003A2D9C /* GLRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLRender.m; sourceTree = "<group>"; };
 		AB3A1582165FF41700130517 /* IndexMeshCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndexMeshCache.h; sourceTree = "<group>"; };
 		AB3A1583165FF41700130517 /* IndexMeshCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndexMeshCache.m; sourceTree = "<group>"; };
+		AB3A158F1661584900130517 /* Brush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Brush.h; sourceTree = "<group>"; };
+		AB3A15901661584900130517 /* Brush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Brush.m; sourceTree = "<group>"; };
+		AB3A15921661724600130517 /* DeformBrush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeformBrush.h; sourceTree = "<group>"; };
+		AB3A15931661724600130517 /* DeformBrush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeformBrush.m; sourceTree = "<group>"; };
 		AB47689B165ED71B0030308F /* IndexMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndexMesh.h; sourceTree = "<group>"; };
 		AB47689C165ED71B0030308F /* IndexMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndexMesh.m; sourceTree = "<group>"; };
 		AB65C19C161F76E9007E7C29 /* DeformTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeformTool.h; sourceTree = "<group>"; };
@@ -226,6 +232,10 @@
 				ABA7AF6216470DF100782DCF /* DeformVectors.m */,
 				ABC27B29163343BC00EA868E /* DeformTool+TextureMesh.h */,
 				ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */,
+				AB3A158F1661584900130517 /* Brush.h */,
+				AB3A15901661584900130517 /* Brush.m */,
+				AB3A15921661724600130517 /* DeformBrush.h */,
+				AB3A15931661724600130517 /* DeformBrush.m */,
 			);
 			path = DeformTool;
 			sourceTree = "<group>";
@@ -383,6 +393,8 @@
 				ABA7AF6316470DF100782DCF /* DeformVectors.m in Sources */,
 				AB47689D165ED71B0030308F /* IndexMesh.m in Sources */,
 				AB3A1584165FF41700130517 /* IndexMeshCache.m in Sources */,
+				AB3A15911661584900130517 /* Brush.m in Sources */,
+				AB3A15941661724600130517 /* DeformBrush.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -460,14 +472,15 @@
 		AB384B4E16125C70003A2D9C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Sergey Nikitenko (TB5M3TUXF6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Sergey Nikitenko (TB5M3TUXF6)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeformTool/DeformTool-Prefix.pch";
 				INFOPLIST_FILE = "DeformTool/DeformTool-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "05E4E1B8-42A8-49FE-93CC-7CCE3B313DA9";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "05E4E1B8-42A8-49FE-93CC-7CCE3B313DA9";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -475,12 +488,13 @@
 		AB384B4F16125C70003A2D9C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Sergey Nikitenko (TB5M3TUXF6)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeformTool/DeformTool-Prefix.pch";
 				INFOPLIST_FILE = "DeformTool/DeformTool-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "05E4E1B8-42A8-49FE-93CC-7CCE3B313DA9";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

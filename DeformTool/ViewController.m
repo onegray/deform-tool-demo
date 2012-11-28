@@ -13,6 +13,7 @@
 
 #import "LayerMesh.h"
 #import "DeformTool.h"
+#import "DeformBrush.h"
 
 enum  {
 	MODE_SCROLL,
@@ -38,6 +39,7 @@ enum  {
 	int mode;
 	
 	DeformTool* deformTool;
+	DeformBrush* deformBrush;
 }
 @end
 
@@ -69,6 +71,9 @@ enum  {
 
 	deformTool = [[DeformTool alloc] initWithMesh:mesh];
 
+	deformBrush = [[DeformBrush alloc] init];
+	deformBrush.fingerSize = 1.0;
+	deformTool.brush = deformBrush;
 	
 	UIPinchGestureRecognizer* pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(onPinchGesture:)];
 	[glController.glView addGestureRecognizer:pinchRecognizer];
@@ -113,10 +118,7 @@ enum  {
 	glCullFace(GL_BACK);
 	
 	[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
-	//if(mode==MODE_DEFORM)
-	{
-		[[GLRender sharedRender] drawMesh:mesh transformMatrix:resultTransform];
-	}
+	[[GLRender sharedRender] drawMesh:mesh transformMatrix:resultTransform];
 
 	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
 	
@@ -261,6 +263,10 @@ enum  {
 
 	gestureInProgress = YES;
 	resultTransform = CGAffineTransformConcat(modelviewMatrix, glController.projectionMatrix);
+	
+	deformBrush.scale = [self modelScale];
+	deformTool.brush = deformBrush;
+	
 	[self drawTexture:texture];
 }
 
