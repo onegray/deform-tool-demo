@@ -95,6 +95,9 @@
 	vDSP_vsmul(indexes, 1, &scalar2, indexes, 1, lookupVectorsNum);
 	//[self printArray1:indexes width:deformWidth height:deformHeight];
 	
+
+	CFAbsoluteTime t0 = CFAbsoluteTimeGetCurrent();
+
 	vDSP_vindex(inputVectors, indexes, 1, xData, 4, lookupVectorsNum);
 	vDSP_vindex(inputVectors+1, indexes, 1, yData, 4, lookupVectorsNum);
 	//[self printArray1:xData width:deformWidth*4 height:deformHeight];
@@ -110,6 +113,8 @@
 	vDSP_vindex(inputVectors+1, indexes, 1, yData+2, 4, lookupVectorsNum);
 	//[self printArray2:xData width:deformWidth*2 height:deformHeight];
 	
+	CFAbsoluteTime t1 = CFAbsoluteTimeGetCurrent();
+
 	
 	vDSP_vramp(&scalar0, &scalar4, dataIndices1, 2, lookupVectorsNum);
 	vDSP_vadd(dataIndices1, 2, xFrac, 1, dataIndices1, 2, lookupVectorsNum);
@@ -131,7 +136,7 @@
 
 	CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
 
-	NSLog(@"interpolate_DSP time: %f", endTime-startTime);
+	NSLog(@"interpolate_DSP time: %f  (fractioning:%f indexing:%f interpolating:%f)", endTime-startTime, t0-startTime, t1-t0, endTime-t1);
 }
 
 static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, MeshLayout layout)

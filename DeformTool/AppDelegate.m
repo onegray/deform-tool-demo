@@ -27,7 +27,7 @@
 	//[DeformVectors test];
 	//[IndexMeshCache test];
 	//[DeformBrush test];
-	[InterpolationTest test];
+	//[InterpolationTest test];
 	
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
