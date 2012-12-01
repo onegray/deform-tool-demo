@@ -87,7 +87,9 @@ static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, MeshLayout 
 }
 
 // Inline assembler optimization   http://stackoverflow.com/questions/11161237/fast-arm-neon-memcpy
+// http://hilbert-space.de/
 // http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.faqs/ka13544.html
+
 
 -(void) applyMoveDeformVector:(CGPoint)force atPoint:(CGPoint)point
 {

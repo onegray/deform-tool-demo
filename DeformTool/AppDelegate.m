@@ -14,6 +14,7 @@
 #import "DeformVectors.h"
 #import "IndexMeshCache.h"
 #import "DeformBrush.h"
+#import "InterpolationTest.h"
 
 @implementation AppDelegate
 
@@ -25,7 +26,8 @@
 	//[TextureMesh test];
 	//[DeformVectors test];
 	//[IndexMeshCache test];
-	[DeformBrush test];
+	//[DeformBrush test];
+	[InterpolationTest test];
 	
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
