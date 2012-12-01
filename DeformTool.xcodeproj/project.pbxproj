@@ -56,6 +56,7 @@
 		ABA7AF6316470DF100782DCF /* DeformVectors.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA7AF6216470DF100782DCF /* DeformVectors.m */; };
 		ABA7AF66164718C300782DCF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA7AF65164718C300782DCF /* Accelerate.framework */; };
 		ABA99B19166A48DE00576BFB /* InterpolationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA99B18166A48DE00576BFB /* InterpolationTest.m */; };
+		ABA99B1D166A917D00576BFB /* BrushView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA99B1C166A917D00576BFB /* BrushView.m */; };
 		ABC27B2B163343BC00EA868E /* DeformTool+TextureMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */; };
 		ABC27B7D163740EC00EA868E /* MeshShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = ABC27B7B163740EC00EA868E /* MeshShader.fsh */; };
 		ABC27B7E163740EC00EA868E /* MeshShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = ABC27B7C163740EC00EA868E /* MeshShader.vsh */; };
@@ -134,6 +135,8 @@
 		ABA7AF65164718C300782DCF /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		ABA99B17166A48DD00576BFB /* InterpolationTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterpolationTest.h; sourceTree = "<group>"; };
 		ABA99B18166A48DE00576BFB /* InterpolationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterpolationTest.m; sourceTree = "<group>"; };
+		ABA99B1B166A917D00576BFB /* BrushView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrushView.h; sourceTree = "<group>"; };
+		ABA99B1C166A917D00576BFB /* BrushView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrushView.m; sourceTree = "<group>"; };
 		ABC27B29163343BC00EA868E /* DeformTool+TextureMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DeformTool+TextureMesh.h"; sourceTree = "<group>"; };
 		ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DeformTool+TextureMesh.m"; sourceTree = "<group>"; };
 		ABC27B7B163740EC00EA868E /* MeshShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MeshShader.fsh; sourceTree = "<group>"; };
@@ -239,6 +242,8 @@
 				AB3A15901661584900130517 /* Brush.m */,
 				AB3A15921661724600130517 /* DeformBrush.h */,
 				AB3A15931661724600130517 /* DeformBrush.m */,
+				ABA99B1B166A917D00576BFB /* BrushView.h */,
+				ABA99B1C166A917D00576BFB /* BrushView.m */,
 				ABA99B17166A48DD00576BFB /* InterpolationTest.h */,
 				ABA99B18166A48DE00576BFB /* InterpolationTest.m */,
 			);
@@ -401,6 +406,7 @@
 				AB3A15911661584900130517 /* Brush.m in Sources */,
 				AB3A15941661724600130517 /* DeformBrush.m in Sources */,
 				ABA99B19166A48DE00576BFB /* InterpolationTest.m in Sources */,
+				ABA99B1D166A917D00576BFB /* BrushView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,6 +15,8 @@
 #import "DeformTool.h"
 #import "DeformBrush.h"
 
+#import "BrushView.h"
+
 enum  {
 	MODE_SCROLL,
 	MODE_TRANSFORM,
@@ -40,6 +42,8 @@ enum  {
 	
 	DeformTool* deformTool;
 	DeformBrush* deformBrush;
+	
+	BrushView* brushView;
 }
 @end
 
@@ -74,6 +78,10 @@ enum  {
 	deformBrush = [[DeformBrush alloc] init];
 	deformBrush.fingerSize = 1.0;
 	deformTool.brush = deformBrush;
+	
+	
+	//brushView = [[BrushView alloc] initWithFrame:CGRectMake(100, 100, 44, 44)];
+	//[self.view addSubview:brushView];
 	
 	UIPinchGestureRecognizer* pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(onPinchGesture:)];
 	[glController.glView addGestureRecognizer:pinchRecognizer];
@@ -118,7 +126,7 @@ enum  {
 	glCullFace(GL_BACK);
 	
 	[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
-	[[GLRender sharedRender] drawMesh:mesh transformMatrix:resultTransform];
+	//[[GLRender sharedRender] drawMesh:mesh transformMatrix:resultTransform];
 
 	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
 	
@@ -211,6 +219,8 @@ enum  {
 		}
 		else if(mode==MODE_DEFORM)
 		{
+			//brushView.center = [touch locationInView:self.view];
+
 			CGAffineTransform t = CGAffineTransformInvert(CGAffineTransformConcat(modelviewMatrix, glController.transform));
 			CGPoint p0 = CGPointApplyAffineTransform(prev_pos, t);
 			CGPoint p1 = CGPointApplyAffineTransform(pos, t);
