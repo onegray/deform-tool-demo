@@ -57,7 +57,7 @@
 
 static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, MeshLayout layout)
 {
-	if(p.x>=0 && p.x<=layout.width && p.y>=0 && p.y<=layout.height)
+	if(p.x>=0 && p.x<layout.width && p.y>=0 && p.y<layout.height)
 	{
 		int xi = (int)p.x;
 		int yi = (int)p.y;
@@ -67,6 +67,8 @@ static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, MeshLayout 
 		
 		int rowSize = layout.width+1;
 		int index = yi*rowSize + xi;
+		
+		NSCAssert( (index+rowSize+1) < rowSize*(layout.height+1), @"interpolatedVector: Invalid point index");
 		
 		CGPoint v00 = deformVectors[index];
 		CGPoint v10 = deformVectors[index+1];
@@ -80,6 +82,8 @@ static CGPoint interpolatedVector(CGPoint p, CGPoint* deformVectors, MeshLayout 
 		
 		float vx = mx0 + dy * (mx1 - mx0);
 		float vy = my0 + dy * (my1 - my0);
+		
+		NSCAssert( !isnan(vx) && !isnan(vy), @"interpolatedVector: Invalid result point values");
 		
 		return CGPointMake(vx, vy);
 	}
