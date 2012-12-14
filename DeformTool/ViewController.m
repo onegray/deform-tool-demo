@@ -126,7 +126,7 @@ enum  {
 	glCullFace(GL_BACK);
 	
 	[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
-	//[[GLRender sharedRender] drawMesh:mesh transformMatrix:resultTransform];
+	[[GLRender sharedRender] drawMesh:mesh transformMatrix:resultTransform];
 
 	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
 	

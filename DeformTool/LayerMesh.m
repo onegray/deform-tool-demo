@@ -30,7 +30,9 @@
 	
 	int indexMeshHeight;
 	
-	int vertOffset;
+	//int vertOffset;
+	
+	NSMutableArray* subMeshes;
 	
 	DeformVectors* deformVectors;
 }
@@ -42,7 +44,8 @@
 
 
 @implementation LayerMesh
-@synthesize vertices, vectors, vertNum;
+//@synthesize vertices, vectors;
+@synthesize vertNum;
 //@synthesize indices, indexCount;
 @synthesize layout, tileSize, textureContentSize;
 @synthesize vertStride, vectorsStride;
@@ -57,7 +60,8 @@
 		NSAssert( ts.heighPixels % MAX_TEXTURE_TILE_SIZE == 0, @"");
 		
 		tileSize = 4;
-		maxLayoutWindow = LayoutWindowMake(-120, -120, 240+120, 240+120);
+		//maxLayoutWindow = LayoutWindowMake(-120, -120, 240+120, 240+120);
+		maxLayoutWindow = LayoutWindowMake(-120*8, -120*8, 120*8, 120*8);
 		textureContentSize = ts;
 		layout = MeshLayoutMake(0, 0, ts.widthPixels/tileSize, ts.heighPixels/tileSize);
 		textureCoordinateRect = CGRectMake(0, 0, 1, 1);
@@ -66,6 +70,8 @@
 		
 		deformVectors = [[DeformVectors alloc] initWithLayout:layout];
 				
+		subMeshes = [[NSMutableArray alloc] initWithCapacity:4];
+		
 		[self rebuildVertices];
 		[self setupVisibleRect:CGRectMake(0, 0, ts.widthPixels, ts.heighPixels) interlacing:1];
 		
@@ -86,6 +92,7 @@
 	return deformVectors.vectors;
 }
 
+/*
 -(GLfloat*) vectors
 {
 	return deformVectors.vectors + vertOffset;
@@ -106,19 +113,28 @@
 	//return indexMesh.indexCount;
 	return [indexMesh indexCountForMeshHeight:indexMeshHeight];
 }
-
+ 
 -(GLfloat*) texCoords
 {
 	return textureCoordinates + vertOffset;
 }
+ */
 
+ 
 -(int) interlacedTileSize
 {
 	return _interlacing*tileSize;
 }
 
+-(NSArray*) subMeshes
+{
+	return subMeshes;
+}
+
 -(void) extendLayoutForWindow:(LayoutWindow)window
 {
+	NSLog(@"extendLayoutForWindow %@", LayoutWindowDescription(window));
+	
 	int layoutMaxX = layout.x+layout.width;
 	int layoutMaxY = layout.y+layout.height;
 
@@ -176,21 +192,10 @@
 	int interlacedHeight = height/interlacing;
 	NSAssert(interlacedWidth <= layout.width && interlacedHeight <= layout.height, @"Invalid index window");
 
-	
+
+	/*
 	self.indexMesh = [indexMeshCache meshForWidth:interlacedWidth];
 	indexMeshHeight = MIN(interlacedHeight, indexMesh.height);
-	//[indexMeshCache printLast:20];
-	
-	/*
-	if(interlacedWidth > indexMesh.width || interlacedHeight > indexMesh.height || (layout.width+1)!=indexMesh.rowStride)
-	{
-		self.indexMesh = [IndexMesh indexMeshWithWidth:interlacedWidth maxHeight:interlacedHeight rowStride:(layout.width+1)];
-	}
-	else if(indexMesh.width*interlacing > layout.width || indexMesh.height*interlacing > layout.height)
-	{
-		self.indexMesh = [IndexMesh indexMeshWithWidth:interlacedWidth maxHeight:interlacedHeight rowStride:(layout.width+1)];
-	}
-	*/ 
 	
 	int offsetX = renderingWindow.left-layout.x;
 	if(offsetX+indexMesh.width*interlacing > layout.width) {
@@ -203,9 +208,44 @@
 		indexMeshHeight = (layout.height - offsetY)/interlacing;
 	}
 
-	//NSLog(@"offsetX:%d offsetY:%d", offsetX, offsetY);
-	
 	vertOffset = ( offsetY*(layout.width+1) + offsetX )*2;
+	vertStride = interlacing*sizeof(GLshort)*2;
+	vectorsStride = interlacing*sizeof(GLfloat)*2;
+	_interlacing = interlacing;
+	*/
+	
+	self.indexMesh = [indexMeshCache meshForWidth:interlacedWidth];
+	
+	int offsetX = renderingWindow.left-layout.x;
+	if(offsetX+indexMesh.width*interlacing > layout.width) {
+		offsetX = layout.width - indexMesh.width*interlacing;
+		NSAssert(offsetX>=0, @"");
+	}
+
+	int offsetY = renderingWindow.top-layout.y;
+	if(offsetY+interlacedHeight*interlacing > layout.height) {
+		interlacedHeight = (layout.height - offsetY)/interlacing;
+	}
+
+
+	int h = interlacedHeight;
+	[subMeshes removeAllObjects];
+	while (h > 0) {
+
+		int subMeshHeight = MIN(h, indexMesh.height);
+		int vertOffset = ( offsetY*(layout.width+1) + offsetX )*2;
+		
+		SubMesh* sm = [[SubMesh alloc] init];
+		sm.vertices = vertices + vertOffset;
+		sm.vectors = deformVectors.vectors + vertOffset;
+		sm.indices = indexMesh.indices;
+		sm.indexCount = [indexMesh indexCountForMeshHeight:subMeshHeight];
+		[subMeshes addObject:sm];
+
+		offsetY += subMeshHeight*interlacing;
+		h -= subMeshHeight;
+	}
+	
 	vertStride = interlacing*sizeof(GLshort)*2;
 	vectorsStride = interlacing*sizeof(GLfloat)*2;
 	_interlacing = interlacing;
@@ -307,7 +347,7 @@
 	}
 }
 
-
+/*
 -(void) checkVerticesForIndices
 {
 	GLshort* pVertEnd = vertices + vertNum*2;
@@ -319,7 +359,7 @@
 		NSAssert(p>=vertices && p<pVertEnd, @"Invalid indices");
 	}
 }
-
+*/
 
 
 
@@ -426,7 +466,11 @@
 
 @end
 
+@implementation SubMesh
 
+
+
+@end
 
 
 

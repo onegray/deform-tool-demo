@@ -23,7 +23,6 @@ CG_INLINE PixelSize PixelSizeMake(int width, int height)
 }
 
 
-
 @interface LayerMesh : NSObject
 
 -(id) initWithTextureSize:(PixelSize)ts;
@@ -31,18 +30,20 @@ CG_INLINE PixelSize PixelSizeMake(int width, int height)
 -(void) setupVisibleRect:(CGRect)visibleRect interlacing:(int)interlacing;
 -(void) setupVisibleRect:(CGRect)visibleRect scale:(CGFloat)scale;
 
-@property (nonatomic, readonly) GLshort* vertices;
-@property (nonatomic, readonly) GLfloat* vectors;
+//@property (nonatomic, readonly) GLshort* vertices;
+//@property (nonatomic, readonly) GLfloat* vectors;
 @property (nonatomic, readonly) GLfloat* vectorsAbsolutePointer;
 @property (nonatomic, readonly) int vertNum;
 
-@property (nonatomic, readonly) GLushort* indices;
-@property (nonatomic, readonly) int indexCount;
+//@property (nonatomic, readonly) GLushort* indices;
+//@property (nonatomic, readonly) int indexCount;
 
 //@property (nonatomic, readonly) GLfloat* texCoords;
 
 @property (nonatomic, readonly) int vertStride;
 @property (nonatomic, readonly) int vectorsStride;
+
+@property (nonatomic, readonly) NSArray* subMeshes;
 
 
 @property (nonatomic, readonly) MeshLayout layout;
@@ -53,6 +54,16 @@ CG_INLINE PixelSize PixelSizeMake(int width, int height)
 
 
 -(void) checkVertices;
--(void) checkVerticesForIndices;
+//-(void) checkVerticesForIndices;
+
+@end
+
+
+
+@interface SubMesh : NSObject
+@property (nonatomic, assign) GLshort* vertices;
+@property (nonatomic, assign) GLfloat* vectors;
+@property (nonatomic, assign) GLushort* indices;
+@property (nonatomic, assign) int indexCount;
 
 @end

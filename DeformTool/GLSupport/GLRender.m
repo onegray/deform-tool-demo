@@ -140,16 +140,16 @@ static GLRender* sharedInstance = nil;
     GLuint vertCoordAttr = [program attributeIndex:@"position"];
     //GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
     GLuint vectorsAttr = [program attributeIndex:@"vectors"];
-    
-    glVertexAttribPointer(vertCoordAttr, 2, GL_SHORT, 0, mesh.vertStride, mesh.vertices);
-    glEnableVertexAttribArray(vertCoordAttr);
-    //glVertexAttribPointer(texCoordAttr, 2, GL_FLOAT, 0, mesh.vertStride, mesh.texCoords);
-    //glEnableVertexAttribArray(texCoordAttr);
-    glVertexAttribPointer(vectorsAttr, 2, GL_FLOAT, 0, mesh.vectorsStride, mesh.vectors);
-    glEnableVertexAttribArray(vectorsAttr);
-    
-	//glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
-	glDrawElements(GL_TRIANGLE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
+
+	for(SubMesh* sm in mesh.subMeshes) {
+		glVertexAttribPointer(vertCoordAttr, 2, GL_SHORT, 0, mesh.vertStride, sm.vertices);
+		glEnableVertexAttribArray(vertCoordAttr);
+		
+		glVertexAttribPointer(vectorsAttr, 2, GL_FLOAT, 0, mesh.vectorsStride, sm.vectors);
+		glEnableVertexAttribArray(vectorsAttr);
+
+		glDrawElements(GL_TRIANGLE_STRIP, sm.indexCount, GL_UNSIGNED_SHORT, sm.indices);
+	}
 }
 
 - (void) drawMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform
@@ -161,21 +161,22 @@ static GLRender* sharedInstance = nil;
     [program use];
     
 	glUniformMatrix4fv([program uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, matrix);
-	glUniform4fv([program uniformIndex:@"color"], 1, (float[4]){1.0, 1.0, 1.0, 1.0} );
+	//glUniform4fv([program uniformIndex:@"color"], 1, (float[4]){1.0, 1.0, 1.0, 0.4} );
     
     GLuint vertCoordAttr = [program attributeIndex:@"position"];
-    glVertexAttribPointer(vertCoordAttr, 2, GL_SHORT, 0, mesh.vertStride, mesh.vertices);
-    glEnableVertexAttribArray(vertCoordAttr);
-    
-	glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_SHORT, mesh.indices);
+
+	float colors[4][4] = {{1.0, 1.0, 1.0, 0.4}, {0.5, 1.0, 1.0, 0.4}, {1.0, 0.5, 1.0, 0.4}, {1.0, 1.0, 0.5, 0.4}};
 	
-	/*
-	GLuint* buf = (GLuint*)malloc(mesh.indexCount*sizeof(GLuint));
-	for(int i=0; i<mesh.indexCount; i++) {
-		buf[i] = mesh.indices[i];
+	int clr=0;
+	for(SubMesh* sm in mesh.subMeshes) {
+		
+		glUniform4fv([program uniformIndex:@"color"], 1, colors[(clr++)%4]);
+		
+		glVertexAttribPointer(vertCoordAttr, 2, GL_SHORT, 0, mesh.vertStride, sm.vertices);
+		glEnableVertexAttribArray(vertCoordAttr);
+		
+		glDrawElements(GL_LINE_STRIP, sm.indexCount, GL_UNSIGNED_SHORT, sm.indices);
 	}
-	glDrawElements(GL_LINE_STRIP, mesh.indexCount, GL_UNSIGNED_INT, buf);
-	*/
 }
 
 

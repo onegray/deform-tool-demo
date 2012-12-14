@@ -47,6 +47,8 @@
 	_brush = b;
 	
 	if(_brush.pixelSize!=deformAreaRadius) {
+		if(deformAreaVectors)
+			free(deformAreaVectors);
 		
 		deformAreaRadius = _brush.pixelSize;
 		int deformAreaBufSize = (2*deformAreaRadius+1)*(2*deformAreaRadius+1)*sizeof(CGPoint);
