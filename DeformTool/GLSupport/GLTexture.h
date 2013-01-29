@@ -15,6 +15,7 @@ typedef enum {
 	kTexture2DPixelFormat_RGBA8888,
 	kTexture2DPixelFormat_RGB565,
 	kTexture2DPixelFormat_A8,
+	kTexture2DPixelFormat_FloatRG,
 } Texture2DPixelFormat;
 
 typedef struct
@@ -48,6 +49,7 @@ void freeTextureData(TextureRawData* texture_data);
 
 -(id) initWithImage:(UIImage*)image;
 -(id) initWithTextureData:(TextureRawData*)rawData;
+-(id) initEmptyTextureOfSize:(CGSize)textureSize pixelFormat:(Texture2DPixelFormat)pixelFormat;
 
 -(GLint) releaseTexture;
 

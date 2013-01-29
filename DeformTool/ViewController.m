@@ -14,6 +14,8 @@
 #import "LayerMesh.h"
 #import "DeformTool.h"
 #import "DeformBrush.h"
+#import "PatternBrush.h"
+#import "EraseTool.h"
 
 #import "BrushView.h"
 
@@ -21,12 +23,14 @@ enum  {
 	MODE_SCROLL,
 	MODE_TRANSFORM,
 	MODE_DEFORM,
+	MODE_ERASE,
 };
 
 
 @interface ViewController ()
 {
 	GLTexture* texture;
+	GLTexture* alphaTexture;
 	LayerMesh* mesh;
 		
 	CGAffineTransform modelviewMatrix;
@@ -42,6 +46,9 @@ enum  {
 	
 	DeformTool* deformTool;
 	DeformBrush* deformBrush;
+	
+	EraseTool* eraseTool;
+	PatternBrush* patternBrush;
 	
 	BrushView* brushView;
 }
@@ -67,17 +74,22 @@ enum  {
 	
 	if(!texture) {
 		texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"nature"]];
-		mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(352, 288)];
+		alphaTexture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"nature_alpha"]];
+		mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(texture.textureSize.width, texture.textureSize.height)];
 
 		//texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"table"]];
 		//mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(256, 256)];
 	}
 
 	deformTool = [[DeformTool alloc] initWithMesh:mesh];
-
 	deformBrush = [[DeformBrush alloc] init];
 	deformBrush.fingerSize = 1.0;
 	deformTool.brush = deformBrush;
+	
+	eraseTool = [[EraseTool alloc] initWithMesh:mesh alphaTexture:alphaTexture];
+	patternBrush = [[PatternBrush alloc] init];
+	patternBrush.fingerSize = 1.0;
+	eraseTool.brush = patternBrush;
 	
 	
 	//brushView = [[BrushView alloc] initWithFrame:CGRectMake(100, 100, 44, 44)];
@@ -125,11 +137,20 @@ enum  {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	
-	[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
-	[[GLRender sharedRender] drawMesh:mesh transformMatrix:resultTransform];
-
-	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
 	
+	if(alphaTexture) {
+		[[GLRender sharedRender] drawTexture:tex alphaTexture:alphaTexture withMesh:mesh transformMatrix:resultTransform];
+	} else {
+		[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
+	}
+	
+	//[[GLRender sharedRender] drawMesh:mesh transformMatrix:resultTransform];
+	
+	
+	//[[GLRender sharedRender] drawTexture:alphaTexture withMesh:mesh transformMatrix:resultTransform];
+	//[[GLRender sharedRender] drawTextureName:patternBrush.patternTexture.textureName inRect:CGRectMake(-0.5, -0.5, -0.25, -0.25)];
+	
+	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
 	//[[GLRender sharedRender] drawTexture:tex deformTexture:deformTool.deformTextureName inRect:CGRectMake(0, 0, 256, 256) transformMatrix:resultTransform];
 	
 	[glController presentFramebuffer];  
@@ -224,7 +245,7 @@ enum  {
 			CGAffineTransform t = CGAffineTransformInvert(CGAffineTransformConcat(modelviewMatrix, glController.transform));
 			CGPoint p0 = CGPointApplyAffineTransform(prev_pos, t);
 			CGPoint p1 = CGPointApplyAffineTransform(pos, t);
-			
+
 			CGFloat l, dx, dy, xf, yf;
 			int deformAreaRadius = 64/2;
 			
@@ -247,6 +268,14 @@ enum  {
 				yf += dy;
 			}
 			
+		}
+		else if(mode == MODE_ERASE)
+		{
+			CGAffineTransform t = CGAffineTransformInvert(CGAffineTransformConcat(modelviewMatrix, glController.transform));
+			CGPoint p0 = CGPointApplyAffineTransform(prev_pos, t);
+			CGPoint p1 = CGPointApplyAffineTransform(pos, t);
+			
+			[eraseTool eraseFromPoint:p0 toPoint:p1];
 		}
 		
 		[self drawTexture:texture];
@@ -276,6 +305,8 @@ enum  {
 	
 	deformBrush.scale = [self modelScale];
 	deformTool.brush = deformBrush;
+	
+	patternBrush.scale = [self modelScale];
 	
 	[self drawTexture:texture];
 }

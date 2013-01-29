@@ -21,7 +21,7 @@
 	if(self) {
 		scale = 1.0;
 		fingerSize = 1.0;
-		pixelSize = fingerSize*scale*PPF;
+		[self updatePixelSize];
 	}
 	return self;
 }
@@ -29,12 +29,17 @@
 -(void) setFingerSize:(float)fs
 {
 	fingerSize = fs;
-	pixelSize = fingerSize*scale*PPF;
+	[self updatePixelSize];
 }
 
 -(void) setScale:(float)s
 {
 	scale = s;
+	[self updatePixelSize];
+}
+
+-(void) updatePixelSize
+{
 	pixelSize = fingerSize*scale*PPF;
 }
 

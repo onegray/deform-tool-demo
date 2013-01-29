@@ -22,9 +22,10 @@
 
 - (void) drawTexture:(GLTexture*)texture withMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform;
 - (void) drawMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform;
+- (void) drawTexture:(GLTexture*)texture alphaTexture:(GLTexture*)alpha withMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform;
 
 //- (void) drawTexture:(GLTexture*)texture deformTexture:(GLTexture*)deformTexture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform;
-- (void) drawTexture:(GLTexture*)texture deformTexture:(int)deformTexture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform;
+//- (void) drawTexture:(GLTexture*)texture deformTexture:(int)deformTexture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform;
 
 
 - (void) drawTextureName:(GLuint)textureName inRect:(CGRect)rect;

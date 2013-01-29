@@ -53,6 +53,12 @@
 		ABA16F9B16163D840075E675 /* LayerMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16F9A16163D840075E675 /* LayerMesh.m */; };
 		ABA16FA4161722B00075E675 /* TextureMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16FA3161722B00075E675 /* TextureMesh.m */; };
 		ABA16FB61618EC320075E675 /* MeshLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA16FB51618EC320075E675 /* MeshLayout.m */; };
+		ABA2AC0F16AC32900049706D /* PatternBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA2AC0E16AC32900049706D /* PatternBrush.m */; };
+		ABA2AC1316AC4D410049706D /* EraseTool.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA2AC1216AC4D410049706D /* EraseTool.m */; };
+		ABA2AC1E16ACAC070049706D /* EraseShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = ABA2AC1C16ACAC070049706D /* EraseShader.fsh */; };
+		ABA2AC1F16ACAC070049706D /* EraseShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = ABA2AC1D16ACAC070049706D /* EraseShader.vsh */; };
+		ABA6677616A74E6E003CC2A2 /* MeshAlphaShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = ABA6677416A74E6E003CC2A2 /* MeshAlphaShader.fsh */; };
+		ABA6677716A74E6E003CC2A2 /* MeshAlphaShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = ABA6677516A74E6E003CC2A2 /* MeshAlphaShader.vsh */; };
 		ABA7AF6316470DF100782DCF /* DeformVectors.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA7AF6216470DF100782DCF /* DeformVectors.m */; };
 		ABA7AF66164718C300782DCF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA7AF65164718C300782DCF /* Accelerate.framework */; };
 		ABA99B19166A48DE00576BFB /* InterpolationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA99B18166A48DE00576BFB /* InterpolationTest.m */; };
@@ -130,6 +136,14 @@
 		ABA16FA3161722B00075E675 /* TextureMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureMesh.m; sourceTree = "<group>"; };
 		ABA16FB41618EC320075E675 /* MeshLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshLayout.h; sourceTree = "<group>"; };
 		ABA16FB51618EC320075E675 /* MeshLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeshLayout.m; sourceTree = "<group>"; };
+		ABA2AC0D16AC32900049706D /* PatternBrush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternBrush.h; sourceTree = "<group>"; };
+		ABA2AC0E16AC32900049706D /* PatternBrush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatternBrush.m; sourceTree = "<group>"; };
+		ABA2AC1116AC4D410049706D /* EraseTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EraseTool.h; sourceTree = "<group>"; };
+		ABA2AC1216AC4D410049706D /* EraseTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EraseTool.m; sourceTree = "<group>"; };
+		ABA2AC1C16ACAC070049706D /* EraseShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = EraseShader.fsh; sourceTree = "<group>"; };
+		ABA2AC1D16ACAC070049706D /* EraseShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = EraseShader.vsh; sourceTree = "<group>"; };
+		ABA6677416A74E6E003CC2A2 /* MeshAlphaShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MeshAlphaShader.fsh; sourceTree = "<group>"; };
+		ABA6677516A74E6E003CC2A2 /* MeshAlphaShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MeshAlphaShader.vsh; sourceTree = "<group>"; };
 		ABA7AF6116470DF100782DCF /* DeformVectors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeformVectors.h; sourceTree = "<group>"; };
 		ABA7AF6216470DF100782DCF /* DeformVectors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeformVectors.m; sourceTree = "<group>"; };
 		ABA7AF65164718C300782DCF /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -171,10 +185,14 @@
 				AB384B7B161266CD003A2D9C /* BaseShader.vsh */,
 				ABC27B7B163740EC00EA868E /* MeshShader.fsh */,
 				ABC27B7C163740EC00EA868E /* MeshShader.vsh */,
+				ABA6677416A74E6E003CC2A2 /* MeshAlphaShader.fsh */,
+				ABA6677516A74E6E003CC2A2 /* MeshAlphaShader.vsh */,
 				AB34719B16271C1C00A4BB1A /* GenBrush.fsh */,
 				AB34719C16271C1C00A4BB1A /* GenBrush.vsh */,
 				AB65C1A2161F7C51007E7C29 /* DeformShader.fsh */,
 				AB65C1A3161F7C51007E7C29 /* DeformShader.vsh */,
+				ABA2AC1C16ACAC070049706D /* EraseShader.fsh */,
+				ABA2AC1D16ACAC070049706D /* EraseShader.vsh */,
 				AB65C1A6161F87A3007E7C29 /* ResultShader.fsh */,
 				AB65C1A7161F87A3007E7C29 /* ResultShader.vsh */,
 			);
@@ -234,14 +252,18 @@
 				ABA16FA3161722B00075E675 /* TextureMesh.m */,
 				AB65C19C161F76E9007E7C29 /* DeformTool.h */,
 				AB65C19D161F76E9007E7C29 /* DeformTool.m */,
-				ABA7AF6116470DF100782DCF /* DeformVectors.h */,
-				ABA7AF6216470DF100782DCF /* DeformVectors.m */,
 				ABC27B29163343BC00EA868E /* DeformTool+TextureMesh.h */,
 				ABC27B2A163343BC00EA868E /* DeformTool+TextureMesh.m */,
+				ABA7AF6116470DF100782DCF /* DeformVectors.h */,
+				ABA7AF6216470DF100782DCF /* DeformVectors.m */,
+				ABA2AC1116AC4D410049706D /* EraseTool.h */,
+				ABA2AC1216AC4D410049706D /* EraseTool.m */,
 				AB3A158F1661584900130517 /* Brush.h */,
 				AB3A15901661584900130517 /* Brush.m */,
 				AB3A15921661724600130517 /* DeformBrush.h */,
 				AB3A15931661724600130517 /* DeformBrush.m */,
+				ABA2AC0D16AC32900049706D /* PatternBrush.h */,
+				ABA2AC0E16AC32900049706D /* PatternBrush.m */,
 				ABA99B1B166A917D00576BFB /* BrushView.h */,
 				ABA99B1C166A917D00576BFB /* BrushView.m */,
 				ABA99B17166A48DD00576BFB /* InterpolationTest.h */,
@@ -360,8 +382,12 @@
 				AB384B83161266CD003A2D9C /* BaseShader.vsh in Resources */,
 				ABC27B7D163740EC00EA868E /* MeshShader.fsh in Resources */,
 				ABC27B7E163740EC00EA868E /* MeshShader.vsh in Resources */,
+				ABA6677616A74E6E003CC2A2 /* MeshAlphaShader.fsh in Resources */,
+				ABA6677716A74E6E003CC2A2 /* MeshAlphaShader.vsh in Resources */,
 				AB65C1A4161F7C51007E7C29 /* DeformShader.fsh in Resources */,
 				AB65C1A5161F7C51007E7C29 /* DeformShader.vsh in Resources */,
+				ABA2AC1E16ACAC070049706D /* EraseShader.fsh in Resources */,
+				ABA2AC1F16ACAC070049706D /* EraseShader.vsh in Resources */,
 				AB65C1A8161F87A3007E7C29 /* ResultShader.fsh in Resources */,
 				AB65C1A9161F87A3007E7C29 /* ResultShader.vsh in Resources */,
 				AB27A1701641D5E800A495F8 /* ColorShader.fsh in Resources */,
@@ -407,6 +433,8 @@
 				AB3A15941661724600130517 /* DeformBrush.m in Sources */,
 				ABA99B19166A48DE00576BFB /* InterpolationTest.m in Sources */,
 				ABA99B1D166A917D00576BFB /* BrushView.m in Sources */,
+				ABA2AC0F16AC32900049706D /* PatternBrush.m in Sources */,
+				ABA2AC1316AC4D410049706D /* EraseTool.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,6 +483,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -484,15 +513,15 @@
 		AB384B4E16125C70003A2D9C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Sergey Nikitenko (TB5M3TUXF6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Sergey Nikitenko (TB5M3TUXF6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeformTool/DeformTool-Prefix.pch";
 				INFOPLIST_FILE = "DeformTool/DeformTool-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "05E4E1B8-42A8-49FE-93CC-7CCE3B313DA9";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "05E4E1B8-42A8-49FE-93CC-7CCE3B313DA9";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -500,13 +529,15 @@
 		AB384B4F16125C70003A2D9C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Sergey Nikitenko (TB5M3TUXF6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeformTool/DeformTool-Prefix.pch";
 				INFOPLIST_FILE = "DeformTool/DeformTool-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "05E4E1B8-42A8-49FE-93CC-7CCE3B313DA9";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

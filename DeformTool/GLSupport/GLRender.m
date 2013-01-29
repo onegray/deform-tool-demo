@@ -75,7 +75,17 @@ static GLRender* sharedInstance = nil;
 	return meshProgram;
 }
 
-
++(GLProgram*) meshWithAlphaProgram
+{
+	static GLProgram* meshWithAlphaProgram = nil;
+	if(!meshWithAlphaProgram) {
+		meshWithAlphaProgram = [[GLProgram alloc] initWithVertexShaderFilename:@"MeshAlphaShader" fragmentShaderFilename:@"MeshAlphaShader"];
+		[meshWithAlphaProgram addAttribute:@"position"];
+		[meshWithAlphaProgram addAttribute:@"vectors"];
+		[meshWithAlphaProgram link];
+	}
+	return meshWithAlphaProgram;
+}
 
 
 
@@ -178,6 +188,50 @@ static GLRender* sharedInstance = nil;
 		glDrawElements(GL_LINE_STRIP, sm.indexCount, GL_UNSIGNED_SHORT, sm.indices);
 	}
 }
+
+- (void) drawTexture:(GLTexture*)texture alphaTexture:(GLTexture*)alpha withMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform
+{
+	GLfloat matrix[16];
+	CGAffineToGL(&transform, matrix);
+    
+	GLProgram* program = [GLRender meshWithAlphaProgram];
+    [program use];
+    
+	glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, alpha.textureName);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    glUniform1i([program uniformIndex:@"alpha"], 1);
+	
+	glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture.textureName);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    glUniform1i([program uniformIndex:@"texture"], 0);
+	
+	
+	glUniformMatrix4fv([program uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, matrix);
+	
+	glUniform2f([program uniformIndex:@"textureContentSize"], mesh.textureContentSize.widthPixels, mesh.textureContentSize.heighPixels);
+    
+    GLuint vertCoordAttr = [program attributeIndex:@"position"];
+    //GLuint texCoordAttr = [program attributeIndex:@"texCoord"];
+    GLuint vectorsAttr = [program attributeIndex:@"vectors"];
+	
+	for(SubMesh* sm in mesh.subMeshes) {
+		glVertexAttribPointer(vertCoordAttr, 2, GL_SHORT, 0, mesh.vertStride, sm.vertices);
+		glEnableVertexAttribArray(vertCoordAttr);
+		
+		glVertexAttribPointer(vectorsAttr, 2, GL_FLOAT, 0, mesh.vectorsStride, sm.vectors);
+		glEnableVertexAttribArray(vectorsAttr);
+		
+		glDrawElements(GL_TRIANGLE_STRIP, sm.indexCount, GL_UNSIGNED_SHORT, sm.indices);
+	}
+}
+
+
+
+
 
 
 

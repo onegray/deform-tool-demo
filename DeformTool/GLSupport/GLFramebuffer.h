@@ -12,7 +12,8 @@
 
 @interface GLFramebuffer : NSObject
 
-@property (nonatomic, readonly) GLuint textureName;
+//@property (nonatomic, readonly) GLuint textureName;
+@property (nonatomic, readonly) GLTexture* texture;
 @property (nonatomic, readonly) CGSize framebufferSize;
 
 -(id) initTextureFramebufferWithTexture:(GLTexture*)texture;

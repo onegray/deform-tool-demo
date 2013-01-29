@@ -74,7 +74,7 @@
 
 -(GLuint) deformTextureName
 {
-	return meshFramebuffer.textureName;
+	return meshFramebuffer.texture.textureName;
 }
 
 -(GLuint) brushTextureName
@@ -123,7 +123,7 @@
 	glUniform1i([program uniformIndex:@"brushTexture"], 1);
 	
 	glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, meshFramebuffer.textureName);
+    glBindTexture(GL_TEXTURE_2D, meshFramebuffer.texture.textureName);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glUniform1i([program uniformIndex:@"meshTexture"], 0);
@@ -147,7 +147,7 @@
 	[tempFramebuffer endRendering];
 	
 	[meshFramebuffer startRendering];
-	[[GLRender sharedRender] drawTextureName:tempFramebuffer.textureName inRect:vertexRect];
+	[[GLRender sharedRender] drawTextureName:tempFramebuffer.texture.textureName inRect:vertexRect];
 	[meshFramebuffer endRendering];
 }
 

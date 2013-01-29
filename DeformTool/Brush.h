@@ -26,4 +26,6 @@ typedef enum {
 
 @property (nonatomic, readonly) int pixelSize;
 
+-(void) updatePixelSize;
+
 @end

@@ -56,25 +56,57 @@
         maxS = contentSize.width / textureSize.width;
         maxT = contentSize.height / textureSize.height;
         
-		switch(pixelFormat)
-        {
-			case kTexture2DPixelFormat_RGBA8888:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureSize.width, textureSize.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureRawData->data);
-				break;
-			case kTexture2DPixelFormat_RGB565:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureSize.width, textureSize.height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, textureRawData->data);
-				break;
-			case kTexture2DPixelFormat_A8:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, textureSize.width, textureSize.height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, textureRawData->data);
-				break;
-			default:
-                self = nil;
-				[NSException raise:NSInternalInconsistencyException format:@"Unknown texture pixel format"];
-		}
+		[self texImage2DWithData:textureRawData->data];
     }
 
     return self;
 }
+
+- (id)initEmptyTextureOfSize:(CGSize)sz pixelFormat:(Texture2DPixelFormat)pf
+{
+    self = [super init];
+    if (self) {
+		
+		textureSize = sz;
+		contentSize = sz;
+		maxS = 1.0;
+		maxT = 1.0;
+		pixelFormat = pf;
+		
+		glGenTextures(1, &textureName);
+		glBindTexture(GL_TEXTURE_2D, textureName);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// This is necessary for non-power-of-two textures
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		
+		[self texImage2DWithData:NULL];
+    }
+    return self;
+}
+
+-(void) texImage2DWithData:(void*)data
+{
+	switch(pixelFormat)
+	{
+		case kTexture2DPixelFormat_RGBA8888:
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureSize.width, textureSize.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			break;
+		case kTexture2DPixelFormat_RGB565:
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureSize.width, textureSize.height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, data);
+			break;
+		case kTexture2DPixelFormat_A8:
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, textureSize.width, textureSize.height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, data);
+			break;
+		case kTexture2DPixelFormat_FloatRG:
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RG_EXT, textureSize.width, textureSize.height, 0, GL_RG_EXT, GL_HALF_FLOAT_OES, NULL);
+			break;
+		default:
+			[NSException raise:NSInternalInconsistencyException format:@"Unknown texture pixel format"];
+	}
+}
+
 
 -(GLint) releaseTexture
 {

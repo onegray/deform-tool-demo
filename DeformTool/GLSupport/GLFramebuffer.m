@@ -15,21 +15,22 @@
 	CGRect savedViewport;
 	GLuint fbo;
 	
-	GLuint textureName;
 	CGSize framebufferSize;
+	
+	GLTexture* texture;
 }
 @end
 
 @implementation GLFramebuffer
-@synthesize textureName, framebufferSize;
+@synthesize texture, framebufferSize;
 
--(id) initTextureFramebufferWithTexture:(GLTexture*)texture
+-(id) initTextureFramebufferWithTexture:(GLTexture*)tex
 {
 	self = [super init];
 	if(self) {
+		texture = tex;
 		framebufferSize = texture.textureSize;
-		textureName = texture.textureName;
-		fbo = [GLFramebuffer genFramebufferTexture2D:textureName];
+		fbo = [GLFramebuffer genFramebufferTexture2D:texture.textureName];
 	}
 	return self;
 }
@@ -38,47 +39,31 @@
 {
 	self = [super init];
 	if(self) {
-		glGenTextures(1, &textureName);
-		glBindTexture(GL_TEXTURE_2D, textureName);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// This is necessary for non-power-of-two textures
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureSize.width, textureSize.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);		
-		
+		texture = [[GLTexture alloc] initEmptyTextureOfSize:textureSize pixelFormat:kTexture2DPixelFormat_RGBA8888];
 		framebufferSize = textureSize;
-		fbo = [GLFramebuffer genFramebufferTexture2D:textureName];
-		
+		fbo = [GLFramebuffer genFramebufferTexture2D:texture.textureName];
 	}
 	return self;
 }
-
 
 -(id) initFloatTextureFramebufferOfSize:(CGSize)textureSize
 {
 	self = [super init];
 	if(self) {
-		
-		glGenTextures(1, &textureName);
-		glBindTexture(GL_TEXTURE_2D, textureName);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// This is necessary for non-power-of-two textures
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG_EXT, textureSize.width, textureSize.height, 0, GL_RG_EXT, GL_HALF_FLOAT_OES, NULL);		
-		
-
+		texture = [[GLTexture alloc] initEmptyTextureOfSize:textureSize pixelFormat:kTexture2DPixelFormat_FloatRG];
 		framebufferSize = textureSize;
-		fbo = [GLFramebuffer genFramebufferTexture2D:textureName];
-		
+		fbo = [GLFramebuffer genFramebufferTexture2D:texture.textureName];
 	}
 	return self;
 }
 
+-(void) dealloc
+{
+	if (fbo) {
+		glDeleteFramebuffers(1, &fbo);
+		fbo = 0;
+	}
+}
 
 
 + (GLuint) genFramebufferTexture2D:(GLuint)textureName
@@ -142,7 +127,7 @@
         buffer = malloc(2048*2048*4);
     }
     
-	
+	NSAssert(texture.pixelFormat==kTexture2DPixelFormat_RGBA8888, @"Unsupported texture format");
 	
 	[self startRendering];
 	glReadPixels(0,0,tx,ty,GL_RGBA,GL_UNSIGNED_BYTE, buffer);
