@@ -77,8 +77,9 @@ enum  {
 		alphaTexture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"nature_alpha"]];
 		mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(texture.textureSize.width, texture.textureSize.height)];
 
-		//texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"table"]];
-		//mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(256, 256)];
+//		texture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"table"]];
+//		alphaTexture = [[GLTexture alloc] initWithImage:[UIImage imageNamed:@"table"]];
+//		mesh = [[LayerMesh alloc] initWithTextureSize:PixelSizeMake(256, 256)];
 	}
 
 	deformTool = [[DeformTool alloc] initWithMesh:mesh];
@@ -137,19 +138,21 @@ enum  {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	
-	
+
+	/*
 	if(alphaTexture) {
 		[[GLRender sharedRender] drawTexture:tex alphaTexture:alphaTexture withMesh:mesh transformMatrix:resultTransform];
 	} else {
 		[[GLRender sharedRender] drawTexture:tex withMesh:mesh transformMatrix:resultTransform];
 	}
+	[[GLRender sharedRender] drawMesh:mesh transformMatrix:resultTransform];
+	*/
 	
-	//[[GLRender sharedRender] drawMesh:mesh transformMatrix:resultTransform];
+	[[GLRender sharedRender] drawTexture:alphaTexture withMesh:mesh transformMatrix:resultTransform];
 	
 	
-	//[[GLRender sharedRender] drawTexture:alphaTexture withMesh:mesh transformMatrix:resultTransform];
+	//[[GLRender sharedRender] drawVectorsFromMesh:mesh transformMatrix:resultTransform];
 	//[[GLRender sharedRender] drawTextureName:patternBrush.patternTexture.textureName inRect:CGRectMake(-0.5, -0.5, -0.25, -0.25)];
-	
 	//[[GLRender sharedRender] drawTextureName:tex.textureName inRect:CGRectMake(-1, -1, 2, 2)];
 	//[[GLRender sharedRender] drawTexture:tex deformTexture:deformTool.deformTextureName inRect:CGRectMake(0, 0, 256, 256) transformMatrix:resultTransform];
 	
@@ -187,6 +190,10 @@ enum  {
 -(IBAction)onTransformModeBtn:(UISegmentedControl*)segmentedControl
 {
 	mode = segmentedControl.selectedSegmentIndex;
+	
+	//if(mode == MODE_ERASE) {
+	//	[eraseTool clear];
+	//}
 	
 	[self drawTexture:texture];
 }

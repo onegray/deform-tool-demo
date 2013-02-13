@@ -16,6 +16,8 @@
 
 -(void) eraseFromPoint:(CGPoint)startPoint toPoint:(CGPoint)endPoint;
 
+-(void) clear;
+
 @property (nonatomic, retain) PatternBrush* brush;
 
 @end

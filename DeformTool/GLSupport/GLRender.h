@@ -28,6 +28,8 @@
 //- (void) drawTexture:(GLTexture*)texture deformTexture:(int)deformTexture inRect:(CGRect)rect transformMatrix:(CGAffineTransform)transform;
 
 
+- (void) drawVectorsFromMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform;
+
 - (void) drawTextureName:(GLuint)textureName inRect:(CGRect)rect;
 
 

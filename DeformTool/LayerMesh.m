@@ -87,6 +87,11 @@
 	return scale < 20 ? values[(int)scale] : 20;
 }
 
+-(GLshort*) verticesAbsolutePointer
+{
+	return vertices;
+}
+
 -(GLfloat*) vectorsAbsolutePointer
 {
 	return deformVectors.vectors;

@@ -30,15 +30,9 @@ CG_INLINE PixelSize PixelSizeMake(int width, int height)
 -(void) setupVisibleRect:(CGRect)visibleRect interlacing:(int)interlacing;
 -(void) setupVisibleRect:(CGRect)visibleRect scale:(CGFloat)scale;
 
-//@property (nonatomic, readonly) GLshort* vertices;
-//@property (nonatomic, readonly) GLfloat* vectors;
+@property (nonatomic, readonly) GLshort* verticesAbsolutePointer;
 @property (nonatomic, readonly) GLfloat* vectorsAbsolutePointer;
 @property (nonatomic, readonly) int vertNum;
-
-//@property (nonatomic, readonly) GLushort* indices;
-//@property (nonatomic, readonly) int indexCount;
-
-//@property (nonatomic, readonly) GLfloat* texCoords;
 
 @property (nonatomic, readonly) int vertStride;
 @property (nonatomic, readonly) int vectorsStride;
@@ -52,6 +46,7 @@ CG_INLINE PixelSize PixelSizeMake(int width, int height)
 @property (nonatomic, readonly) int interlacedTileSize;
 @property (nonatomic, readonly) PixelSize textureContentSize;
 
+-(LayoutWindow) inclusiveWindowForRect:(CGRect)rect interlacing:(int)interlacing;
 
 -(void) checkVertices;
 //-(void) checkVerticesForIndices;

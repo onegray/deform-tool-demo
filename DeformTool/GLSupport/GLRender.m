@@ -189,6 +189,43 @@ static GLRender* sharedInstance = nil;
 	}
 }
 
+- (void) drawVectorsFromMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform
+{
+	GLfloat matrix[16];
+	CGAffineToGL(&transform, matrix);
+    
+	GLfloat buf[512*512*4];
+	GLshort* vertices = mesh.verticesAbsolutePointer;
+	GLfloat* vectors = mesh.vectorsAbsolutePointer;
+	GLfloat* p = buf;
+	int count = (mesh.layout.height+1)*(mesh.layout.width+1);
+	count = MIN(count, 512*512);
+	
+	for(int i=0; i<count; i++) {
+		GLshort vx = *vertices++;
+		GLshort vy = *vertices++;
+		GLfloat vvx = *vectors++;
+		GLfloat vvy = *vectors++;
+		
+		*p++ = vx;
+		*p++ = vy;
+		*p++ = vx+vvx*50;
+		*p++ = vy+vvy*50;
+	}
+	
+	GLProgram* program = [GLRender colorProgram];
+    [program use];
+    
+	glUniformMatrix4fv([program uniformIndex:@"modelViewProjectionMatrix"], 1, GL_FALSE, matrix);
+	
+	glUniform4fv([program uniformIndex:@"color"], 1, (float[]){1.0f, 0.2f, 0.2f, 0.8f});
+    GLuint vertCoordAttr = [program attributeIndex:@"position"];
+	glVertexAttribPointer(vertCoordAttr, 2, GL_FLOAT, 0, 0, buf);
+	glEnableVertexAttribArray(vertCoordAttr);
+	glDrawArrays(GL_LINES, 0, count);
+}
+
+
 - (void) drawTexture:(GLTexture*)texture alphaTexture:(GLTexture*)alpha withMesh:(LayerMesh*)mesh transformMatrix:(CGAffineTransform)transform
 {
 	GLfloat matrix[16];

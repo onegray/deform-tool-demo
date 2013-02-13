@@ -6,14 +6,20 @@
 //  Hire me at odesk! ( www.odesk.com/users/~~1bd7ccce67734b51 )
 //
 
-attribute vec4 position;
+uniform vec2 tsz; // tex size
+uniform vec2 bsz; // brush size
+uniform vec2 bp0; // brush pos (rect.origin)
+
+attribute vec2 position;
 attribute vec2 vectors;
-attribute vec2 texCoord;
 
 varying vec2 varTexCoord;
 
 void main()
 {
-    varTexCoord = texCoord-vectors;
-    gl_Position = position;
+	varTexCoord = (position.xy - bp0) / bsz;
+
+	highp vec2 pos = position + vectors*tsz;
+	pos = 2.0*pos/tsz-1.0;
+    gl_Position = vec4(pos, 1.0, 1.0);
 }
